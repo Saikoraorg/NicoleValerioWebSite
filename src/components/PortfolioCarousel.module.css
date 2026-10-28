@@ -1,0 +1,362 @@
+/* ==========================================================================
+   GAZU-INSPIRED EDITORIAL PORTFOLIO CAROUSEL & CARDS
+   ========================================================================== */
+
+.portfolioSection {
+  background-color: #faf8f5;
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+  padding: 90px 0 100px;
+}
+
+.headerRow {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 30px;
+}
+
+.editorialEyebrow {
+  display: block;
+  font-size: 0.72rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: #8c8275;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.editorialTitle {
+  font-family: var(--font-sans), sans-serif;
+  font-size: clamp(2rem, 3.5vw, 2.8rem);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  color: #111111;
+  line-height: 1.05;
+}
+
+.navControls {
+  display: flex;
+  gap: 12px;
+}
+
+.carouselBtn {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  color: #111111;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+  transition: all var(--transition-fast);
+}
+
+.carouselBtn:hover {
+  background: #111111;
+  color: #ffffff;
+  border-color: #111111;
+  transform: scale(1.06);
+}
+
+/* Filter Bar (Minimalist High-Fashion Pills) */
+.filterBar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 14px;
+  margin-bottom: 32px;
+  scrollbar-width: none;
+}
+
+.filterBar::-webkit-scrollbar {
+  display: none;
+}
+
+.filterPill {
+  padding: 9px 22px;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: #55504a;
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: var(--radius-full);
+  white-space: nowrap;
+  transition: all var(--transition-fast);
+}
+
+.filterPill:hover {
+  color: #111111;
+  border-color: #111111;
+}
+
+.activeFilter {
+  background: #111111;
+  color: #ffffff;
+  border-color: #111111;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.16);
+}
+
+/* CAROUSEL VIEWPORT & TRACK */
+.carouselViewport {
+  overflow: hidden;
+  position: relative;
+  user-select: none;
+  cursor: grab;
+  padding: 10px 0 20px;
+}
+
+.carouselViewport:active {
+  cursor: grabbing;
+}
+
+.carouselTrack {
+  display: flex;
+  gap: 24px;
+  transition: transform 0.5s var(--ease-smooth);
+}
+
+/* ==========================================================================
+   THE NEW EDITORIAL CARDS (GAZU BEST-OF STYLE)
+   ========================================================================== */
+.editorialCard {
+  flex: 0 0 calc((100% - 96px) / 5); /* 5 cards on desktop */
+  min-width: 230px;
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.03);
+  transition: transform var(--transition-normal), box-shadow var(--transition-normal), border-color var(--transition-normal);
+  cursor: pointer;
+}
+
+.editorialCard:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  border-color: rgba(0, 0, 0, 0.25);
+}
+
+/* Photo Box (Tall 3:4.2 aspect ratio) */
+.imageBox {
+  position: relative;
+  aspect-ratio: 3 / 4.1;
+  width: 100%;
+  overflow: hidden;
+  background-color: #ebe7e0;
+}
+
+.imageBox img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.7s var(--ease-smooth);
+}
+
+.editorialCard:hover .imageBox img {
+  transform: scale(1.08);
+}
+
+/* Floating Heart Wishlist Icon */
+.heartBtn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 5;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  transition: transform var(--transition-fast), background-color var(--transition-fast);
+}
+
+.heartBtn:hover {
+  transform: scale(1.15);
+  background: #ffffff;
+}
+
+.heartActive {
+  background: #ffffff;
+}
+
+/* Top Left Number & Category Tag */
+.cardCornerTag {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 5;
+  background: rgba(17, 17, 17, 0.85);
+  color: #ffffff;
+  padding: 3px 8px;
+  border-radius: 3px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  backdrop-filter: blur(6px);
+}
+
+/* Hover Quick View Strip */
+.hoverActionOverlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 10px;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(17, 17, 17, 0.88) 100%);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity var(--transition-fast), transform var(--transition-fast);
+}
+
+.editorialCard:hover .hoverActionOverlay {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.quickViewText {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #ffffff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+}
+
+/* Card Details Underneath */
+.cardDetails {
+  padding: 16px 14px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: #ffffff;
+  border-top: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.detailsMetaRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.cardCategory {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #8c8275;
+}
+
+.cardGear {
+  font-size: 0.68rem;
+  color: #aba296;
+  font-family: monospace;
+}
+
+.cardTitle {
+  font-family: var(--font-sans), sans-serif;
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: #111111;
+  line-height: 1.25;
+  margin-top: 2px;
+}
+
+.cardLinkRow {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 6px;
+}
+
+.cardLink {
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: #6e655c;
+  transition: color var(--transition-fast);
+}
+
+.cardLinkIcon {
+  color: #8c8275;
+  transition: transform var(--transition-fast), color var(--transition-fast);
+}
+
+.editorialCard:hover .cardLink {
+  color: #111111;
+}
+
+.editorialCard:hover .cardLinkIcon {
+  color: #111111;
+  transform: translate(2px, -2px);
+}
+
+/* FOOTER PROGRESS BAR */
+.footerBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 24px;
+  gap: 20px;
+}
+
+.progressTrack {
+  flex: 1;
+  max-width: 280px;
+  height: 3px;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background: #111111;
+  transition: width 0.4s var(--ease-smooth);
+}
+
+.counter {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: #7d756d;
+}
+
+.hint {
+  font-size: 0.78rem;
+  color: #9c9185;
+  font-style: italic;
+}
+
+/* RESPONSIVE */
+@media (max-width: 1200px) {
+  .editorialCard {
+    flex: 0 0 calc((100% - 48px) / 3);
+  }
+}
+
+@media (max-width: 768px) {
+  .editorialCard {
+    flex: 0 0 calc((100% - 24px) / 2);
+  }
+}
+
+@media (max-width: 520px) {
+  .editorialCard {
+    flex: 0 0 85%;
+  }
+}

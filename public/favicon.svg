@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="camGold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E5C59E"/>
+      <stop offset="100%" stop-color="#B8864E"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="16" fill="#141312"/>
+  <!-- Camera Shutter Button & Flash -->
+  <rect x="18" y="13" width="9" height="5" rx="2" fill="url(#camGold)"/>
+  <circle cx="47" cy="22" r="3" fill="url(#camGold)"/>
+  <!-- Camera Body -->
+  <rect x="11" y="17" width="42" height="32" rx="7" fill="none" stroke="url(#camGold)" stroke-width="3"/>
+  <!-- Lens Outer Ring -->
+  <circle cx="32" cy="33" r="11" fill="#1c1a18" stroke="url(#camGold)" stroke-width="3"/>
+  <!-- Lens Inner Aperture / Reflection -->
+  <circle cx="32" cy="33" r="6" fill="url(#camGold)"/>
+  <circle cx="34" cy="31" r="2" fill="#ffffff" opacity="0.8"/>
+</svg>

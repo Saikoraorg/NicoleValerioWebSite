@@ -1,0 +1,234 @@
+.booksCatalogSection {
+  background-color: #efe9e2; /* Warm sand / linen from reference image */
+  border-bottom: 1px solid #e5dfd7;
+  padding: 110px 0;
+}
+
+.sectionContainer {
+  width: 90%;
+  max-width: 1260px;
+  margin: 0 auto;
+}
+
+.booksHeader {
+  text-align: center;
+  max-width: 680px;
+  margin: 0 auto 60px;
+}
+
+.booksEyebrow {
+  display: inline-block;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: #8a837a;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.booksTitle {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(3rem, 6vw, 5rem);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  line-height: 1.05;
+  color: #111111;
+  margin-bottom: 16px;
+}
+
+.booksTitle em {
+  font-style: italic;
+  font-weight: 400;
+}
+
+.booksDescription {
+  font-size: 0.95rem;
+  color: #5e5953;
+  line-height: 1.65;
+}
+
+.booksGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 32px 24px;
+  margin-bottom: 60px;
+}
+
+.bookCard {
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.bookCard:hover {
+  transform: translateY(-8px);
+}
+
+.bookJacket {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  background-color: #ffffff;
+  overflow: hidden;
+  box-shadow: 
+    inset 5px 0 10px rgba(0, 0, 0, 0.24),
+    inset 0 0 0 1px rgba(0, 0, 0, 0.06),
+    4px 10px 24px rgba(0, 0, 0, 0.12);
+  border-radius: 2px 4px 4px 2px;
+  transition: box-shadow 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.bookCard:hover .bookJacket {
+  box-shadow: 
+    inset 5px 0 12px rgba(0, 0, 0, 0.3),
+    inset 0 0 0 1px rgba(0, 0, 0, 0.08),
+    8px 18px 32px rgba(0, 0, 0, 0.18);
+}
+
+.bookSpine {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 14px;
+  height: 100%;
+  background: linear-gradient(to right, rgba(0,0,0,0.35) 0%, rgba(255,255,255,0.15) 50%, rgba(0,0,0,0.1) 100%);
+  z-index: 5;
+  pointer-events: none;
+}
+
+.bookJacket img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.bookCard:hover .bookJacket img {
+  transform: scale(1.04);
+}
+
+.bookOverlayTag {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  z-index: 4;
+}
+
+.bookNumber {
+  background: rgba(17, 17, 17, 0.85);
+  color: #ffffff;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  padding: 3px 8px;
+  backdrop-filter: blur(4px);
+}
+
+.bookCount {
+  background: rgba(255, 255, 255, 0.9);
+  color: #111111;
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  padding: 2px 6px;
+}
+
+.bookHoverAction {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: linear-gradient(to top, rgba(17,17,17,0.85) 0%, transparent 100%);
+  padding: 24px 16px 14px;
+  color: #ffffff;
+  display: flex;
+  justify-content: center;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.22s ease;
+  z-index: 4;
+}
+
+.bookCard:hover .bookHoverAction {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.bookHoverAction span {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  border-bottom: 1px solid #ffffff;
+  padding-bottom: 2px;
+}
+
+.bookMeta {
+  padding-top: 12px;
+}
+
+.bookName {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.35rem;
+  font-weight: 500;
+  color: #111111;
+  line-height: 1.2;
+}
+
+.bookName em {
+  font-style: italic;
+  font-weight: 400;
+}
+
+.bookSubtitle {
+  display: block;
+  font-size: 0.78rem;
+  color: #5e5953;
+  margin-top: 2px;
+}
+
+.booksFooterAction {
+  display: flex;
+  justify-content: center;
+}
+
+.btnBoxMinimal {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 13px 28px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #111111;
+  background-color: transparent;
+  border: 1px solid #111111;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btnBoxMinimal:hover {
+  background-color: #111111;
+  color: #ffffff;
+}
+
+@media (max-width: 1024px) {
+  .booksGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .booksGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px 14px;
+  }
+}

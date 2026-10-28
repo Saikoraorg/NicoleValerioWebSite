@@ -1,0 +1,87 @@
+.siteFooter {
+  background: #181513;
+  color: #c9c1b8;
+  padding: 60px 0 30px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.container {
+  width: 90%;
+  max-width: 1240px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 40px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  flex-wrap: wrap;
+  gap: 24px;
+}
+
+.logoLink {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+}
+
+.logoTitle {
+  font-family: var(--font-serif), Georgia, serif;
+  font-size: 1.45rem;
+  letter-spacing: 0.16em;
+  color: #ffffff;
+}
+
+.logoSubtitle {
+  font-size: 0.62rem;
+  letter-spacing: 0.38em;
+  color: #a8a096;
+}
+
+.socialList {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.socialLink {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.06);
+  color: #e5ded6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+}
+
+.socialLink:hover {
+  background: var(--color-accent);
+  color: #ffffff;
+  transform: translateY(-3px);
+}
+
+.motto {
+  font-family: var(--font-serif), Georgia, serif;
+  font-style: italic;
+  font-size: 1.1rem;
+  color: #a8a096;
+  border-bottom: 1px solid rgba(196, 150, 99, 0.4);
+  padding-bottom: 4px;
+}
+
+.bottomCopyright {
+  width: 90%;
+  max-width: 1240px;
+  margin: 24px auto 0;
+  text-align: center;
+  font-size: 0.78rem;
+  color: #7d756d;
+}
+
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+    text-align: center;
+  }
+}

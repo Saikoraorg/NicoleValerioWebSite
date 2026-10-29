@@ -5,24 +5,24 @@
 
 /* --- CSS Variables & Design Tokens --- */
 :root {
-  /* Warm editorial color palette from reference image */
-  --color-bg: #faf8f5;              /* Clean warm alabaster / off-white */
-  --color-surface: #ffffff;         /* Pure white surface */
-  --color-books-bg: #efe9e2;        /* Warm sand / linen beige for BOOKS section */
-  --color-surface-warm: #f5f0eb;    /* Soft ecru */
-  --color-surface-subtle: #e8e2d8;  /* Divider tone */
-  
-  --color-primary: #111111;         /* Deep high-fashion noir */
-  --color-primary-light: #2c2926;   /* Charcoal */
-  --color-accent: #b89772;          /* Muted warm gold / champagne */
-  --color-accent-light: #dfcaa8;    /* Soft highlight gold */
-  
-  --color-text-main: #141414;       /* Primary editorial text */
-  --color-text-muted: #5e5953;      /* Secondary reading text */
-  --color-text-subtle: #8a837a;     /* Metadata / labels */
-  
-  --color-border: #e5dfd7;          /* Soft hairline borders */
-  --color-border-dark: #111111;     /* Editorial dark borders */
+  /* Paleta editorial natural — Nicole Valerio (actualizada) */
+  --color-bg: #F4EFE8;              /* Crema cálido / fondo principal */
+  --color-surface: #ffffff;         /* Blanco puro para tarjetas */
+  --color-books-bg: #ede8e1;        /* Fondo lino para sección Books */
+  --color-surface-warm: #F4EFE8;    /* Ecru suave */
+  --color-surface-subtle: #e0d9d0;  /* Tono divisor */
+
+  --color-primary: #3F3B34;         /* Carbón oliva oscuro — textos y botones */
+  --color-primary-light: #5a554c;   /* Versión media del primario */
+  --color-accent: #939E7E;          /* Verde salvia — acento principal */
+  --color-accent-light: #D8B8AF;    /* Rosa polvoso — acento secundario / hover */
+
+  --color-text-main: #3F3B34;       /* Texto principal editorial */
+  --color-text-muted: #B8AA9E;      /* Texto secundario / taupe */
+  --color-text-subtle: #B8AA9E;     /* Metadatos / etiquetas */
+
+  --color-border: #D8B8AF;          /* Bordes finos rosados */
+  --color-border-dark: #3F3B34;     /* Bordes oscuros editoriales */
   
   /* Typography */
   --font-serif: 'Cormorant Garamond', Georgia, serif;
@@ -649,7 +649,7 @@ h1 em, h2 em, h3 em, h4 em,
 
 .hero-typing-actions .btn-box-minimal:hover {
   background: #ffffff;
-  color: #111111;
+  color: #3F3B34;
   border-color: #ffffff;
 }
 
@@ -848,7 +848,7 @@ h1 em, h2 em, h3 em, h4 em,
   font-size: 0.65rem;
   letter-spacing: 0.22em;
   font-weight: 700;
-  color: #111111;
+  color: #3F3B34;
   text-align: center;
   z-index: 3;
   pointer-events: none;
@@ -986,7 +986,7 @@ h1 em, h2 em, h3 em, h4 em,
   font-size: 0.62rem;
   letter-spacing: 0.16em;
   font-weight: 700;
-  color: #111111;
+  color: #3F3B34;
 }
 
 .press-headline {
@@ -1030,7 +1030,7 @@ h1 em, h2 em, h3 em, h4 em,
    SECTION: BOOKS / CATÁLOGO (Warm Beige Section from Reference Image)
    ========================================================================== */
 .books-catalog-section {
-  background-color: var(--color-books-bg); /* #efe9e2 warm sand */
+  background-color: var(--color-books-bg); /* #ede8e1 warm sand */
   border-bottom: 1px solid var(--color-border);
   padding: 110px 0;
 }
@@ -1072,18 +1072,63 @@ h1 em, h2 em, h3 em, h4 em,
   line-height: 1.65;
 }
 
-/* 4-Column Book Grid */
+/* Gallery Wall Diamond Layout — 11 books */
+/* ==========================================================================
+   GALLERY WALL DIAMOND COMPOSITION — 11 BOOKS (Inspirado en muro de cuadros)
+   Zero cortes forzados: Verticales a 2:3 / Horizontales a 3:2 sin huecos vacíos
+   ========================================================================== */
+
 .books-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 32px 24px;
-  margin-bottom: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 18px;
+  width: 100%;
+  max-width: 1240px;
+  margin: 0 auto 60px auto;
+  padding: 30px 0;
+}
+
+.books-col {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  min-width: 0;
+  transition: transform var(--transition-normal);
+}
+
+/* Columnas de retrato (Verticales) */
+.books-col.col-portrait {
+  flex: 1;
+}
+
+/* Columna central (Horizontales - más ancha para ratio 3:2) */
+.books-col.col-landscape {
+  flex: 1.45;
+}
+
+/* Escalonamiento sutil que dibuja el contorno de ROMBO / DIAMOND */
+.books-col.col-1 {
+  transform: translateY(45px);
+}
+.books-col.col-2 {
+  transform: translateY(20px);
+}
+.books-col.col-3 {
+  transform: translateY(0);
+}
+.books-col.col-4 {
+  transform: translateY(20px);
+}
+.books-col.col-5 {
+  transform: translateY(45px);
 }
 
 .book-card {
   display: flex;
   flex-direction: column;
   cursor: pointer;
+  width: 100%;
   transition: transform var(--transition-normal);
 }
 
@@ -1091,27 +1136,55 @@ h1 em, h2 em, h3 em, h4 em,
   transform: translateY(-8px);
 }
 
-/* Realistic Art Book Jacket */
+/* Realistic Art Book Jacket & Frame */
 .book-jacket {
   position: relative;
   width: 100%;
-  aspect-ratio: 3 / 4;
   background-color: #ffffff;
   overflow: hidden;
-  /* Book spine and hardcover shadow */
   box-shadow: 
-    inset 5px 0 10px rgba(0, 0, 0, 0.24),
-    inset 0 0 0 1px rgba(0, 0, 0, 0.06),
-    4px 10px 24px rgba(0, 0, 0, 0.12);
+    inset 4px 0 10px rgba(0, 0, 0, 0.22),
+    inset 0 0 0 1px rgba(63, 59, 52, 0.08),
+    0 10px 28px rgba(63, 59, 52, 0.12);
   border-radius: 2px 4px 4px 2px;
-  transition: box-shadow var(--transition-normal);
+  transition: box-shadow var(--transition-normal), transform var(--transition-normal);
+}
+
+/* Ratios exactos de las fotos originales — CERO CORTES */
+.books-col.col-portrait .book-jacket {
+  aspect-ratio: 2 / 3;
+}
+
+.books-col.col-landscape .book-jacket {
+  aspect-ratio: 3 / 2;
+}
+
+.books-col.col-landscape .center-hero-card .book-jacket {
+  aspect-ratio: 16 / 10;
+  box-shadow: 
+    inset 5px 0 12px rgba(0, 0, 0, 0.25),
+    inset 0 0 0 1px rgba(147, 158, 126, 0.35),
+    0 16px 36px rgba(63, 59, 52, 0.18);
+}
+
+.book-jacket img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 22%; /* Prioriza rostros y detalles superiores */
+  display: block;
+  transition: transform 0.6s var(--ease-smooth);
+}
+
+.book-card:hover .book-jacket img {
+  transform: scale(1.03);
 }
 
 .book-card:hover .book-jacket {
   box-shadow: 
-    inset 5px 0 12px rgba(0, 0, 0, 0.3),
-    inset 0 0 0 1px rgba(0, 0, 0, 0.08),
-    8px 18px 32px rgba(0, 0, 0, 0.18);
+    inset 5px 0 12px rgba(0, 0, 0, 0.28),
+    inset 0 0 0 1px rgba(147, 158, 126, 0.5),
+    0 16px 36px rgba(63, 59, 52, 0.22);
 }
 
 .book-spine {
@@ -1159,7 +1232,7 @@ h1 em, h2 em, h3 em, h4 em,
 
 .book-count {
   background: rgba(255, 255, 255, 0.9);
-  color: #111111;
+  color: #3F3B34;
   font-size: 0.58rem;
   font-weight: 700;
   letter-spacing: 0.12em;
@@ -1491,7 +1564,7 @@ h1 em, h2 em, h3 em, h4 em,
   font-size: 0.62rem;
   letter-spacing: 0.18em;
   font-weight: 700;
-  color: #111111;
+  color: #3F3B34;
 }
 
 .story-content-body {
@@ -1656,7 +1729,7 @@ h1 em, h2 em, h3 em, h4 em,
 
 .cta-banner-card {
   position: relative;
-  background-color: #111111;
+  background-color: #3F3B34;
   color: #ffffff;
   padding: 60px 50px;
   overflow: hidden;
@@ -1723,7 +1796,7 @@ h1 em, h2 em, h3 em, h4 em,
 
 .cta-banner-content .btn-box-minimal:hover {
   background-color: #ffffff;
-  color: #111111;
+  color: #3F3B34;
 }
 
 .cta-info-card {
@@ -1939,7 +2012,7 @@ h1 em, h2 em, h3 em, h4 em,
   right: 18px;
   font-size: 2rem;
   line-height: 1;
-  color: #111111;
+  color: #3F3B34;
   z-index: 20;
 }
 
@@ -1950,7 +2023,7 @@ h1 em, h2 em, h3 em, h4 em,
   width: 48px;
   height: 48px;
   background: rgba(255, 255, 255, 0.9);
-  color: #111111;
+  color: #3F3B34;
   font-size: 2rem;
   line-height: 1;
   display: flex;
@@ -1970,7 +2043,7 @@ h1 em, h2 em, h3 em, h4 em,
 }
 
 .lightbox-image-box {
-  background-color: #141414;
+  background-color: #3F3B34;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1987,7 +2060,7 @@ h1 em, h2 em, h3 em, h4 em,
   padding: 40px;
   display: flex;
   flex-direction: column;
-  background-color: #faf8f5;
+  background-color: #F4EFE8;
   overflow-y: auto;
 }
 
@@ -2121,7 +2194,7 @@ h1 em, h2 em, h3 em, h4 em,
   width: 100%;
   padding: 12px 14px;
   border: 1px solid var(--color-border);
-  background-color: #faf8f5;
+  background-color: #F4EFE8;
   font-family: inherit;
   font-size: 0.88rem;
   color: var(--color-text-main);
@@ -2259,8 +2332,18 @@ h1 em, h2 em, h3 em, h4 em,
   }
 
   .books-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px 14px;
+    flex-wrap: wrap;
+    gap: 16px;
+    align-items: stretch;
+  }
+  .books-col {
+    transform: none !important;
+  }
+  .books-col.col-portrait {
+    flex: calc(50% - 16px);
+  }
+  .books-col.col-landscape {
+    flex: 100%;
   }
 
   .form-row {
@@ -2275,7 +2358,10 @@ h1 em, h2 em, h3 em, h4 em,
 
 @media (max-width: 480px) {
   .books-grid {
-    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+  .books-col.col-portrait {
+    flex: 100%;
   }
 
   .follow-photos-row {
@@ -2611,7 +2697,7 @@ h1 em, h2 em, h3 em, h4 em,
 .rf-group input,
 .rf-group select,
 .rf-group textarea {
-  background: #faf8f5;
+  background: #F4EFE8;
   border: 1px solid var(--color-border);
   border-radius: 2px;
   padding: 13px 16px;
@@ -2638,7 +2724,7 @@ h1 em, h2 em, h3 em, h4 em,
 
 .star-btn {
   font-size: 1.8rem;
-  color: #e5dfd7;
+  color: #D8B8AF;
   background: none;
   border: none;
   cursor: pointer;
@@ -3056,8 +3142,8 @@ h1 em, h2 em, h3 em, h4 em,
 }
 
 .pricing-card--featured .pricing-cta-btn:hover {
-  background: #c9a87c;
-  border-color: #c9a87c;
+  background: #7d8a6a;
+  border-color: #7d8a6a;
 }
 
 .pricing-note {
@@ -3079,4 +3165,14 @@ h1 em, h2 em, h3 em, h4 em,
   .pricing-grid {
     grid-template-columns: 1fr;
   }
+}
+
+/* Review form toggled by button */
+#publicar-calificacion {
+  display: none;
+  margin-top: 40px;
+  transition: all 0.3s ease;
+}
+#publicar-calificacion.form-visible {
+  display: block;
 }

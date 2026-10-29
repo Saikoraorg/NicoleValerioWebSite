@@ -343,21 +343,43 @@ document.addEventListener('DOMContentLoaded', () => {
      5. DYNAMIC REVIEWS SYSTEM (Carousel + Star Rating + LocalStorage)
      ========================================================================== */
 
-  // Smooth scroll "DEJAR MI CALIFICACIÓN" button → review form
+  // Toggle review form visibility
   const btnOpenReviewTop = document.getElementById('btnOpenReviewTop');
+  const reviewFormContainer = document.getElementById('publicar-calificacion');
+
+  function showReviewForm() {
+    if (reviewFormContainer) {
+      reviewFormContainer.classList.add('form-visible');
+      reviewFormContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      setTimeout(() => {
+        const firstInput = reviewFormContainer.querySelector('input, select, textarea');
+        if (firstInput) firstInput.focus();
+      }, 500);
+      if (btnOpenReviewTop) btnOpenReviewTop.style.display = 'none';
+    }
+  }
+
+  function hideReviewForm() {
+    if (reviewFormContainer) {
+      reviewFormContainer.classList.remove('form-visible');
+      if (btnOpenReviewTop) btnOpenReviewTop.style.display = '';
+      // Scroll back to button area
+      const rateSection = document.getElementById('resenas');
+      if (rateSection) rateSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+
   if (btnOpenReviewTop) {
     btnOpenReviewTop.addEventListener('click', (e) => {
       e.preventDefault();
-      const formEl = document.getElementById('publicar-calificacion');
-      if (formEl) {
-        formEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        // Focus first input for better UX
-        setTimeout(() => {
-          const firstInput = formEl.querySelector('input, select, textarea');
-          if (firstInput) firstInput.focus();
-        }, 600);
-      }
+      showReviewForm();
     });
+  }
+
+  // Cancel button hides the form
+  const rfCancelBtn = document.getElementById('rfCancelBtn');
+  if (rfCancelBtn) {
+    rfCancelBtn.addEventListener('click', hideReviewForm);
   }
 
   const STORAGE_KEY = 'studionvf_reviews_v1';
@@ -523,6 +545,7 @@ document.addEventListener('DOMContentLoaded', () => {
       reviewForm.reset();
       selectedRating = 0;
       starBtns.forEach(b => b.classList.remove('active'));
+      setTimeout(hideReviewForm, 2500);
     });
   }
 

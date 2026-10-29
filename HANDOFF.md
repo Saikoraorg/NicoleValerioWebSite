@@ -112,6 +112,14 @@ Los siguientes cambios fueron aplicados para simplificar la navegación y mejora
 | Componentes React **`AboutSection`** y **`StoryModal`** | **Eliminados** de `page.tsx` (imports, estado y JSX). | `src/app/page.tsx` |
 | Botón **★ DEJAR MI CALIFICACIÓN** | **Añadido** como CTA prominente en el header de la sección Reseñas, visible de inmediato. Al hacer clic realiza *smooth scroll* al formulario y auto-enfoca el primer campo. | `index.html`, `css/styles.css`, `js/main.js` |
 
+### 6. Muro de Galería Rombo (Gallery Wall) y Nueva Paleta de Color (2026-10-29)
+| Elemento | Descripción del cambio |
+| :--- | :--- |
+| **Paleta Natural Editorial** | Se actualizaron todos los tokens de diseño con la nueva paleta: Crema (`#F4EFE8`), Carbón Oliva (`#3F3B34`), Verde Salvia (`#939E7E`), Rosa Polvoso (`#D8B8AF`) y Taupe Cálido (`#B8AA9E`). |
+| **Muro de Galería (Rombo)** | Se rediseñó la sección Books como una composición tipo *Gallery Wall* en 5 columnas con silueta de rombo: las 3 fotos horizontales en el centro (ratio 3:2) y las 8 verticales a los costados (ratio 2:3). Sin huecos vacíos ni recortes forzados. |
+| **Formulario de Reseñas Desplegable** | El botón "DEJAR MI CALIFICACIÓN" abre suavemente el formulario y se oculta; el formulario incluye botón "Cancelar" y se autocierra tras publicar con éxito. |
+| **Comando `npm run dev`** | Configurado para servir inmediatamente el sitio estático (`index.html`) en el puerto 3000. |
+
 ---
 
 ## 🗂️ Estructura Final del Proyecto

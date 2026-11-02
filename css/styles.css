@@ -1032,13 +1032,13 @@ h1 em, h2 em, h3 em, h4 em,
 .books-catalog-section {
   background-color: var(--color-books-bg); /* #ede8e1 warm sand */
   border-bottom: 1px solid var(--color-border);
-  padding: 50px 0 65px;
+  padding: 44px 0 56px;
 }
 
 .books-catalog-section .section-container {
-  width: 96%;
-  max-width: 1700px;
-  padding: 0 16px;
+  width: 100%;
+  max-width: none;
+  padding: 0 20px;
 }
 
 .books-header {
@@ -1090,24 +1090,24 @@ h1 em, h2 em, h3 em, h4 em,
 .books-mosaic {
   display: grid;
   grid-template-columns: 1.85fr 1.05fr 1.85fr 1.05fr 1.85fr;
-  gap: 12px;
+  gap: 8px;
   width: 100%;
-  max-width: 100%;
-  height: clamp(420px, 50vh, 530px);
-  margin: 0 auto 24px auto;
+  max-width: none;
+  height: clamp(440px, 56vh, 580px);
+  margin: 0 0 20px 0;
 }
 
 .books-mosaic-col {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 8px;
   height: 100%;
   min-width: 0;
 }
 
 .book-card-pair {
   display: flex;
-  gap: 12px;
+  gap: 8px;
   flex: 1;
   min-height: 0;
   width: 100%;
@@ -1118,9 +1118,9 @@ h1 em, h2 em, h3 em, h4 em,
   overflow: hidden;
   cursor: pointer;
   background-color: var(--color-surface);
-  border-radius: 3px;
-  box-shadow: 0 4px 16px rgba(63, 59, 52, 0.1);
-  transition: transform 0.35s var(--transition-fast), box-shadow 0.35s var(--transition-fast);
+  border-radius: 0;
+  box-shadow: none;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .books-mosaic .book-card.card-wide {
@@ -1142,9 +1142,9 @@ h1 em, h2 em, h3 em, h4 em,
 }
 
 .books-mosaic .book-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 14px 32px rgba(63, 59, 52, 0.22);
   z-index: 10;
+  transform: none;
+  box-shadow: none;
 }
 
 /* Image behavior inside card */
@@ -1153,11 +1153,12 @@ h1 em, h2 em, h3 em, h4 em,
   height: 100%;
   object-fit: cover;
   display: block;
-  transition: transform 0.6s var(--ease-smooth);
+  transition: transform 0.5s ease, filter 0.35s ease;
 }
 
 .books-mosaic .book-card:hover .book-mosaic-img {
   transform: scale(1.04);
+  filter: brightness(0.72);
 }
 
 /* Specific focal points to prevent awkward cuts */
@@ -1195,113 +1196,91 @@ h1 em, h2 em, h3 em, h4 em,
   object-position: center 18%;
 }
 
-/* Corner Marker Tab (matching the user's reference image!) */
+/* Corner Marker Tab */
 .book-tab-marker {
   position: absolute;
   top: 0;
   left: 0;
-  background: rgba(63, 59, 52, 0.88);
+  background: rgba(63, 59, 52, 0.82);
   backdrop-filter: blur(4px);
   color: #FAF8F5;
   padding: 5px 14px 6px 9px;
-  border-bottom-right-radius: 18px;
+  border-bottom-right-radius: 14px;
   z-index: 5;
   font-family: var(--font-sans);
-  font-size: 0.65rem;
+  font-size: 0.62rem;
   font-weight: 700;
   letter-spacing: 0.12em;
-  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.15);
   pointer-events: none;
-  transition: background 0.3s ease;
+  transition: background 0.3s ease, opacity 0.3s ease;
 }
 
 .book-tab-marker.tab-olive {
-  background: rgba(147, 158, 126, 0.92);
+  background: rgba(147, 158, 126, 0.88);
 }
 
 .books-mosaic .book-card:hover .book-tab-marker {
-  background: var(--color-accent);
-  color: #ffffff;
+  opacity: 0;
 }
 
-/* Luxury Editorial Hover Overlay */
+/* Hover label — barra inferior limpia */
 .book-mosaic-overlay {
   position: absolute;
-  inset: 0;
-  background: linear-gradient(to top, rgba(35, 32, 28, 0.94) 0%, rgba(35, 32, 28, 0.62) 55%, rgba(35, 32, 28, 0.12) 100%);
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(30, 27, 23, 0.88);
   display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  padding: clamp(10px, 1.2vw, 16px);
-  box-sizing: border-box;
-  opacity: 0;
-  transition: opacity 0.3s ease;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  transform: translateY(100%);
+  transition: transform 0.3s ease;
   z-index: 6;
   pointer-events: none;
-  overflow: hidden;
-  max-height: 100%;
+  gap: 8px;
 }
 
 .books-mosaic .book-card:hover .book-mosaic-overlay {
-  opacity: 1;
+  transform: translateY(0);
 }
 
+/* Ocultar category y count en el nuevo hover limpio */
 .book-overlay-category {
-  font-family: var(--font-sans);
-  font-size: 0.52rem;
-  letter-spacing: 0.16em;
-  color: var(--color-accent-light);
-  font-weight: 700;
-  text-transform: uppercase;
-  margin-bottom: 2px;
-  line-height: 1.1;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  display: none;
+}
+
+.book-overlay-count {
+  display: none;
 }
 
 .book-overlay-title {
   font-family: var(--font-serif);
-  font-size: clamp(0.95rem, 1.2vw, 1.2rem);
-  font-weight: 500;
+  font-size: clamp(0.85rem, 1.1vw, 1.1rem);
+  font-style: italic;
+  font-weight: 400;
   color: #ffffff;
-  margin-bottom: 2px;
-  line-height: 1.1;
+  margin: 0;
+  line-height: 1.2;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  flex: 1;
 }
 
 .book-overlay-title em {
   font-style: italic;
 }
 
-.book-overlay-count {
-  font-family: var(--font-sans);
-  font-size: 0.58rem;
-  letter-spacing: 0.08em;
-  color: rgba(255, 255, 255, 0.82);
-  margin-bottom: 6px;
-  line-height: 1.1;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
 .book-overlay-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
   font-family: var(--font-sans);
   font-size: 0.58rem;
   font-weight: 700;
-  letter-spacing: 0.12em;
-  color: #ffffff;
+  letter-spacing: 0.14em;
+  color: rgba(255,255,255,0.75);
   text-transform: uppercase;
-  border-bottom: 1.5px solid var(--color-accent);
-  padding-bottom: 1px;
-  width: fit-content;
-  line-height: 1.1;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .book-spine {
@@ -2449,14 +2428,14 @@ h1 em, h2 em, h3 em, h4 em,
   }
 
   .books-mosaic {
-    height: clamp(380px, 46vh, 480px);
-    gap: 10px;
+    height: clamp(360px, 44vh, 460px);
+    gap: 6px;
   }
   .books-mosaic-col {
-    gap: 10px;
+    gap: 6px;
   }
   .book-card-pair {
-    gap: 10px;
+    gap: 6px;
   }
 
   .form-row {
@@ -2474,9 +2453,10 @@ h1 em, h2 em, h3 em, h4 em,
     display: flex;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
-    height: 420px;
-    padding-bottom: 14px;
+    height: 400px;
+    padding-bottom: 12px;
     -webkit-overflow-scrolling: touch;
+    gap: 6px;
   }
   .books-mosaic::-webkit-scrollbar {
     height: 6px;

@@ -3,355 +3,472 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Panel de Administración | STUDIO NVF - Nicole Valerio</title>
+  <title>Studio NVF · Panel de Control de Nicole Valerio</title>
   <meta name="robots" content="noindex, nofollow">
 
   <!-- Favicon SVG -->
   <link rel="icon" type="image/svg+xml" href="assets/images/favicon-camera.svg">
 
-  <!-- Google Fonts: Cormorant Garamond & Plus Jakarta Sans -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Bootstrap 5.3 CSS & Bootstrap Icons CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
-  <!-- Admin Stylesheet -->
+  <!-- Custom Admin Stylesheet -->
   <link rel="stylesheet" href="css/admin.css">
 </head>
 <body>
 
   <!-- ==========================================================================
-       TOPBAR
+       TOP NAVBAR (Bootstrap 5)
        ========================================================================== -->
-  <header class="admin-topbar">
-    <div class="topbar-brand">
-      <span class="brand-title">STUDIO NVF</span>
-      <span class="brand-badge">ADMIN PORTAL</span>
-    </div>
-
-    <div class="topbar-actions">
-      <a href="index.html" class="btn-topbar-link">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
-        <span>Ver Sitio Web</span>
+  <nav class="navbar navbar-expand-lg admin-navbar py-3 sticky-top">
+    <div class="container-fluid px-4">
+      <a class="navbar-brand d-flex align-items-center gap-2 text-white m-0 text-decoration-none" href="admin.html">
+        <i class="bi bi-camera-fill text-warning fs-4"></i>
+        <span class="brand-heading fs-4">STUDIO NVF</span>
+        <span class="badge bg-secondary text-uppercase ms-1 px-2 py-1" style="font-size: 0.65rem; letter-spacing: 0.1em;">Panel Nicole</span>
       </a>
 
-      <button class="btn-topbar-link" id="btnExportBackup" title="Descargar copia de seguridad en JSON">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-        <span>Exportar Respaldo</span>
-      </button>
+      <div class="d-flex align-items-center gap-2 ms-auto">
+        <a href="index.html" class="btn btn-outline-light btn-sm px-3 d-flex align-items-center gap-2" target="_blank" rel="noopener">
+          <i class="bi bi-box-arrow-up-right"></i>
+          <span class="d-none d-sm-inline">Ver Página Web</span>
+        </a>
 
-      <button class="btn-topbar-primary" id="btnOpenNewBooking">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-        <span>+ Agendar Sesión</span>
-      </button>
+        <button class="btn btn-outline-secondary btn-sm text-light px-3 d-flex align-items-center gap-2" id="btnExportBackup" title="Descargar copia de seguridad en JSON">
+          <i class="bi bi-download"></i>
+          <span class="d-none d-md-inline">Copia de Seguridad</span>
+        </button>
+
+        <button class="btn btn-gold btn-sm px-3 d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#modalNewBooking">
+          <i class="bi bi-plus-lg fw-bold"></i>
+          <span>+ Agendar Cita</span>
+        </button>
+      </div>
     </div>
-  </header>
-
-  <!-- ==========================================================================
-       TABS NAVIGATION
-       ========================================================================== -->
-  <nav class="admin-tabs-nav" aria-label="Navegación del panel">
-    <button class="tab-btn active" data-tab="tab-calendar">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-      <span>Calendario de Reservas</span>
-      <span class="tab-count" id="bookingsCountBadge">4 citas</span>
-    </button>
-
-    <button class="tab-btn" data-tab="tab-books">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
-      <span>Gestor de Books & Galería de Fotos</span>
-      <span class="tab-count">11 Colecciones</span>
-    </button>
-
-    <button class="tab-btn" data-tab="tab-supabase">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path></svg>
-      <span>Base de Datos Supabase (SQL)</span>
-      <span class="tab-count">Estructura Lista</span>
-    </button>
   </nav>
 
   <!-- ==========================================================================
-       MAIN CONTENT
+       MAIN DASHBOARD CONTAINER
        ========================================================================== -->
-  <main class="admin-main">
+  <div class="container-fluid px-4 py-4" style="max-width: 1680px;">
 
-    <!-- ======================================================================
-         TAB 1: CALENDARIO DE RESERVAS
-         ====================================================================== -->
-    <section class="tab-pane active" id="tab-calendar">
-      
-      <div class="section-banner">
-        <div class="banner-left">
-          <h1>Agenda de Sesiones & <em>Citas de Clientes</em></h1>
-          <p>Visualiza todas las solicitudes enviadas desde el formulario web con su fecha, hora y tipo de book.</p>
+    <!-- WELCOME BANNER FOR NICOLE -->
+    <div class="card border-0 shadow-sm rounded-4 p-4 mb-4 text-white position-relative overflow-hidden" style="background: linear-gradient(135deg, #1C1A18 0%, #2A2622 100%); border-left: 5px solid #C5A059 !important;">
+      <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 position-relative" style="z-index: 2;">
+        <div>
+          <div class="d-flex align-items-center gap-2 mb-1">
+            <span class="badge bg-warning text-dark fw-bold px-2 py-1" style="font-size: 0.7rem; letter-spacing: 0.08em;">STUDIO NVF</span>
+            <span class="text-white-50 small">Panel de Administración Exclusivo</span>
+          </div>
+          <h3 class="font-serif fw-bold m-0 text-white">¡Hola Nicole! 👋 Bienvenida a tu espacio</h3>
+          <p class="text-white-50 small m-0 mt-1" style="max-width: 760px;">
+            Aquí puedes revisar las reservas que te envían tus clientes desde la página web, marcar fechas en tu calendario, actualizar las portadas de tus 11 books y conectar tu base de datos cuando lo desees.
+          </p>
         </div>
-        <div class="banner-actions">
-          <button class="btn-primary" id="btnOpenNewBookingBanner">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-            <span>+ Nueva Reserva Manual</span>
+        <div class="d-flex align-items-center gap-2">
+          <button class="btn btn-gold btn-sm px-3 py-2 rounded-pill d-flex align-items-center gap-2 shadow-sm" data-bs-toggle="modal" data-bs-target="#modalNewBooking">
+            <i class="bi bi-calendar-plus-fill"></i>
+            <span>+ Nueva Cita</span>
           </button>
+          <a href="index.html" target="_blank" class="btn btn-outline-light btn-sm px-3 py-2 rounded-pill d-flex align-items-center gap-2">
+            <i class="bi bi-eye"></i>
+            <span>Ver mi Web</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOP KPI METRICS BAR -->
+    <div class="row g-3 mb-4">
+      <div class="col-6 col-md-3">
+        <div class="kpi-card d-flex align-items-center gap-3">
+          <div class="kpi-icon-wrap bg-warning bg-opacity-10 text-warning">
+            <i class="bi bi-bell-fill"></i>
+          </div>
+          <div>
+            <div class="fs-4 fw-bold text-dark lh-1" id="kpiPendingCount">1</div>
+            <div class="text-muted small mt-1">Citas por Confirmar</div>
+          </div>
         </div>
       </div>
 
-      <div class="calendar-layout">
+      <div class="col-6 col-md-3">
+        <div class="kpi-card d-flex align-items-center gap-3">
+          <div class="kpi-icon-wrap bg-success bg-opacity-10 text-success">
+            <i class="bi bi-calendar-check-fill"></i>
+          </div>
+          <div>
+            <div class="fs-4 fw-bold text-dark lh-1" id="kpiConfirmedCount">3</div>
+            <div class="text-muted small mt-1">Citas Confirmadas</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-6 col-md-3">
+        <div class="kpi-card d-flex align-items-center gap-3">
+          <div class="kpi-icon-wrap bg-primary bg-opacity-10 text-primary">
+            <i class="bi bi-collection-fill"></i>
+          </div>
+          <div>
+            <div class="fs-4 fw-bold text-dark lh-1">11</div>
+            <div class="text-muted small mt-1">Colecciones (Books)</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-6 col-md-3">
+        <div class="kpi-card d-flex align-items-center gap-3">
+          <div class="kpi-icon-wrap bg-danger bg-opacity-10 text-danger">
+            <i class="bi bi-images"></i>
+          </div>
+          <div>
+            <div class="fs-4 fw-bold text-dark lh-1" id="kpiTotalPhotos">575+</div>
+            <div class="text-muted small mt-1">Fotos en Alta Calidad</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN NAVIGATION PILLS -->
+    <div class="card border-0 shadow-sm rounded-4 p-2 mb-4 bg-white">
+      <ul class="nav nav-pills nav-pills-editorial gap-2" id="adminMainTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active d-flex align-items-center gap-2" id="tab-agenda-btn" data-bs-toggle="pill" data-bs-target="#tab-agenda" type="button" role="tab" aria-selected="true">
+            <i class="bi bi-calendar3"></i>
+            <span>Agenda de Citas & Calendario</span>
+            <span class="badge bg-warning text-dark ms-1" id="tabBookingsCountBadge">4</span>
+          </button>
+        </li>
+
+        <li class="nav-item" role="presentation">
+          <button class="nav-link d-flex align-items-center gap-2" id="tab-books-btn" data-bs-toggle="pill" data-bs-target="#tab-books" type="button" role="tab" aria-selected="false">
+            <i class="bi bi-journal-album"></i>
+            <span>Portadas & Fotos de Books</span>
+            <span class="badge bg-light text-secondary ms-1">11 Sesiones</span>
+          </button>
+        </li>
+
+        <li class="nav-item" role="presentation">
+          <button class="nav-link d-flex align-items-center gap-2" id="tab-supabase-btn" data-bs-toggle="pill" data-bs-target="#tab-supabase" type="button" role="tab" aria-selected="false">
+            <i class="bi bi-database-fill-gear"></i>
+            <span>Base de Datos Supabase</span>
+            <span class="badge bg-success bg-opacity-10 text-success ms-1">SQL Listo</span>
+          </button>
+        </li>
+      </ul>
+    </div>
+
+    <!-- TAB CONTENT -->
+    <div class="tab-content" id="adminTabContent">
+
+      <!-- ====================================================================
+           TAB 1: AGENDA DE CITAS & CALENDARIO
+           ==================================================================== -->
+      <div class="tab-pane fade show active" id="tab-agenda" role="tabpanel">
+
+        <!-- Help Tip & Legend Banner for Nicole -->
+        <div class="alert alert-light border-0 shadow-sm rounded-4 p-3 mb-4 d-flex flex-wrap align-items-center justify-content-between gap-3">
+          <div class="d-flex align-items-center gap-3">
+            <div class="rounded-circle bg-warning bg-opacity-25 text-warning d-flex align-items-center justify-content-center flex-shrink-0" style="width: 44px; height: 44px;">
+              <i class="bi bi-lightbulb-fill fs-5"></i>
+            </div>
+            <div>
+              <div class="fw-bold text-dark small">¿Cómo funciona tu agenda?</div>
+              <div class="text-muted small">Cuando una clienta llena el formulario en tu web, su cita aparece automáticamente aquí en <strong>Pendiente (amarillo)</strong>. Haz clic en el día para ver sus datos, enviarle un WhatsApp directo o marcarla como Confirmada.</div>
+            </div>
+          </div>
+          <div class="d-flex align-items-center gap-2 flex-wrap small">
+            <span class="badge bg-warning text-dark"><i class="bi bi-circle-fill me-1" style="font-size: 0.5rem;"></i>Pendiente</span>
+            <span class="badge bg-success"><i class="bi bi-circle-fill me-1" style="font-size: 0.5rem;"></i>Confirmada</span>
+            <span class="badge bg-primary"><i class="bi bi-circle-fill me-1" style="font-size: 0.5rem;"></i>Completada</span>
+            <span class="badge bg-secondary"><i class="bi bi-circle-fill me-1" style="font-size: 0.5rem;"></i>Cancelada</span>
+          </div>
+        </div>
         
-        <!-- Left: Full Month Calendar Card -->
-        <div class="calendar-card">
-          <div class="calendar-controls-bar">
-            <div class="month-picker">
-              <button class="btn-icon" id="prevMonthBtn" aria-label="Mes anterior">&#8249;</button>
-              <span class="current-month-label" id="currentMonthLabel">Noviembre 2026</span>
-              <button class="btn-icon" id="nextMonthBtn" aria-label="Siguiente mes">&#8250;</button>
-              <button class="btn-secondary" id="todayMonthBtn" style="padding: 6px 12px; font-size: 0.75rem;">Hoy</button>
+        <div class="row g-4">
+          <!-- Left: Interactive Calendar (Bootstrap Grid) -->
+          <div class="col-lg-8">
+            <div class="calendar-card">
+              <!-- Calendar Header & Navigation Controls -->
+              <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+                <div class="d-flex align-items-center gap-2">
+                  <button class="btn btn-outline-secondary btn-sm rounded-circle p-2" id="prevMonthBtn" aria-label="Mes anterior" style="width: 36px; height: 36px;">
+                    <i class="bi bi-chevron-left"></i>
+                  </button>
+                  <h4 class="font-serif fw-bold text-dark m-0 px-2" id="currentMonthLabel" style="min-width: 180px; text-align: center;">
+                    Noviembre 2026
+                  </h4>
+                  <button class="btn btn-outline-secondary btn-sm rounded-circle p-2" id="nextMonthBtn" aria-label="Siguiente mes" style="width: 36px; height: 36px;">
+                    <i class="bi bi-chevron-right"></i>
+                  </button>
+                  <button class="btn btn-outline-dark btn-sm rounded-pill px-3 ms-2" id="todayMonthBtn">Hoy</button>
+                </div>
+
+                <div class="d-flex align-items-center gap-2">
+                  <select class="form-select form-select-sm rounded-3" id="filterSessionType" style="max-width: 170px;">
+                    <option value="all">Todas las sesiones</option>
+                    <option value="Familia">Familia</option>
+                    <option value="Boda">Boda</option>
+                    <option value="Embarazo">Embarazo</option>
+                    <option value="Cumpleaños">Cumpleaños</option>
+                    <option value="Marca Personal">Marca Personal</option>
+                    <option value="Parejas">Parejas</option>
+                    <option value="Parejas Playa">Parejas Playa</option>
+                    <option value="Revelación de Género">Revelación</option>
+                    <option value="Eventos">Eventos</option>
+                    <option value="Gastronomía">Gastronomía</option>
+                    <option value="Navidad">Navidad</option>
+                  </select>
+
+                  <select class="form-select form-select-sm rounded-3" id="filterStatus" style="max-width: 150px;">
+                    <option value="all">Todos los estados</option>
+                    <option value="Pendiente">Pendiente</option>
+                    <option value="Confirmada">Confirmada</option>
+                    <option value="Completada">Completada</option>
+                    <option value="Cancelada">Cancelada</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- 7-Column Days Grid -->
+              <div class="calendar-grid" id="calendarGrid">
+                <div class="weekday-header">Dom</div>
+                <div class="weekday-header">Lun</div>
+                <div class="weekday-header">Mar</div>
+                <div class="weekday-header">Mié</div>
+                <div class="weekday-header">Jue</div>
+                <div class="weekday-header">Vie</div>
+                <div class="weekday-header">Sáb</div>
+                <!-- Dynamic Days Cells Populated by js/admin.js -->
+              </div>
             </div>
+          </div>
 
-            <div class="calendar-filters">
-              <select class="calendar-select" id="filterSessionType" aria-label="Filtrar por sesión">
-                <option value="all">Todas las sesiones</option>
-                <option value="Familia">Familia</option>
-                <option value="Boda">Boda</option>
-                <option value="Embarazo">Embarazo & Maternidad</option>
-                <option value="Cumpleaños">Cumpleaños</option>
-                <option value="Marca Personal">Marca Personal</option>
-                <option value="Parejas">Parejas</option>
-                <option value="Parejas Playa">Parejas Playa</option>
-                <option value="Revelación de Género">Revelación de Género</option>
-                <option value="Eventos">Eventos</option>
-                <option value="Gastronomía">Gastronomía</option>
-                <option value="Navidad">Navidad</option>
-              </select>
+          <!-- Right: Selected Day Bookings Detail Sidebar -->
+          <div class="col-lg-4">
+            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white h-100">
+              <div class="d-flex align-items-center justify-content-between pb-3 border-bottom mb-3">
+                <div>
+                  <h5 class="fw-bold m-0" id="sidebarTitle">Citas para Hoy</h5>
+                  <small class="text-muted" id="sidebarSubtitle">Selecciona cualquier día del calendario</small>
+                </div>
+                <button class="btn btn-gold btn-sm rounded-pill px-3" data-bs-toggle="modal" data-bs-target="#modalNewBooking">
+                  <i class="bi bi-plus-lg"></i> Cita
+                </button>
+              </div>
 
-              <select class="calendar-select" id="filterStatus" aria-label="Filtrar por estado">
-                <option value="all">Todos los estados</option>
-                <option value="Pendiente">Pendiente</option>
-                <option value="Confirmada">Confirmada</option>
-                <option value="Completada">Completada</option>
-                <option value="Cancelada">Cancelada</option>
-              </select>
+              <!-- Bookings List Scroll Area -->
+              <div class="d-flex flex-column gap-3 overflow-auto" id="bookingsListContainer" style="max-height: 650px;">
+                <!-- Populated dynamically by js/admin.js -->
+              </div>
             </div>
-          </div>
-
-          <!-- Calendar Grid -->
-          <div class="calendar-grid" id="calendarGrid">
-            <div class="weekday-header">Dom</div>
-            <div class="weekday-header">Lun</div>
-            <div class="weekday-header">Mar</div>
-            <div class="weekday-header">Mié</div>
-            <div class="weekday-header">Jue</div>
-            <div class="weekday-header">Vie</div>
-            <div class="weekday-header">Sáb</div>
-            <!-- Day cells will be generated dynamically by js/admin.js -->
-          </div>
-        </div>
-
-        <!-- Right: Day Details / Appointments Sidebar -->
-        <div class="bookings-sidebar-card">
-          <div class="sidebar-header">
-            <h3 class="sidebar-title" id="sidebarTitle">Citas para Hoy</h3>
-            <p class="sidebar-subtitle" id="sidebarSubtitle">Selecciona cualquier día del calendario para ver los detalles.</p>
-          </div>
-
-          <div class="bookings-list-container" id="bookingsListContainer">
-            <!-- Booking item cards populated dynamically -->
           </div>
         </div>
 
       </div>
 
-    </section>
+      <!-- ====================================================================
+           TAB 2: PORTADAS & FOTOS DE BOOKS (GESTOR DE CONTENIDO)
+           ==================================================================== -->
+      <div class="tab-pane fade" id="tab-books" role="tabpanel">
 
-    <!-- ======================================================================
-         TAB 2: GESTOR DE BOOKS & GALERÍA DE FOTOS
-         ====================================================================== -->
-    <section class="tab-pane" id="tab-books">
-
-      <div class="section-banner">
-        <div class="banner-left">
-          <h1>Gestor de Books & <em>Fotografías de Portada</em></h1>
-          <p>Modifica títulos, sube fotos nuevas, reemplaza portadas o elimina imágenes. Los cambios se actualizan en vivo.</p>
-        </div>
-        <div class="banner-actions">
-          <button class="btn-secondary" id="btnResetCatalog" title="Restaurar a las 11 sesiones originales">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path></svg>
-            <span>Restablecer Originales</span>
+        <!-- Help Tip for Nicole -->
+        <div class="alert alert-light border-0 shadow-sm rounded-4 p-3 mb-4 d-flex flex-wrap align-items-center justify-content-between gap-3">
+          <div class="d-flex align-items-center gap-3">
+            <div class="rounded-circle bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center flex-shrink-0" style="width: 44px; height: 44px;">
+              <i class="bi bi-images fs-5"></i>
+            </div>
+            <div>
+              <div class="fw-bold text-dark small">Gestión Visual de tus 11 Colecciones</div>
+              <div class="text-muted small">Haz clic en cualquier colección abajo. Puedes <strong>subir una foto desde tu computadora</strong> para cambiar la portada, o presionar <strong>"⭐ Portada"</strong> en cualquiera de las fotos de la galería. Los cambios se ven reflejados al instante en la vista previa y en tu página web.</div>
+            </div>
+          </div>
+          <button class="btn btn-outline-secondary btn-sm rounded-pill d-flex align-items-center gap-2" id="btnResetCatalog" title="Restaurar fotos originales">
+            <i class="bi bi-arrow-counterclockwise"></i>
+            <span>Restaurar Originales</span>
           </button>
         </div>
-      </div>
 
-      <div class="books-manager-layout">
-
-        <!-- 1. Left Column: Collections List -->
-        <div class="collections-sidebar">
-          <div class="collections-sidebar-title">
-            <span>Colecciones</span>
-            <span style="font-size: 0.72rem; color: var(--admin-text-subtle);">11 Books</span>
-          </div>
-          <div class="collections-nav-list" id="collectionsNavList">
-            <!-- Nav buttons generated dynamically -->
-          </div>
+        <!-- 11 Collections Visual Selector Grid -->
+        <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-6 g-3 mb-4" id="collectionsCardsRow">
+          <!-- Populated dynamically with photo cards for each of the 11 books -->
         </div>
 
-        <!-- 2. Middle Column: Book Editor & Gallery Photos Grid -->
-        <div class="book-editor-panel">
-          
-          <!-- Metadata & Cover Card -->
-          <div class="editor-card">
-            <div class="card-title-row">
-              <h3>Datos del Book</h3>
-              <button class="btn-primary" id="btnSaveBookMeta">💾 Guardar Cambios</button>
-            </div>
-
-            <div class="form-grid-2">
-              <div class="form-field">
-                <label for="bookTitleInput">Título del Book</label>
-                <input type="text" id="bookTitleInput" class="form-input" placeholder="Ej. Familia">
+        <!-- Active Book Detailed Inspector & Gallery Manager -->
+        <div class="row g-4" id="activeBookInspector">
+          <!-- Left: Metadata & Cover Changer -->
+          <div class="col-lg-8">
+            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4">
+              <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
+                <h5 class="fw-bold m-0" id="inspectorBookTitleHeader">Editar Book: Familia</h5>
+                <button class="btn btn-charcoal btn-sm px-4" id="btnSaveBookMeta">
+                  <i class="bi bi-check2"></i> Guardar Cambios
+                </button>
               </div>
 
-              <div class="form-field">
-                <label for="bookCategoryInput">Categoría Editorial</label>
-                <input type="text" id="bookCategoryInput" class="form-input" placeholder="EDITORIAL">
-              </div>
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label class="form-label small fw-bold text-muted text-uppercase">Título de la Sesión</label>
+                  <input type="text" class="form-control" id="bookTitleInput" placeholder="Ej. Familia">
+                </div>
 
-              <div class="form-field" style="grid-column: span 2;">
-                <label for="bookSubtitleInput">Subtítulo / Concepto</label>
-                <input type="text" id="bookSubtitleInput" class="form-input" placeholder="Ej. Momentos Genuinos">
-              </div>
+                <div class="col-md-6">
+                  <label class="form-label small fw-bold text-muted text-uppercase">Categoría</label>
+                  <input type="text" class="form-control" id="bookCategoryInput" placeholder="EDITORIAL">
+                </div>
 
-              <div class="form-field" style="grid-column: span 2;">
-                <label for="bookCoverUrlInput">URL o Archivo de Portada</label>
-                <div style="display: flex; gap: 8px;">
-                  <input type="text" id="bookCoverUrlInput" class="form-input" style="flex: 1;" placeholder="assets/images/studionvf/cover_familia.jpg">
-                  <label class="btn-secondary" style="cursor: pointer; white-space: nowrap;">
-                    <span>📁 Subir desde mi PC</span>
-                    <input type="file" id="coverFileInput" accept="image/*" style="display: none;">
-                  </label>
+                <div class="col-12">
+                  <label class="form-label small fw-bold text-muted text-uppercase">Subtítulo / Concepto</label>
+                  <input type="text" class="form-control" id="bookSubtitleInput" placeholder="Ej. Momentos Genuinos">
+                </div>
+
+                <div class="col-12">
+                  <label class="form-label small fw-bold text-muted text-uppercase">Foto de Portada Actual</label>
+                  <div class="input-group">
+                    <input type="text" class="form-control" id="bookCoverUrlInput" placeholder="assets/images/studionvf/cover_familia.jpg">
+                    <label class="btn btn-outline-dark px-3 d-flex align-items-center gap-2" style="cursor: pointer;">
+                      <i class="bi bi-upload"></i>
+                      <span>Subir desde mi PC</span>
+                      <input type="file" id="coverFileInput" accept="image/*" class="d-none">
+                    </label>
+                  </div>
+                  <div class="form-text small">Puedes subir una imagen desde tu computadora o seleccionar cualquier foto de la galería abajo con el botón "⭐ Portada".</div>
                 </div>
               </div>
             </div>
-          </div>
 
-          <!-- Gallery Photos in Book Card -->
-          <div class="editor-card">
-            <div class="gallery-grid-controls">
-              <div>
-                <h3 style="display: inline-block; margin-right: 8px;">Fotos en esta Colección</h3>
-                <span class="tab-count" id="galleryPhotosCount">0 fotos</span>
+            <!-- Gallery Photos Grid -->
+            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
+              <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-3 pb-2 border-bottom">
+                <div class="d-flex align-items-center gap-2">
+                  <h5 class="fw-bold m-0">Fotos de esta Colección</h5>
+                  <span class="badge bg-secondary rounded-pill" id="galleryPhotosCount">49 fotos</span>
+                </div>
+                <button class="btn btn-gold btn-sm px-3 d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#modalAddPhotos">
+                  <i class="bi bi-plus-circle-fill"></i>
+                  <span>Subir Fotos Nuevas</span>
+                </button>
               </div>
-              <button class="btn-primary" id="btnOpenAddPhotos">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                <span>➕ Agregar Fotos a la Galería</span>
-              </button>
-            </div>
 
-            <div class="gallery-photos-grid" id="galleryPhotosGrid">
-              <!-- Photos cards loaded dynamically -->
+              <!-- Photos Grid -->
+              <div class="gallery-photos-grid" id="galleryPhotosGrid">
+                <!-- Dynamically loaded with photo cards -->
+              </div>
             </div>
           </div>
 
-        </div>
+          <!-- Right: Live Preview Box ("Así lo ve el cliente") -->
+          <div class="col-lg-4">
+            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white sticky-top" style="top: 85px;">
+              <h6 class="fw-bold text-dark mb-1">
+                <i class="bi bi-eye-fill text-warning me-1"></i>
+                Vista Previa en Vivo
+              </h6>
+              <p class="text-muted small mb-3">Así se ve exactamente la portada en tu página web:</p>
 
-        <!-- 3. Right Column: Real-Time Live Preview -->
-        <div class="book-live-preview-box">
-          <div class="preview-title">👁️ Vista Previa en Vivo (Página Web)</div>
-          <p style="font-size: 0.75rem; color: var(--admin-text-muted); margin-bottom: 14px;">
-            Así es exactamente cómo el visitante verá la tarjeta en el mosaico de la portada:
-          </p>
+              <div class="live-preview-container">
+                <div class="preview-book-card-mockup">
+                  <div class="preview-corner-badge" id="mockupMarker">01</div>
+                  <img src="assets/images/studionvf/cover_familia.jpg" alt="Preview Book" id="mockupImg">
+                </div>
+                <div class="text-center mt-3">
+                  <h5 class="font-serif fst-italic fw-bold text-dark m-0" id="mockupTitle">Familia</h5>
+                  <span class="badge bg-dark bg-opacity-75 text-light mt-1" id="mockupCount">49 FOTOGRAFÍAS</span>
+                </div>
+              </div>
 
-          <div class="preview-card-mockup">
-            <div class="mockup-book-card">
-              <div class="mockup-marker" id="mockupMarker">01</div>
-              <img src="assets/images/studionvf/cover_familia.jpg" alt="Preview Book" id="mockupImg">
-            </div>
-            <div class="mockup-caption">
-              <div class="mockup-title" id="mockupTitle"><em>Familia</em></div>
-              <div class="mockup-count" id="mockupCount">49 FOTOGRAFÍAS</div>
+              <div class="alert alert-light border small mt-3 mb-0 text-muted">
+                <i class="bi bi-info-circle-fill text-primary me-1"></i>
+                Cualquier cambio de foto o título se guarda y se refleja inmediatamente cuando abres tu página.
+              </div>
             </div>
           </div>
         </div>
 
       </div>
 
-    </section>
+      <!-- ====================================================================
+           TAB 3: BASE DE DATOS SUPABASE (GUÍA & SQL)
+           ==================================================================== -->
+      <div class="tab-pane fade" id="tab-supabase" role="tabpanel">
 
-    <!-- ======================================================================
-         TAB 3: BASE DE DATOS SUPABASE
-         ====================================================================== -->
-    <section class="tab-pane" id="tab-supabase">
-
-      <div class="section-banner">
-        <div class="banner-left">
-          <h1>Estructura de Base de Datos para <em>Supabase</em></h1>
-          <p>Esquema SQL completo y listo para montar con PostgreSQL, Row Level Security (RLS) y Storage.</p>
-        </div>
-        <div class="banner-actions">
-          <button class="btn-primary" id="btnCopySql">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-            <span>📋 Copiar SQL para Supabase</span>
-          </button>
-        </div>
-      </div>
-
-      <!-- Overview Cards -->
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-bottom: 24px;">
-        <div class="supabase-guide-card" style="margin-bottom: 0;">
-          <h4 style="font-size: 0.95rem; font-weight: 700; color: var(--admin-gold); margin-bottom: 6px;">1. TABLA: books</h4>
-          <p style="font-size: 0.8rem; color: var(--admin-text-muted);">
-            Guarda los 11 books con título, slug, número de book, badge, portada y total de fotos sincronizado.
-          </p>
+        <div class="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4">
+          <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+            <div>
+              <h4 class="font-serif fw-bold text-dark m-0">Estructura para <em>Supabase</em></h4>
+              <p class="text-muted small m-0 mt-1">
+                Esquema de base de datos PostgreSQL con 5 tablas, seguridad RLS y configuración de almacenamiento de fotos.
+              </p>
+            </div>
+            <button class="btn btn-success btn-sm px-4 d-flex align-items-center gap-2" id="btnCopySql">
+              <i class="bi bi-clipboard-check"></i>
+              <span>Copiar Script SQL Completo</span>
+            </button>
+          </div>
         </div>
 
-        <div class="supabase-guide-card" style="margin-bottom: 0;">
-          <h4 style="font-size: 0.95rem; font-weight: 700; color: var(--admin-accent-dark); margin-bottom: 6px;">2. TABLA: photos</h4>
-          <p style="font-size: 0.8rem; color: var(--admin-text-muted);">
-            Almacena cada foto individual con URLs en alta resolución, miniatura, dimensiones y flag de portada.
-          </p>
+        <!-- 4 Step Guide Cards -->
+        <div class="row g-3 mb-4">
+          <div class="col-md-3">
+            <div class="card border-0 shadow-sm rounded-4 p-3 h-100 bg-white">
+              <div class="fw-bold text-dark mb-1">
+                <span class="badge bg-dark text-white me-1">1</span> Crear Proyecto
+              </div>
+              <p class="text-muted small m-0">Entra a <strong>supabase.com</strong> y crea tu proyecto gratis.</p>
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <div class="card border-0 shadow-sm rounded-4 p-3 h-100 bg-white">
+              <div class="fw-bold text-dark mb-1">
+                <span class="badge bg-dark text-white me-1">2</span> Abrir SQL Editor
+              </div>
+              <p class="text-muted small m-0">En el menú izquierdo de Supabase, entra a <strong>SQL Editor</strong> &gt; <strong>New Query</strong>.</p>
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <div class="card border-0 shadow-sm rounded-4 p-3 h-100 bg-white">
+              <div class="fw-bold text-dark mb-1">
+                <span class="badge bg-dark text-white me-1">3</span> Pegar & Ejecutar
+              </div>
+              <p class="text-muted small m-0">Pega el código SQL de abajo y presiona el botón verde <strong>RUN</strong>.</p>
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <div class="card border-0 shadow-sm rounded-4 p-3 h-100 bg-white">
+              <div class="fw-bold text-dark mb-1">
+                <span class="badge bg-dark text-white me-1">4</span> Crear Buckets
+              </div>
+              <p class="text-muted small m-0">En <strong>Storage</strong>, crea 2 carpetas públicas: <code>covers</code> y <code>photos</code>.</p>
+            </div>
+          </div>
         </div>
 
-        <div class="supabase-guide-card" style="margin-bottom: 0;">
-          <h4 style="font-size: 0.95rem; font-weight: 700; color: #1976D2; margin-bottom: 6px;">3. TABLA: bookings</h4>
-          <p style="font-size: 0.8rem; color: var(--admin-text-muted);">
-            Registra citas del formulario web: cliente, teléfono, email, fecha, hora, tipo de book y estado.
-          </p>
-        </div>
-
-        <div class="supabase-guide-card" style="margin-bottom: 0;">
-          <h4 style="font-size: 0.95rem; font-weight: 700; color: #7B8A61; margin-bottom: 6px;">4. TABLA: reviews</h4>
-          <p style="font-size: 0.8rem; color: var(--admin-text-muted);">
-            Testimonios y calificaciones de 1 a 5 estrellas con moderación de comentarios.
-          </p>
-        </div>
-      </div>
-
-      <!-- SQL Box -->
-      <div class="code-box-header">
-        <span style="font-size: 0.8rem; font-weight: 700; letter-spacing: 0.05em;">supabase_schema.sql (PostgreSQL Script Oficial)</span>
-        <span style="font-size: 0.72rem; color: #A0AEC0;">5 Tablas + RLS + Triggers + Storage Buckets</span>
-      </div>
-      <pre class="sql-code-block" id="sqlCodeBlock">-- ==============================================================================
+        <!-- SQL Box -->
+        <div class="card border-0 shadow-sm rounded-4 bg-dark overflow-hidden">
+          <div class="card-header bg-dark border-secondary d-flex align-items-center justify-content-between py-3 px-4">
+            <span class="text-light fw-bold small font-monospace">supabase_schema.sql</span>
+            <span class="badge bg-secondary">PostgreSQL 15</span>
+          </div>
+          <pre class="sql-code-box m-0 p-4" id="sqlCodeBlock">-- ==============================================================================
 -- STUDIO NVF - NICOLE VALERIO FOTOGRAFÍA EDITORIAL
 -- Arquitectura de Base de Datos para Supabase (PostgreSQL + RLS + Storage)
 -- ==============================================================================
 
--- 1. EXTENSIONES
+-- 1. EXTENSIÓN UUID
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
--- 2. FUNCIÓN DE TRIGGER PARA ACTUALIZAR updated_at
-CREATE OR REPLACE FUNCTION update_updated_at_column()
-RETURNS TRIGGER AS $$
-BEGIN
-    NEW.updated_at = NOW();
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
--- 3. TABLA: books (Catálogo de Colecciones)
-CREATE TABLE IF NOT EXISTS public.books (
+-- 2. TABLA: books (Catálogo de Colecciones)
+CREATE TABLE public.books (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    slug TEXT UNIQUE NOT NULL,                          -- ej: 'familia', 'boda', 'embarazo'
-    badge_number TEXT NOT NULL,                         -- ej: '01', '02', '03'
-    title TEXT NOT NULL,                                -- ej: 'Familia', 'Boda de Autor'
-    subtitle TEXT,                                      -- ej: 'Momentos Genuinos'
-    category TEXT DEFAULT 'EDITORIAL',                  -- ej: 'EDITORIAL', 'RETRATO'
-    description TEXT,
+    slug TEXT UNIQUE NOT NULL,                          -- ej: 'familia', 'boda'
+    badge_number TEXT NOT NULL,                         -- ej: '01', '02'
+    title TEXT NOT NULL,                                -- ej: 'Familia'
+    subtitle TEXT,
+    category TEXT DEFAULT 'EDITORIAL',
     cover_url TEXT NOT NULL,
     photo_count INTEGER DEFAULT 0,
     sort_order INTEGER DEFAULT 0,
@@ -360,14 +477,13 @@ CREATE TABLE IF NOT EXISTS public.books (
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- 4. TABLA: photos (Galería en Alta Resolución)
-CREATE TABLE IF NOT EXISTS public.photos (
+-- 3. TABLA: photos (Galería en Alta Resolución)
+CREATE TABLE public.photos (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     book_id UUID NOT NULL REFERENCES public.books(id) ON DELETE CASCADE,
     name TEXT NOT NULL,
     caption TEXT,
     url_large TEXT NOT NULL,
-    url_xlarge TEXT,
     url_thumb TEXT,
     width INTEGER,
     height INTEGER,
@@ -376,8 +492,8 @@ CREATE TABLE IF NOT EXISTS public.photos (
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- 5. TABLA: bookings (Citas y Reservas del Calendario)
-CREATE TABLE IF NOT EXISTS public.bookings (
+-- 4. TABLA: bookings (Citas y Reservas del Calendario)
+CREATE TABLE public.bookings (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     client_name TEXT NOT NULL,
     client_email TEXT NOT NULL,
@@ -385,19 +501,17 @@ CREATE TABLE IF NOT EXISTS public.bookings (
     session_type TEXT NOT NULL,                         -- 'Familia', 'Boda', 'Embarazo', etc.
     booking_date DATE NOT NULL,                         -- Fecha (AAAA-MM-DD)
     booking_time TIME NOT NULL DEFAULT '10:30:00',      -- Hora (HH:MM)
-    estimated_duration_hours NUMERIC(3,1) DEFAULT 1.5,
     location TEXT,
     message TEXT,
     status TEXT DEFAULT 'Pendiente' CHECK (
         status IN ('Pendiente', 'Confirmada', 'Completada', 'Cancelada')
     ),
-    internal_notes TEXT,
     created_at TIMESTAMPTZ DEFAULT NOW(),
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- 6. TABLA: reviews (Calificaciones)
-CREATE TABLE IF NOT EXISTS public.reviews (
+-- 5. TABLA: reviews (Calificaciones y Reseñas)
+CREATE TABLE public.reviews (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     author_name TEXT NOT NULL,
     rating INTEGER NOT NULL CHECK (rating >= 1 AND rating <= 5),
@@ -407,195 +521,177 @@ CREATE TABLE IF NOT EXISTS public.reviews (
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- 7. TABLA: site_assets (Fotos del Hero, Work, Instagram)
-CREATE TABLE IF NOT EXISTS public.site_assets (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    section TEXT NOT NULL,
-    key_name TEXT NOT NULL,
-    title TEXT,
-    subtitle TEXT,
-    image_url TEXT NOT NULL,
-    external_link TEXT,
-    sort_order INTEGER DEFAULT 0,
-    updated_at TIMESTAMPTZ DEFAULT NOW()
-);
-
--- 8. POLÍTICAS DE SEGURIDAD (RLS)
+-- 6. POLÍTICAS DE SEGURIDAD (ROW LEVEL SECURITY - RLS)
 ALTER TABLE public.books ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.photos ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.bookings ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.reviews ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.site_assets ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Public can view published books" ON public.books FOR SELECT USING (is_published = true);
-CREATE POLICY "Admin can manage all books" ON public.books FOR ALL TO authenticated USING (true);
+CREATE POLICY "Público puede ver books" ON public.books FOR SELECT USING (is_published = true);
+CREATE POLICY "Admin gestiona books" ON public.books FOR ALL TO authenticated USING (true);
 
-CREATE POLICY "Public can view photos" ON public.photos FOR SELECT USING (true);
-CREATE POLICY "Admin can manage all photos" ON public.photos FOR ALL TO authenticated USING (true);
+CREATE POLICY "Público puede ver fotos" ON public.photos FOR SELECT USING (true);
+CREATE POLICY "Admin gestiona fotos" ON public.photos FOR ALL TO authenticated USING (true);
 
-CREATE POLICY "Public can insert bookings" ON public.bookings FOR INSERT TO anon, authenticated WITH CHECK (true);
-CREATE POLICY "Admin can manage all bookings" ON public.bookings FOR ALL TO authenticated USING (true);
+CREATE POLICY "Clientes pueden enviar reservas" ON public.bookings FOR INSERT TO anon, authenticated WITH CHECK (true);
+CREATE POLICY "Admin gestiona reservas" ON public.bookings FOR ALL TO authenticated USING (true);
 
-CREATE POLICY "Public can view approved reviews" ON public.reviews FOR SELECT USING (is_approved = true);
-CREATE POLICY "Public can insert reviews" ON public.reviews FOR INSERT TO anon, authenticated WITH CHECK (true);
-CREATE POLICY "Admin can manage reviews" ON public.reviews FOR ALL TO authenticated USING (true);
+-- 7. STORAGE BUCKETS (En Supabase Storage crea los buckets públicos: 'covers' y 'photos')
+INSERT INTO storage.buckets (id, name, public)
+VALUES ('covers', 'covers', true), ('photos', 'photos', true)
+ON CONFLICT (id) DO NOTHING;</pre>
+        </div>
 
-CREATE POLICY "Public can view site assets" ON public.site_assets FOR SELECT USING (true);
-CREATE POLICY "Admin can manage site assets" ON public.site_assets FOR ALL TO authenticated USING (true);</pre>
-
-      <!-- Step-by-step Setup Guide -->
-      <div class="supabase-guide-card" style="margin-top: 24px;">
-        <h3 style="font-family: var(--font-serif); font-size: 1.4rem; font-weight: 600; margin-bottom: 12px;">
-          🚀 Pasos para Conectar con Supabase
-        </h3>
-        <ol style="padding-left: 20px; font-size: 0.85rem; color: var(--admin-text-muted); display: flex; flex-direction: column; gap: 8px;">
-          <li>Crea tu proyecto gratuito en <a href="https://supabase.com" target="_blank" rel="noopener" style="color: var(--admin-gold); font-weight: 700;">supabase.com</a>.</li>
-          <li>En el menú lateral izquierdo, haz clic en <strong>SQL Editor</strong> &gt; <strong>New Query</strong>.</li>
-          <li>Haz clic en el botón superior <strong>"📋 Copiar SQL para Supabase"</strong>, pégalo en el editor y presiona <strong>RUN</strong>.</li>
-          <li>En la pestaña <strong>Storage</strong>, crea dos buckets públicos: <code>covers</code> y <code>photos</code>.</li>
-          <li>Copia tu <code>Project URL</code> y <code>anon public key</code> de <strong>Project Settings &gt; API</strong> para sincronizar la aplicación.</li>
-        </ol>
       </div>
 
-    </section>
+    </div>
 
-  </main>
+  </div>
 
   <!-- ==========================================================================
-       MODAL 1: NUEVA RESERVA MANUAL
+       MODAL: AGENDAR NUEVA CITA (Bootstrap 5)
        ========================================================================== -->
-  <div class="admin-modal" id="modalNewBooking" role="dialog" aria-label="Nueva Reserva">
-    <div class="admin-modal-box">
-      <div class="modal-header">
-        <h3>Agendar Nueva Sesión</h3>
-        <button class="modal-close-btn" id="btnCloseNewBooking">&times;</button>
-      </div>
+  <div class="modal fade" id="modalNewBooking" tabindex="-1" aria-labelledby="modalNewBookingLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content rounded-4 border-0 shadow">
+        <div class="modal-header border-bottom px-4 pt-4 pb-3">
+          <h5 class="modal-title font-serif fw-bold fs-4" id="modalNewBookingLabel">Agendar Nueva Cita</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
 
-      <form id="formNewBooking">
-        <div class="modal-body">
-          <div class="form-grid-2">
-            <div class="form-field">
-              <label for="newBookingName">Nombre del Cliente *</label>
-              <input type="text" id="newBookingName" class="form-input" required placeholder="Ej. Mariana Jiménez">
-            </div>
+        <form id="formNewBooking">
+          <div class="modal-body px-4 py-3">
+            <div class="row g-3">
+              <div class="col-md-7">
+                <label for="newBookingName" class="form-label small fw-bold text-muted text-uppercase">Nombre del Cliente *</label>
+                <input type="text" class="form-control" id="newBookingName" required placeholder="Ej. Mariana Jiménez">
+              </div>
 
-            <div class="form-field">
-              <label for="newBookingPhone">Teléfono / WhatsApp *</label>
-              <input type="tel" id="newBookingPhone" class="form-input" required placeholder="+506 8888 0000">
-            </div>
+              <div class="col-md-5">
+                <label for="newBookingPhone" class="form-label small fw-bold text-muted text-uppercase">Teléfono / WhatsApp *</label>
+                <input type="tel" class="form-control" id="newBookingPhone" required placeholder="+506 8888 0000">
+              </div>
 
-            <div class="form-field" style="grid-column: span 2;">
-              <label for="newBookingEmail">Correo Electrónico</label>
-              <input type="email" id="newBookingEmail" class="form-input" placeholder="mariana@ejemplo.com">
-            </div>
+              <div class="col-12">
+                <label for="newBookingEmail" class="form-label small fw-bold text-muted text-uppercase">Correo Electrónico</label>
+                <input type="email" class="form-control" id="newBookingEmail" placeholder="mariana@gmail.com">
+              </div>
 
-            <div class="form-field">
-              <label for="newBookingSession">Tipo de Book / Sesión *</label>
-              <select id="newBookingSession" class="form-input" required>
-                <option value="Familia">Familia</option>
-                <option value="Boda">Boda de Autor</option>
-                <option value="Embarazo">Embarazo & Maternidad</option>
-                <option value="Cumpleaños">Cumpleaños</option>
-                <option value="Marca Personal">Marca Personal</option>
-                <option value="Parejas">Parejas</option>
-                <option value="Parejas Playa">Parejas Playa</option>
-                <option value="Revelación de Género">Revelación de Género</option>
-                <option value="Eventos">Eventos</option>
-                <option value="Gastronomía">Gastronomía</option>
-                <option value="Navidad">Navidad</option>
-                <option value="Personalizado">Proyecto Personalizado</option>
-              </select>
-            </div>
+              <div class="col-md-6">
+                <label for="newBookingSession" class="form-label small fw-bold text-muted text-uppercase">Tipo de Sesión *</label>
+                <select class="form-select" id="newBookingSession" required>
+                  <option value="Familia">Familia</option>
+                  <option value="Boda">Boda de Autor</option>
+                  <option value="Embarazo">Embarazo & Maternidad</option>
+                  <option value="Cumpleaños">Cumpleaños</option>
+                  <option value="Marca Personal">Marca Personal</option>
+                  <option value="Parejas">Parejas</option>
+                  <option value="Parejas Playa">Parejas Playa</option>
+                  <option value="Revelación de Género">Revelación de Género</option>
+                  <option value="Eventos">Eventos</option>
+                  <option value="Gastronomía">Gastronomía</option>
+                  <option value="Navidad">Navidad</option>
+                  <option value="Personalizado">Proyecto Personalizado</option>
+                </select>
+              </div>
 
-            <div class="form-field">
-              <label for="newBookingStatus">Estado Inicial</label>
-              <select id="newBookingStatus" class="form-input">
-                <option value="Pendiente">Pendiente</option>
-                <option value="Confirmada" selected>Confirmada</option>
-                <option value="Completada">Completada</option>
-              </select>
-            </div>
+              <div class="col-md-6">
+                <label for="newBookingStatus" class="form-label small fw-bold text-muted text-uppercase">Estado</label>
+                <select class="form-select" id="newBookingStatus">
+                  <option value="Confirmada" selected>Confirmada</option>
+                  <option value="Pendiente">Pendiente</option>
+                  <option value="Completada">Completada</option>
+                </select>
+              </div>
 
-            <div class="form-field">
-              <label for="newBookingDate">Fecha de la Cita *</label>
-              <input type="date" id="newBookingDate" class="form-input" required>
-            </div>
+              <div class="col-md-6">
+                <label for="newBookingDate" class="form-label small fw-bold text-muted text-uppercase">Fecha de la Cita *</label>
+                <input type="date" class="form-control" id="newBookingDate" required>
+              </div>
 
-            <div class="form-field">
-              <label for="newBookingTime">Hora de Inicio *</label>
-              <input type="time" id="newBookingTime" class="form-input" value="10:30" required>
-            </div>
+              <div class="col-md-6">
+                <label for="newBookingTime" class="form-label small fw-bold text-muted text-uppercase">Hora *</label>
+                <input type="time" class="form-control" id="newBookingTime" value="10:30" required>
+              </div>
 
-            <div class="form-field" style="grid-column: span 2;">
-              <label for="newBookingLocation">Ubicación / Lugar</label>
-              <input type="text" id="newBookingLocation" class="form-input" placeholder="Ej. Estudio NVF, playa o exteriores">
-            </div>
+              <div class="col-12">
+                <label for="newBookingLocation" class="form-label small fw-bold text-muted text-uppercase">Lugar / Ubicación</label>
+                <input type="text" class="form-control" id="newBookingLocation" placeholder="Ej. Estudio NVF o Jardín">
+              </div>
 
-            <div class="form-field" style="grid-column: span 2;">
-              <label for="newBookingNotes">Notas de la Sesión / Visión del Cliente</label>
-              <textarea id="newBookingNotes" class="form-textarea" rows="2" placeholder="Detalles de vestuario, cantidad de personas, etc."></textarea>
+              <div class="col-12">
+                <label for="newBookingNotes" class="form-label small fw-bold text-muted text-uppercase">Notas o Visión</label>
+                <textarea class="form-control" id="newBookingNotes" rows="2" placeholder="Detalles de vestuario, participantes..."></textarea>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div class="modal-footer">
-          <button type="button" class="btn-secondary" onclick="document.getElementById('modalNewBooking').classList.remove('active')">Cancelar</button>
-          <button type="submit" class="btn-primary">💾 Guardar Cita</button>
-        </div>
-      </form>
+          <div class="modal-footer border-top px-4 pb-4 pt-3">
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-charcoal px-4">Guardar Cita</button>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
 
   <!-- ==========================================================================
-       MODAL 2: AGREGAR FOTOS A LA GALERÍA
+       MODAL: SUBIR FOTOS NUEVAS A LA GALERÍA
        ========================================================================== -->
-  <div class="admin-modal" id="modalAddPhotos" role="dialog" aria-label="Agregar Fotos">
-    <div class="admin-modal-box">
-      <div class="modal-header">
-        <h3>Agregar Fotos a la Colección</h3>
-        <button class="modal-close-btn" id="btnCloseAddPhotos">&times;</button>
-      </div>
-
-      <div class="modal-body">
-        
-        <!-- Option A: File Upload -->
-        <div style="border: 2px dashed var(--admin-border); border-radius: var(--radius-md); padding: 24px; text-align: center; background: #FAF8F5;">
-          <div style="font-size: 2.2rem; margin-bottom: 8px;">🖼️</div>
-          <p style="font-weight: 700; font-size: 0.95rem; margin-bottom: 4px;">Sube fotos desde tu computadora</p>
-          <p style="font-size: 0.78rem; color: var(--admin-text-muted); margin-bottom: 14px;">
-            Selecciona una o varias imágenes (JPG, PNG, WEBP). Se integrarán de inmediato a la galería.
-          </p>
-          <label class="btn-primary" style="cursor: pointer; display: inline-flex;">
-            <span>Elegir Archivos...</span>
-            <input type="file" id="multiFileInput" accept="image/*" multiple style="display: none;">
-          </label>
+  <div class="modal fade" id="modalAddPhotos" tabindex="-1" aria-labelledby="modalAddPhotosLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content rounded-4 border-0 shadow">
+        <div class="modal-header border-bottom px-4 pt-4 pb-3">
+          <h5 class="modal-title font-serif fw-bold fs-4" id="modalAddPhotosLabel">Subir Fotos a la Colección</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
         </div>
 
-        <div style="text-align: center; font-size: 0.75rem; color: var(--admin-text-subtle); margin: 6px 0; text-transform: uppercase; letter-spacing: 0.1em;">
-          — O agregar mediante enlace URL —
-        </div>
+        <div class="modal-body px-4 py-4">
+          <!-- File Dropzone -->
+          <div class="border border-2 border-dashed rounded-4 p-4 text-center bg-light mb-3">
+            <i class="bi bi-cloud-arrow-up text-warning display-4"></i>
+            <h6 class="fw-bold mt-2">Elige fotos desde tu computadora</h6>
+            <p class="text-muted small mb-3">Puedes seleccionar múltiples archivos JPG, PNG o WEBP.</p>
+            <label class="btn btn-dark px-4" style="cursor: pointer;">
+              <span>Seleccionar Fotos...</span>
+              <input type="file" id="multiFileInput" accept="image/*" multiple class="d-none">
+            </label>
+          </div>
 
-        <!-- Option B: URL paste -->
-        <div class="form-field">
-          <label for="newPhotoUrlInput">URL de la Imagen (Pixieset o Servidor)</label>
-          <div style="display: flex; gap: 8px;">
-            <input type="url" id="newPhotoUrlInput" class="form-input" style="flex: 1;" placeholder="https://images.pixieset.com/.../foto.jpg">
-            <button class="btn-secondary" id="btnConfirmAddUrl">Agregar URL</button>
+          <div class="text-center text-muted small my-2 text-uppercase fw-bold" style="letter-spacing: 0.1em;">
+            — O pegar enlace URL —
+          </div>
+
+          <!-- URL Input -->
+          <div class="input-group mt-3">
+            <input type="url" class="form-control" id="newPhotoUrlInput" placeholder="https://images.pixieset.com/.../foto.jpg">
+            <button class="btn btn-outline-dark" id="btnConfirmAddUrl">Agregar URL</button>
           </div>
         </div>
 
-      </div>
-
-      <div class="modal-footer">
-        <button type="button" class="btn-secondary" onclick="document.getElementById('modalAddPhotos').classList.remove('active')">Cerrar</button>
+        <div class="modal-footer border-top px-4 py-3">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Toast Notification Container -->
-  <div class="toast-container" id="toastContainer"></div>
+  <!-- Bootstrap Toast Notification Container -->
+  <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1080;">
+    <div id="liveToast" class="toast align-items-center text-bg-dark border-0 shadow-lg rounded-3" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="d-flex">
+        <div class="toast-body d-flex align-items-center gap-2" id="toastMessage">
+          <i class="bi bi-check-circle-fill text-warning"></i>
+          <span>Acción completada con éxito</span>
+        </div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Cerrar"></button>
+      </div>
+    </div>
+  </div>
 
-  <!-- Scripts -->
+  <!-- Bootstrap 5.3 Bundle JS CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+  <!-- Studio NVF Data & Logic -->
   <script src="js/catalog-data.js"></script>
   <script src="js/admin.js"></script>
 </body>

@@ -1032,19 +1032,20 @@ h1 em, h2 em, h3 em, h4 em,
 .books-catalog-section {
   background-color: var(--color-books-bg);
   border-bottom: 1px solid var(--color-border);
-  padding: 28px 0 32px;
+  padding: 40px 0 48px;
 }
 
 .books-catalog-section .section-container {
-  width: 100%;
-  max-width: none;
+  width: 95%;
+  max-width: 1380px;
+  margin: 0 auto;
   padding: 0 16px;
 }
 
 .books-header {
   text-align: center;
-  max-width: 760px;
-  margin: 0 auto 16px;
+  max-width: 720px;
+  margin: 0 auto 22px;
 }
 
 .books-eyebrow {
@@ -1059,7 +1060,7 @@ h1 em, h2 em, h3 em, h4 em,
 }
 
 .books-title {
-  font-size: clamp(2rem, 4vw, 3.2rem);
+  font-size: clamp(2.2rem, 4.5vw, 3.6rem);
   font-weight: 500;
   letter-spacing: 0.02em;
   line-height: 1.05;
@@ -1079,70 +1080,85 @@ h1 em, h2 em, h3 em, h4 em,
 }
 
 /* ==========================================================================
-   EDITORIAL MOSAIC PANORAMIC GRID — 11 BOOKS (Inspirado en la referencia)
-   Col 1: 1 Wide / 2 Half
-   Col 2: 1 Full Height
-   Col 3: 2 Half / 1 Wide
-   Col 4: 1 Full Height
-   Col 5: 1 Wide / 2 Half
+   EDITORIAL MOSAIC PANORAMIC GRID — 11 BOOKS (Interlocking 8-Column Grid)
+   Row 1: [Familia 2] [Navidad 1] [Cumpleaños 2] [Marca Personal 1] [Boda 2]  = 8 cols
+   Row 2: [Revelación 1] [Eventos 2] [Embarazo 1] [Gastronomía 2] [Parejas Playa 1] [Parejas 1] = 8 cols
    ========================================================================== */
 
 .books-mosaic {
   display: grid;
-  grid-template-columns: 1.85fr 1.05fr 1.85fr 1.05fr 1.85fr;
-  gap: 6px;
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: repeat(2, clamp(210px, 25vh, 245px));
+  gap: 12px;
   width: 100%;
-  max-width: none;
-  height: clamp(280px, 38vh, 360px);
-  margin: 0 0 16px 0;
+  max-width: 1380px;
+  margin: 0 auto 28px auto;
 }
 
-.books-mosaic-col {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  height: 100%;
-  min-width: 0;
+/* Row 1 Placements (8 columns) */
+.card-familia {
+  grid-column: 1 / span 2;
+  grid-row: 1;
+}
+.card-navidad {
+  grid-column: 3 / span 1;
+  grid-row: 1;
+}
+.card-cumpleanos {
+  grid-column: 4 / span 2;
+  grid-row: 1;
+}
+.card-marcapersonal {
+  grid-column: 6 / span 1;
+  grid-row: 1;
+}
+.card-boda {
+  grid-column: 7 / span 2;
+  grid-row: 1;
 }
 
-.book-card-pair {
-  display: flex;
-  gap: 6px;
-  flex: 1;
-  min-height: 0;
-  width: 100%;
+/* Row 2 Placements (8 columns) */
+.card-revelaciondegenero {
+  grid-column: 1 / span 1;
+  grid-row: 2;
+}
+.card-eventos {
+  grid-column: 2 / span 2;
+  grid-row: 2;
+}
+.card-embarazo {
+  grid-column: 4 / span 1;
+  grid-row: 2;
+}
+.card-gastronomia {
+  grid-column: 5 / span 2;
+  grid-row: 2;
+}
+.card-parejasplaya {
+  grid-column: 7 / span 1;
+  grid-row: 2;
+}
+.card-parejas {
+  grid-column: 8 / span 1;
+  grid-row: 2;
 }
 
 .books-mosaic .book-card {
   position: relative;
   overflow: hidden;
   cursor: pointer;
-  background-color: var(--color-surface);
-  border-radius: 0;
-  box-shadow: none;
-  transition: none;
-}
-
-.books-mosaic .book-card.card-wide {
-  flex: 1.05;
-  min-height: 0;
+  background-color: #23201C;
+  border-radius: 6px;
+  box-shadow: 0 4px 14px rgba(35, 32, 28, 0.08);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
   width: 100%;
-}
-
-.books-mosaic .book-card.card-half {
-  flex: 1;
-  min-height: 0;
   height: 100%;
-}
-
-.books-mosaic .book-card.card-full {
-  flex: 1;
-  height: 100%;
-  width: 100%;
 }
 
 .books-mosaic .book-card:hover {
-  z-index: 2;
+  transform: translateY(-3px);
+  box-shadow: 0 10px 24px rgba(35, 32, 28, 0.18);
+  z-index: 5;
 }
 
 /* Image behavior inside card */
@@ -1151,47 +1167,46 @@ h1 em, h2 em, h3 em, h4 em,
   height: 100%;
   object-fit: cover;
   display: block;
-  transition: none;
+  transition: transform 0.4s ease;
 }
 
 .books-mosaic .book-card:hover .book-mosaic-img {
-  transform: none;
-  filter: none;
+  transform: scale(1.04);
 }
 
 /* Specific focal points to prevent awkward cuts */
 .book-card[data-slug="familia"] .book-mosaic-img {
-  object-position: center 22%;
+  object-position: center 25%;
 }
 .book-card[data-slug="navidad"] .book-mosaic-img {
   object-position: center top;
 }
-.book-card[data-slug="marcapersonal"] .book-mosaic-img {
-  object-position: 72% 25%;
-}
 .book-card[data-slug="cumpleanos"] .book-mosaic-img {
-  object-position: 48% 62%;
-}
-.book-card[data-slug="revelaciondegenero"] .book-mosaic-img {
   object-position: center 50%;
 }
-.book-card[data-slug="parejasplaya"] .book-mosaic-img {
-  object-position: center top;
+.book-card[data-slug="marcapersonal"] .book-mosaic-img {
+  object-position: 70% 25%;
 }
 .book-card[data-slug="boda"] .book-mosaic-img {
+  object-position: center 28%;
+}
+.book-card[data-slug="revelaciondegenero"] .book-mosaic-img {
+  object-position: center 40%;
+}
+.book-card[data-slug="eventos"] .book-mosaic-img {
   object-position: center 30%;
 }
 .book-card[data-slug="embarazo"] .book-mosaic-img {
   object-position: center 32%;
 }
-.book-card[data-slug="eventos"] .book-mosaic-img {
-  object-position: center 25%;
-}
 .book-card[data-slug="gastronomia"] .book-mosaic-img {
   object-position: center center;
 }
+.book-card[data-slug="parejasplaya"] .book-mosaic-img {
+  object-position: center top;
+}
 .book-card[data-slug="parejas"] .book-mosaic-img {
-  object-position: center 18%;
+  object-position: center 20%;
 }
 
 /* Corner Marker Tab */
@@ -1199,20 +1214,21 @@ h1 em, h2 em, h3 em, h4 em,
   position: absolute;
   top: 0;
   left: 0;
-  background: rgba(30, 27, 23, 0.72);
+  background: rgba(28, 26, 24, 0.85);
+  backdrop-filter: blur(4px);
   color: #FAF8F5;
-  padding: 4px 10px 4px 7px;
-  border-bottom-right-radius: 10px;
+  padding: 4px 10px 5px 8px;
+  border-bottom-right-radius: 12px;
   z-index: 5;
   font-family: var(--font-sans);
-  font-size: 0.58rem;
+  font-size: 0.62rem;
   font-weight: 700;
   letter-spacing: 0.1em;
   pointer-events: none;
 }
 
 .book-tab-marker.tab-olive {
-  background: rgba(100, 110, 80, 0.82);
+  background: rgba(100, 110, 80, 0.88);
 }
 
 .books-mosaic .book-card:hover .book-tab-marker {
@@ -2374,15 +2390,21 @@ h1 em, h2 em, h3 em, h4 em,
   }
 
   .books-mosaic {
-    height: clamp(240px, 32vh, 300px);
-    gap: 5px;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(4, 190px);
+    gap: 8px;
   }
-  .books-mosaic-col {
-    gap: 5px;
-  }
-  .book-card-pair {
-    gap: 5px;
-  }
+  .card-familia            { grid-column: 1 / span 2; grid-row: 1; }
+  .card-navidad            { grid-column: 3 / span 1; grid-row: 1; }
+  .card-marcapersonal      { grid-column: 4 / span 1; grid-row: 1; }
+  .card-cumpleanos         { grid-column: 1 / span 2; grid-row: 2; }
+  .card-boda               { grid-column: 3 / span 2; grid-row: 2; }
+  .card-revelaciondegenero { grid-column: 1 / span 1; grid-row: 3; }
+  .card-eventos            { grid-column: 2 / span 2; grid-row: 3; }
+  .card-embarazo           { grid-column: 4 / span 1; grid-row: 3; }
+  .card-gastronomia        { grid-column: 1 / span 2; grid-row: 4; }
+  .card-parejasplaya       { grid-column: 3 / span 1; grid-row: 4; }
+  .card-parejas            { grid-column: 4 / span 1; grid-row: 4; }
 
   .form-row {
     grid-template-columns: 1fr;
@@ -2394,49 +2416,26 @@ h1 em, h2 em, h3 em, h4 em,
   }
 }
 
-@media (max-width: 860px) {
+@media (max-width: 640px) {
   .books-mosaic {
-    display: flex;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    height: 320px;
-    padding-bottom: 10px;
-    -webkit-overflow-scrolling: touch;
-    gap: 5px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: auto;
+    gap: 8px;
+    height: auto;
   }
-  .books-mosaic::-webkit-scrollbar {
-    height: 6px;
+  .books-mosaic .book-card {
+    height: 180px;
+    grid-column: auto !important;
+    grid-row: auto !important;
   }
-  .books-mosaic::-webkit-scrollbar-track {
-    background: var(--color-surface-subtle);
-    border-radius: 3px;
-  }
-  .books-mosaic::-webkit-scrollbar-thumb {
-    background: var(--color-accent);
-    border-radius: 3px;
-  }
-  .books-mosaic-col {
-    flex: 0 0 280px;
-    scroll-snap-align: start;
-  }
-  .books-mosaic-col.col-2,
-  .books-mosaic-col.col-4 {
-    flex: 0 0 175px;
+  .books-mosaic .book-card.card-wide {
+    grid-column: span 2 !important;
+    height: 200px;
   }
 }
 
 @media (max-width: 480px) {
-  .books-mosaic {
-    height: 380px;
-  }
-  .books-mosaic-col {
-    flex: 0 0 240px;
-  }
-  .books-mosaic-col.col-2,
-  .books-mosaic-col.col-4 {
-    flex: 0 0 150px;
-  }
-
   .follow-photos-row {
     grid-template-columns: repeat(2, 1fr);
   }

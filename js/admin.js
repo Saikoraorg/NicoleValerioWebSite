@@ -1,43 +1,28 @@
 /**
  * ==============================================================================
- * STUDIO NVF - ADMIN DASHBOARD JAVASCRIPT ENGINE
- * Manages: Bookings Calendar, Books & Images CRUD, Live Preview & Supabase Sync
+ * STUDIO NVF - ADMIN DASHBOARD (Bootstrap 5 Engine)
+ * Nicole Valerio Fotografía Editorial
  * ==============================================================================
  */
 
 document.addEventListener('DOMContentLoaded', () => {
 
-  // 1. Toast Notification Utility
-  const toastContainer = document.getElementById('toastContainer');
-  function showToast(message, type = 'info') {
-    if (!toastContainer) return;
-    const toast = document.createElement('div');
-    toast.className = `toast ${type}`;
-    toast.innerHTML = `<span>${message}</span>`;
-    toastContainer.appendChild(toast);
-    setTimeout(() => {
-      toast.style.opacity = '0';
-      toast.style.transform = 'translateX(100%)';
-      toast.style.transition = 'all 0.3s ease';
-      setTimeout(() => toast.remove(), 300);
-    }, 3200);
+  // 1. Toast Notification Utility (Bootstrap 5)
+  const toastEl = document.getElementById('liveToast');
+  const toastMsg = document.getElementById('toastMessage');
+
+  function showToast(message, isSuccess = true) {
+    if (toastMsg) {
+      toastMsg.innerHTML = `
+        <i class="bi ${isSuccess ? 'bi-check-circle-fill text-warning' : 'bi-exclamation-triangle-fill text-danger'} fs-5"></i>
+        <span>${message}</span>
+      `;
+    }
+    if (toastEl && window.bootstrap) {
+      const bsToast = bootstrap.Toast.getOrCreateInstance(toastEl);
+      bsToast.show();
+    }
   }
-
-  // 2. Navigation Tabs
-  const tabBtns = document.querySelectorAll('.tab-btn');
-  const tabPanes = document.querySelectorAll('.tab-pane');
-
-  tabBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      const targetTab = btn.getAttribute('data-tab');
-      tabBtns.forEach(b => b.classList.remove('active'));
-      tabPanes.forEach(p => p.classList.remove('active'));
-
-      btn.classList.add('active');
-      const pane = document.getElementById(targetTab);
-      if (pane) pane.classList.add('active');
-    });
-  });
 
   /* ==========================================================================
      CATALOG & STATE MANAGEMENT
@@ -64,14 +49,14 @@ document.addEventListener('DOMContentLoaded', () => {
       localStorage.setItem('studionvf_catalog_custom', JSON.stringify(currentCatalog));
     } catch (e) {
       console.error('Error saving catalog to localStorage:', e);
-      showToast('⚠️ No se pudo guardar: almacenamiento lleno', 'danger');
+      showToast('No se pudo guardar: almacenamiento lleno', false);
     }
   }
 
   loadCatalog();
 
   /* ==========================================================================
-     SECTION 1: CALENDARIO DE RESERVAS
+     SECTION 1: CALENDARIO DE RESERVAS & CITAS
      ========================================================================== */
   const initialSampleBookings = [
     {
@@ -123,7 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
       time: '09:30',
       location: 'Parque de la Paz / Bosque',
       message: 'Celebración de primer año con letras UNO y escalera rústica en bosque de cipreses.',
-      status: 'Pendiente',
+      status: 'Confirmada',
       created_at: new Date().toISOString()
     }
   ];
@@ -142,31 +127,36 @@ document.addEventListener('DOMContentLoaded', () => {
     } catch (e) {
       bookings = initialSampleBookings;
     }
-    updateBookingsBadge();
+    updateKPIs();
   }
 
   function saveBookings() {
     localStorage.setItem('studionvf_bookings', JSON.stringify(bookings));
-    updateBookingsBadge();
+    updateKPIs();
   }
 
-  function updateBookingsBadge() {
-    const badge = document.getElementById('bookingsCountBadge');
-    if (badge) {
-      const pendingCount = bookings.filter(b => b.status === 'Pendiente').length;
-      badge.textContent = pendingCount > 0 ? `${pendingCount} pendientes` : `${bookings.length} citas`;
-    }
+  function updateKPIs() {
+    const pendingCount = bookings.filter(b => b.status === 'Pendiente').length;
+    const confirmedCount = bookings.filter(b => b.status === 'Confirmada').length;
+
+    const kpiPending = document.getElementById('kpiPendingCount');
+    const kpiConfirmed = document.getElementById('kpiConfirmedCount');
+    const tabBadge = document.getElementById('tabBookingsCountBadge');
+
+    if (kpiPending) kpiPending.textContent = pendingCount;
+    if (kpiConfirmed) kpiConfirmed.textContent = confirmedCount;
+    if (tabBadge) tabBadge.textContent = bookings.length;
   }
 
   loadBookings();
 
-  // Listen for storage events (if user fills form on index.html in another tab)
+  // Listen for storage changes from public website
   window.addEventListener('storage', (e) => {
     if (e.key === 'studionvf_bookings') {
       loadBookings();
       renderCalendar();
       renderBookingsSidebar(selectedDate);
-      showToast('🔔 ¡Nueva reserva recibida desde la web!', 'info');
+      showToast('🔔 ¡Nueva solicitud de reserva recibida desde la web!', true);
     }
   });
 
@@ -206,19 +196,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     monthLabel.textContent = `${monthNames[month]} ${year}`;
 
-    // Clean previous day cells, keeping weekday headers
+    // Clean previous day cells
     const dayCells = calendarGrid.querySelectorAll('.calendar-day-cell');
     dayCells.forEach(cell => cell.remove());
 
-    const firstDayIndex = new Date(year, month, 1).getDay(); // 0 is Sunday
+    const firstDayIndex = new Date(year, month, 1).getDay(); // 0 = Sunday
     const lastDayOfMonth = new Date(year, month + 1, 0).getDate();
     const prevMonthLastDay = new Date(year, month, 0).getDate();
 
     const todayStr = new Date().toISOString().split('T')[0];
-
-    // Filter selections
-    const filterSession = document.getElementById('filterSessionType')?.value || 'all';
-    const filterStatus = document.getElementById('filterStatus')?.value || 'all';
 
     // 1. Previous month trailing days
     for (let i = firstDayIndex - 1; i >= 0; i--) {
@@ -234,7 +220,7 @@ document.addEventListener('DOMContentLoaded', () => {
       calendarGrid.appendChild(cell);
     }
 
-    // 3. Next month leading days (to complete 35 or 42 grid)
+    // 3. Next month leading days (to complete grid)
     const totalRendered = firstDayIndex + lastDayOfMonth;
     const remaining = (totalRendered % 7 === 0) ? 0 : 7 - (totalRendered % 7);
     for (let day = 1; day <= remaining; day++) {
@@ -250,13 +236,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const header = document.createElement('div');
     header.className = 'day-cell-header';
-    header.innerHTML = `<span class="day-number">${dayNumber}</span>${isToday ? '<span class="today-dot" title="Hoy"></span>' : ''}`;
+    header.innerHTML = `
+      <span class="day-number">${dayNumber}</span>
+      ${isToday ? '<span class="today-dot" title="Hoy"></span>' : ''}
+    `;
     cell.appendChild(header);
 
     const eventsContainer = document.createElement('div');
     eventsContainer.className = 'day-events-list';
 
-    // Match bookings for this day
+    // Filters
     const filterSession = document.getElementById('filterSessionType')?.value || 'all';
     const filterStatus = document.getElementById('filterStatus')?.value || 'all';
 
@@ -308,30 +297,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (dateFilter) {
       if (titleEl) titleEl.textContent = `Citas: ${dateFilter}`;
-      if (subtitleEl) subtitleEl.textContent = `${filtered.length} reserva(s) programada(s) para este día`;
+      if (subtitleEl) subtitleEl.textContent = `${filtered.length} cita(s) programada(s) para este día`;
     } else {
-      if (titleEl) titleEl.textContent = 'Todas las Reservas';
-      if (subtitleEl) subtitleEl.textContent = `${filtered.length} reserva(s) registradas`;
+      if (titleEl) titleEl.textContent = 'Todas las Citas';
+      if (subtitleEl) subtitleEl.textContent = `${filtered.length} cita(s) en total`;
     }
 
     if (filtered.length === 0) {
       container.innerHTML = `
-        <div style="text-align: center; padding: 40px 20px; color: var(--admin-text-subtle);">
-          <div style="font-size: 2rem; margin-bottom: 8px;">📅</div>
-          <p style="font-weight: 600; font-size: 0.9rem;">No hay citas agendadas para esta fecha.</p>
-          <p style="font-size: 0.78rem; margin-top: 4px;">Usa el botón "+ Nueva Reserva" para agendar una sesión manualmente.</p>
-          <button class="btn-secondary" id="btnShowAllBookings" style="margin-top: 14px; font-size: 0.75rem;">
-            Ver todas las fechas
+        <div class="text-center py-5 text-muted">
+          <i class="bi bi-calendar-x fs-1 text-secondary opacity-50 mb-2"></i>
+          <p class="fw-bold mb-1">No hay citas para esta fecha</p>
+          <p class="small text-muted mb-3">Puedes presionar el botón de abajo para ver todas las citas registradas.</p>
+          <button class="btn btn-outline-dark btn-sm rounded-pill px-3" id="btnShowAllBookings">
+            Ver todas las citas
           </button>
         </div>
       `;
-      const btnShowAll = document.getElementById('btnShowAllBookings');
-      if (btnShowAll) {
-        btnShowAll.addEventListener('click', () => {
-          selectedDate = null;
-          renderBookingsSidebar(null);
-        });
-      }
+      document.getElementById('btnShowAllBookings')?.addEventListener('click', () => {
+        selectedDate = null;
+        renderBookingsSidebar(null);
+      });
       return;
     }
 
@@ -343,66 +329,72 @@ document.addEventListener('DOMContentLoaded', () => {
       card.className = 'booking-item-card';
 
       const sClass = getSessionClass(b.session);
-      const statusClass = (b.status || 'pendiente').toLowerCase();
+      const isConfirmed = b.status === 'Confirmada';
+      const isPending = b.status === 'Pendiente';
 
-      // Clean phone for whatsapp link
       const cleanPhone = (b.phone || '').replace(/[^0-9]/g, '');
-      const waMsg = encodeURIComponent(`¡Hola ${b.name}! Te escribo de Studio NVF (Nicole Valerio Fotografía) respecto a tu sesión de ${b.session} para el día ${b.date} a las ${b.time}.`);
+      const waMsg = encodeURIComponent(`¡Hola ${b.name}! Te escribe Nicole Valerio de Studio NVF respecto a tu sesión de ${b.session} para el día ${b.date} a las ${b.time}.`);
       const waUrl = cleanPhone ? `https://wa.me/${cleanPhone}?text=${waMsg}` : `https://wa.me/?text=${waMsg}`;
 
       card.innerHTML = `
-        <div class="booking-item-top">
-          <span class="booking-type-badge event-pill ${sClass}">${b.session}</span>
-          <span class="booking-status-tag ${statusClass}">${b.status}</span>
+        <div class="d-flex justify-content-between align-items-center">
+          <span class="event-pill ${sClass} px-2 py-1">${b.session}</span>
+          <span class="badge ${isConfirmed ? 'bg-success' : (isPending ? 'bg-warning text-dark' : 'bg-secondary')} small">
+            ${b.status}
+          </span>
         </div>
-        <div class="booking-client-name">${b.name}</div>
-        <div class="booking-time-row">
-          <span>📅 ${b.date}</span>
-          <span>⏰ ${b.time || '10:30'}</span>
+
+        <div>
+          <h6 class="fw-bold text-dark m-0">${b.name}</h6>
+          <div class="small text-muted mt-1 d-flex align-items-center gap-3">
+            <span><i class="bi bi-calendar-event me-1"></i>${b.date}</span>
+            <span><i class="bi bi-clock me-1"></i>${b.time || '10:30'}</span>
+          </div>
         </div>
-        <div class="booking-contact-row">
-          <span>📞 ${b.phone || 'Sin teléfono'}</span>
-          <span>✉️ ${b.email || 'Sin correo'}</span>
-          <a href="${waUrl}" target="_blank" rel="noopener noreferrer" class="btn-whatsapp-sm">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.007c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.303-.058.116-.087.188-.173.289l-.26.302c-.087.087-.178.181-.077.355.101.173.449.741.964 1.201.662.591 1.221.774 1.394.86.173.086.275.072.376-.043.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.043.073.043.419-.101.824z"/></svg>
-            WhatsApp
+
+        <div class="d-flex flex-wrap align-items-center gap-2 pt-1">
+          <a href="${waUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-success btn-sm py-1 px-2 d-inline-flex align-items-center gap-1 text-decoration-none" style="font-size: 0.75rem;">
+            <i class="bi bi-whatsapp"></i> WhatsApp
           </a>
+          <span class="small text-muted"><i class="bi bi-telephone me-1"></i>${b.phone || 'Sin teléfono'}</span>
         </div>
-        ${b.location ? `<div style="font-size: 0.76rem; color: var(--admin-text-muted);">📍 <strong>Lugar:</strong> ${b.location}</div>` : ''}
-        ${b.message ? `<div class="booking-notes">"${b.message}"</div>` : ''}
-        <div class="booking-actions-row">
-          <div style="display: flex; align-items: center; gap: 6px;">
-            <span style="font-size: 0.7rem; color: var(--admin-text-subtle);">Estado:</span>
-            <select class="status-dropdown" data-id="${b.id}">
+
+        ${b.location ? `<div class="small text-secondary"><i class="bi bi-geo-alt me-1"></i>${b.location}</div>` : ''}
+        ${b.message ? `<div class="small fst-italic text-muted bg-light p-2 rounded">"${b.message}"</div>` : ''}
+
+        <div class="d-flex justify-content-between align-items-center pt-2 border-top">
+          <div class="d-flex align-items-center gap-1">
+            <small class="text-muted">Estado:</small>
+            <select class="form-select form-select-sm py-0 status-changer-select" data-id="${b.id}" style="font-size: 0.75rem; width: auto;">
               <option value="Pendiente" ${b.status === 'Pendiente' ? 'selected' : ''}>Pendiente</option>
               <option value="Confirmada" ${b.status === 'Confirmada' ? 'selected' : ''}>Confirmada</option>
               <option value="Completada" ${b.status === 'Completada' ? 'selected' : ''}>Completada</option>
               <option value="Cancelada" ${b.status === 'Cancelada' ? 'selected' : ''}>Cancelada</option>
             </select>
           </div>
-          <button class="btn-danger btn-delete-booking" data-id="${b.id}">Eliminar</button>
+          <button class="btn btn-outline-danger btn-sm py-0 px-2 btn-delete-booking" data-id="${b.id}" style="font-size: 0.75rem;">
+            <i class="bi bi-trash"></i>
+          </button>
         </div>
       `;
 
-      // Event listener for status change
-      const statusSelect = card.querySelector('.status-dropdown');
-      statusSelect.addEventListener('change', (e) => {
+      // Status selector
+      card.querySelector('.status-changer-select').addEventListener('change', (e) => {
         b.status = e.target.value;
         saveBookings();
         renderCalendar();
         renderBookingsSidebar(dateFilter);
-        showToast(`Cita de ${b.name} marcada como ${b.status}`, 'info');
+        showToast(`Cita de ${b.name} marcada como ${b.status}`, true);
       });
 
-      // Event listener for delete
-      const deleteBtn = card.querySelector('.btn-delete-booking');
-      deleteBtn.addEventListener('click', () => {
-        if (confirm(`¿Estás seguro de eliminar la reserva de ${b.name}?`)) {
+      // Delete button
+      card.querySelector('.btn-delete-booking').addEventListener('click', () => {
+        if (confirm(`¿Estás segura de eliminar la cita de ${b.name}?`)) {
           bookings = bookings.filter(item => item.id !== b.id);
           saveBookings();
           renderCalendar();
           renderBookingsSidebar(dateFilter);
-          showToast('Reserva eliminada con éxito', 'info');
+          showToast('Cita eliminada correctamente', true);
         }
       });
 
@@ -410,7 +402,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Calendar Month Navigation Buttons
+  // Month navigation buttons
   document.getElementById('prevMonthBtn')?.addEventListener('click', () => {
     currentMonthDate.setMonth(currentMonthDate.getMonth() - 1);
     renderCalendar();
@@ -439,55 +431,40 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Modal: Nueva Reserva Manual
-  const modalNewBooking = document.getElementById('modalNewBooking');
-  const btnOpenNewBooking = document.getElementById('btnOpenNewBooking');
-  const btnCloseNewBooking = document.getElementById('btnCloseNewBooking');
   const formNewBooking = document.getElementById('formNewBooking');
-
-  if (btnOpenNewBooking && modalNewBooking) {
-    btnOpenNewBooking.addEventListener('click', () => {
-      if (document.getElementById('newBookingDate')) {
-        document.getElementById('newBookingDate').value = selectedDate || new Date().toISOString().split('T')[0];
-      }
-      modalNewBooking.classList.add('active');
-    });
-  }
-
-  if (btnCloseNewBooking && modalNewBooking) {
-    btnCloseNewBooking.addEventListener('click', () => {
-      modalNewBooking.classList.remove('active');
-    });
-  }
-
   if (formNewBooking) {
+    // Default today date
+    const dateInput = document.getElementById('newBookingDate');
+    if (dateInput) dateInput.value = selectedDate || new Date().toISOString().split('T')[0];
+
     formNewBooking.addEventListener('submit', (e) => {
       e.preventDefault();
       const name = document.getElementById('newBookingName').value.trim();
-      const email = document.getElementById('newBookingEmail').value.trim();
       const phone = document.getElementById('newBookingPhone').value.trim();
+      const email = document.getElementById('newBookingEmail').value.trim();
       const session = document.getElementById('newBookingSession').value;
+      const status = document.getElementById('newBookingStatus').value;
       const date = document.getElementById('newBookingDate').value;
       const time = document.getElementById('newBookingTime').value || '10:30';
       const location = document.getElementById('newBookingLocation').value.trim();
       const message = document.getElementById('newBookingNotes').value.trim();
-      const status = document.getElementById('newBookingStatus').value;
 
       if (!name || !phone || !date) {
-        showToast('⚠️ Por favor completa los campos requeridos', 'danger');
+        showToast('Por favor completa nombre, teléfono y fecha', false);
         return;
       }
 
       const newBooking = {
         id: 'book_' + Date.now(),
         name,
-        email,
         phone,
+        email,
         session,
+        status,
         date,
         time,
         location,
         message,
-        status,
         created_at: new Date().toISOString()
       };
 
@@ -497,50 +474,61 @@ document.addEventListener('DOMContentLoaded', () => {
       renderCalendar();
       renderBookingsSidebar(date);
 
-      modalNewBooking.classList.remove('active');
+      // Close Bootstrap Modal
+      const modalInstance = bootstrap.Modal.getInstance(document.getElementById('modalNewBooking'));
+      if (modalInstance) modalInstance.hide();
+
       formNewBooking.reset();
-      showToast(`✅ Reserva para ${name} (${session}) agendada con éxito!`, 'success');
+      showToast(`¡Cita para ${name} (${session}) agendada con éxito!`, true);
     });
   }
 
-  // Initial render of calendar
+  // Initial Calendar Render
   renderCalendar();
   renderBookingsSidebar(selectedDate);
 
   /* ==========================================================================
-     SECTION 2: GESTOR DE BOOKS & GALERÍA DE FOTOS
+     SECTION 2: GESTOR DE BOOKS & FOTOS
      ========================================================================== */
   let activeBookSlug = 'familia';
 
-  const collectionsNavList = document.getElementById('collectionsNavList');
+  const collectionsCardsRow = document.getElementById('collectionsCardsRow');
 
-  function renderCollectionsSidebar() {
-    if (!collectionsNavList) return;
-    collectionsNavList.innerHTML = '';
+  function renderCollectionsSelector() {
+    if (!collectionsCardsRow) return;
+    collectionsCardsRow.innerHTML = '';
 
     const slugs = Object.keys(currentCatalog);
 
     slugs.forEach(slug => {
       const book = currentCatalog[slug];
-      const btn = document.createElement('button');
-      btn.className = `collection-nav-item ${slug === activeBookSlug ? 'active' : ''}`;
-      btn.setAttribute('data-slug', slug);
-
       const count = book.photos ? book.photos.length : (book.photoCount || 0);
+      const isSelected = slug === activeBookSlug;
 
-      btn.innerHTML = `
-        <span>${book.title || slug}</span>
-        <span class="item-badge">${count} fotos</span>
+      const col = document.createElement('div');
+      col.className = 'col';
+
+      col.innerHTML = `
+        <div class="book-catalog-card ${isSelected ? 'active-book' : ''}" data-slug="${slug}">
+          <div class="book-card-thumbnail-wrap">
+            <span class="book-card-badge">${book.badge_number || '01'}</span>
+            <img src="${book.cover}" alt="${book.title}" loading="lazy">
+          </div>
+          <div class="p-2 text-center">
+            <div class="fw-bold text-dark small text-truncate">${book.title}</div>
+            <div class="text-muted" style="font-size: 0.7rem;">${count} fotos</div>
+          </div>
+        </div>
       `;
 
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.collection-nav-item').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
+      col.querySelector('.book-catalog-card').addEventListener('click', () => {
+        document.querySelectorAll('.book-catalog-card').forEach(c => c.classList.remove('active-book'));
+        col.querySelector('.book-catalog-card').classList.add('active-book');
         activeBookSlug = slug;
         loadActiveBookData();
       });
 
-      collectionsNavList.appendChild(btn);
+      collectionsCardsRow.appendChild(col);
     });
   }
 
@@ -548,7 +536,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const book = currentCatalog[activeBookSlug];
     if (!book) return;
 
-    // 1. Form fields
+    // Header
+    const titleHeader = document.getElementById('inspectorBookTitleHeader');
+    if (titleHeader) titleHeader.innerHTML = `<i class="bi bi-pencil-square text-warning me-2"></i>Editar Book: <em>${book.title}</em>`;
+
+    // Form fields
     const titleInput = document.getElementById('bookTitleInput');
     const subtitleInput = document.getElementById('bookSubtitleInput');
     const categoryInput = document.getElementById('bookCategoryInput');
@@ -559,11 +551,11 @@ document.addEventListener('DOMContentLoaded', () => {
     if (categoryInput) categoryInput.value = book.category || 'EDITORIAL';
     if (coverUrlInput) coverUrlInput.value = book.cover || '';
 
-    // 2. Live Preview Card
+    // Live preview
     updateLivePreview();
 
-    // 3. Photos Grid
-    renderBookPhotosGrid();
+    // Photos grid
+    renderGalleryPhotos();
   }
 
   function updateLivePreview() {
@@ -589,7 +581,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (previewMarker) previewMarker.textContent = book.badge_number || '01';
   }
 
-  // Real-time listener on book form inputs to update live preview
+  // Live input sync
   document.getElementById('bookTitleInput')?.addEventListener('input', updateLivePreview);
   document.getElementById('bookCoverUrlInput')?.addEventListener('input', updateLivePreview);
 
@@ -604,12 +596,12 @@ document.addEventListener('DOMContentLoaded', () => {
     book.cover = document.getElementById('bookCoverUrlInput').value.trim();
 
     saveCatalog();
-    renderCollectionsSidebar();
+    renderCollectionsSelector();
     updateLivePreview();
-    showToast(`✅ Cambios guardados para el Book ${book.title}`, 'success');
+    showToast(`✅ Portada y datos de "${book.title}" guardados con éxito`, true);
   });
 
-  // Cover Image File Upload (Local file reader to base64)
+  // Local File Upload for Cover
   const coverFileInput = document.getElementById('coverFileInput');
   if (coverFileInput) {
     coverFileInput.addEventListener('change', (e) => {
@@ -627,17 +619,18 @@ document.addEventListener('DOMContentLoaded', () => {
           book.cover = base64Url;
           saveCatalog();
           updateLivePreview();
-          showToast('📸 Portada actualizada con éxito', 'success');
+          renderCollectionsSelector();
+          showToast('📸 Foto de portada actualizada desde tu PC', true);
         }
       };
       reader.readAsDataURL(file);
     });
   }
 
-  // Render Photos Grid
-  function renderBookPhotosGrid() {
+  // Render Gallery Photos Grid
+  function renderGalleryPhotos() {
     const grid = document.getElementById('galleryPhotosGrid');
-    const countLabel = document.getElementById('galleryPhotosCount');
+    const countBadge = document.getElementById('galleryPhotosCount');
     if (!grid) return;
 
     grid.innerHTML = '';
@@ -645,32 +638,38 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!book) return;
 
     const photos = book.photos || [];
-    if (countLabel) countLabel.textContent = `${photos.length} fotos`;
+    if (countBadge) countBadge.textContent = `${photos.length} fotos`;
 
     if (photos.length === 0) {
       grid.innerHTML = `
-        <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--admin-text-subtle);">
-          <p>Esta colección aún no tiene fotos individuales.</p>
-          <button class="btn-primary" id="btnEmptyAddPhotos" style="margin-top: 10px;">➕ Agregar Fotos Ahora</button>
+        <div class="col-12 text-center py-4 text-muted">
+          <i class="bi bi-images fs-2 text-secondary mb-2"></i>
+          <p class="small mb-2">Esta colección aún no tiene fotos individuales cargadas.</p>
+          <button class="btn btn-gold btn-sm" data-bs-toggle="modal" data-bs-target="#modalAddPhotos">
+            Subir Fotos Ahora
+          </button>
         </div>
       `;
-      document.getElementById('btnEmptyAddPhotos')?.addEventListener('click', openAddPhotosModal);
       return;
     }
 
     photos.forEach((photo, idx) => {
       const card = document.createElement('div');
-      card.className = 'gallery-photo-card';
+      card.className = 'gallery-photo-item';
 
       const photoUrl = photo.thumb || photo.large || photo.medium || photo.url;
       const isCover = book.cover && (book.cover === photo.large || book.cover === photoUrl);
 
       card.innerHTML = `
         <img src="${photoUrl}" alt="${photo.name || 'Foto'}" loading="lazy">
-        ${isCover ? '<span class="gallery-photo-badge">⭐ PORTADA</span>' : ''}
-        <div class="gallery-photo-actions">
-          <button class="btn-action-pill btn-make-cover" data-idx="${idx}" title="Definir como portada del Book">⭐ Portada</button>
-          <button class="btn-action-pill danger btn-delete-photo" data-idx="${idx}" title="Eliminar foto">🗑️ Borrar</button>
+        ${isCover ? '<span class="badge-is-cover">⭐ PORTADA</span>' : ''}
+        <div class="gallery-photo-overlay-actions">
+          <button class="btn btn-warning btn-sm py-1 px-2 fw-bold text-dark btn-make-cover" data-idx="${idx}" style="font-size: 0.7rem;">
+            ⭐ Portada
+          </button>
+          <button class="btn btn-danger btn-sm py-1 px-2 btn-delete-photo" data-idx="${idx}" style="font-size: 0.7rem;">
+            <i class="bi bi-trash"></i> Borrar
+          </button>
         </div>
       `;
 
@@ -681,21 +680,22 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('bookCoverUrlInput').value = book.cover;
         saveCatalog();
         updateLivePreview();
-        renderBookPhotosGrid();
-        showToast('⭐ Foto asignada como portada de la colección', 'success');
+        renderCollectionsSelector();
+        renderGalleryPhotos();
+        showToast('⭐ Foto seleccionada como portada del Book', true);
       });
 
       // Delete photo
       card.querySelector('.btn-delete-photo').addEventListener('click', (e) => {
         e.stopPropagation();
-        if (confirm(`¿Eliminar la foto "${photo.name || 'seleccionada'}" de esta galería?`)) {
+        if (confirm(`¿Eliminar la foto "${photo.name || 'seleccionada'}" de esta colección?`)) {
           photos.splice(idx, 1);
           book.photoCount = photos.length;
           saveCatalog();
-          renderCollectionsSidebar();
-          renderBookPhotosGrid();
+          renderCollectionsSelector();
+          renderGalleryPhotos();
           updateLivePreview();
-          showToast('Foto eliminada de la galería', 'info');
+          showToast('Foto eliminada de la colección', true);
         }
       });
 
@@ -703,22 +703,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Modal: Agregar Fotos
-  const modalAddPhotos = document.getElementById('modalAddPhotos');
-  const btnOpenAddPhotos = document.getElementById('btnOpenAddPhotos');
-  const btnCloseAddPhotos = document.getElementById('btnCloseAddPhotos');
+  // Upload Photos (Multi-file & URL)
   const multiFileInput = document.getElementById('multiFileInput');
-  const photoUrlInput = document.getElementById('newPhotoUrlInput');
-  const btnConfirmAddUrl = document.getElementById('btnConfirmAddUrl');
-
-  function openAddPhotosModal() {
-    if (modalAddPhotos) modalAddPhotos.classList.add('active');
-  }
-
-  if (btnOpenAddPhotos) btnOpenAddPhotos.addEventListener('click', openAddPhotosModal);
-  if (btnCloseAddPhotos) btnCloseAddPhotos.addEventListener('click', () => modalAddPhotos.classList.remove('active'));
-
-  // Multi-file upload via FileReader
   if (multiFileInput) {
     multiFileInput.addEventListener('change', (e) => {
       const files = Array.from(e.target.files);
@@ -745,12 +731,16 @@ document.addEventListener('DOMContentLoaded', () => {
           if (loadedCount === files.length) {
             book.photoCount = book.photos.length;
             saveCatalog();
-            renderCollectionsSidebar();
-            renderBookPhotosGrid();
+            renderCollectionsSelector();
+            renderGalleryPhotos();
             updateLivePreview();
-            modalAddPhotos.classList.remove('active');
+            
+            // Close modal
+            const modalInstance = bootstrap.Modal.getInstance(document.getElementById('modalAddPhotos'));
+            if (modalInstance) modalInstance.hide();
             multiFileInput.value = '';
-            showToast(`✅ Se agregaron ${loadedCount} foto(s) a la colección`, 'success');
+
+            showToast(`¡Se subieron ${loadedCount} foto(s) nuevas con éxito!`, true);
           }
         };
         reader.readAsDataURL(file);
@@ -759,81 +749,72 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Add via URL
-  if (btnConfirmAddUrl && photoUrlInput) {
-    btnConfirmAddUrl.addEventListener('click', () => {
-      const url = photoUrlInput.value.trim();
-      if (!url) {
-        showToast('⚠️ Ingresa una URL válida', 'danger');
-        return;
-      }
+  document.getElementById('btnConfirmAddUrl')?.addEventListener('click', () => {
+    const urlInput = document.getElementById('newPhotoUrlInput');
+    const url = urlInput ? urlInput.value.trim() : '';
 
-      const book = currentCatalog[activeBookSlug];
-      if (!book) return;
-      if (!book.photos) book.photos = [];
+    if (!url) {
+      showToast('Ingresa una URL válida', false);
+      return;
+    }
 
-      book.photos.unshift({
-        id: Date.now(),
-        name: `Foto_${book.photos.length + 1}.jpg`,
-        large: url,
-        thumb: url,
-        width: 2400,
-        height: 3600
-      });
-      book.photoCount = book.photos.length;
+    const book = currentCatalog[activeBookSlug];
+    if (!book) return;
+    if (!book.photos) book.photos = [];
 
-      saveCatalog();
-      renderCollectionsSidebar();
-      renderBookPhotosGrid();
-      updateLivePreview();
-      photoUrlInput.value = '';
-      modalAddPhotos.classList.remove('active');
-      showToast('✅ Foto agregada a la galería', 'success');
+    book.photos.unshift({
+      id: Date.now(),
+      name: `Foto_${book.photos.length + 1}.jpg`,
+      large: url,
+      thumb: url,
+      width: 2400,
+      height: 3600
     });
-  }
+    book.photoCount = book.photos.length;
 
-  // Reset to default Pixieset catalog
+    saveCatalog();
+    renderCollectionsSelector();
+    renderGalleryPhotos();
+    updateLivePreview();
+
+    urlInput.value = '';
+    const modalInstance = bootstrap.Modal.getInstance(document.getElementById('modalAddPhotos'));
+    if (modalInstance) modalInstance.hide();
+
+    showToast('Foto agregada a la galería', true);
+  });
+
+  // Restore Pixieset original photos
   document.getElementById('btnResetCatalog')?.addEventListener('click', () => {
-    if (confirm('¿Restablecer todas las colecciones y fotos a las versiones originales de Pixieset?')) {
+    if (confirm('¿Restaurar todas las fotos y portadas originales de Pixieset?')) {
       localStorage.removeItem('studionvf_catalog_custom');
       loadCatalog();
-      renderCollectionsSidebar();
+      renderCollectionsSelector();
       loadActiveBookData();
-      showToast('Colecciones restablecidas al catálogo original', 'info');
+      showToast('Fotos restauradas al catálogo original', true);
     }
   });
 
-  // Initial render of Books section
-  renderCollectionsSidebar();
+  // Initial Book Render
+  renderCollectionsSelector();
   loadActiveBookData();
 
   /* ==========================================================================
-     SECTION 3: SUPABASE SQL VIEWER & COPY
+     SECTION 3: SUPABASE SQL COPY
      ========================================================================== */
-  const btnCopySql = document.getElementById('btnCopySql');
-  const sqlCodeElement = document.getElementById('sqlCodeBlock');
+  document.getElementById('btnCopySql')?.addEventListener('click', () => {
+    const codeEl = document.getElementById('sqlCodeBlock');
+    if (!codeEl) return;
 
-  if (btnCopySql && sqlCodeElement) {
-    btnCopySql.addEventListener('click', () => {
-      const sqlText = sqlCodeElement.textContent;
-      navigator.clipboard.writeText(sqlText).then(() => {
-        const originalText = btnCopySql.textContent;
-        btnCopySql.textContent = '✅ ¡SQL Copiado al Portapapeles!';
-        btnCopySql.style.backgroundColor = '#2E7D32';
-        btnCopySql.style.color = '#FFF';
-        setTimeout(() => {
-          btnCopySql.textContent = originalText;
-          btnCopySql.style.backgroundColor = '';
-          btnCopySql.style.color = '';
-        }, 3000);
-        showToast('📋 Script SQL copiado al portapapeles', 'success');
-      }).catch(err => {
-        showToast('⚠️ Error al copiar al portapapeles', 'danger');
-      });
+    navigator.clipboard.writeText(codeEl.textContent).then(() => {
+      showToast('📋 Código SQL copiado al portapapeles', true);
+    }).catch(() => {
+      showToast('Error al copiar el código', false);
     });
-  }
+  });
 
   /* ==========================================================================
-     SECTION 4: BACKUP & EXPORT JSON
+     SECTION 4: BACKUP EXPORT
      ========================================================================== */
   document.getElementById('btnExportBackup')?.addEventListener('click', () => {
     const backupData = {
@@ -848,7 +829,7 @@ document.addEventListener('DOMContentLoaded', () => {
     a.download = `studionvf_backup_${new Date().toISOString().split('T')[0]}.json`;
     a.click();
     URL.revokeObjectURL(url);
-    showToast('💾 Respaldo JSON descargado con éxito', 'success');
+    showToast('💾 Copia de seguridad descargada', true);
   });
 
 });

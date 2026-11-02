@@ -270,3 +270,4 @@ ON CONFLICT (slug) DO UPDATE SET
 badge_number = EXCLUDED.badge_number,
 title = EXCLUDED.title,
 cover_url = EXCLUDED.cover_url;
+

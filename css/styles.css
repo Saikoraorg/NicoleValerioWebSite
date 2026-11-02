@@ -1032,13 +1032,19 @@ h1 em, h2 em, h3 em, h4 em,
 .books-catalog-section {
   background-color: var(--color-books-bg); /* #ede8e1 warm sand */
   border-bottom: 1px solid var(--color-border);
-  padding: 110px 0;
+  padding: 70px 0 85px;
+}
+
+.books-catalog-section .section-container {
+  width: 96%;
+  max-width: 1800px;
+  padding: 0 12px;
 }
 
 .books-header {
   text-align: center;
-  max-width: 680px;
-  margin: 0 auto 60px;
+  max-width: 720px;
+  margin: 0 auto 36px;
 }
 
 .books-eyebrow {
@@ -1084,24 +1090,24 @@ h1 em, h2 em, h3 em, h4 em,
 .books-mosaic {
   display: grid;
   grid-template-columns: 1.85fr 1.05fr 1.85fr 1.05fr 1.85fr;
-  gap: 12px;
+  gap: 14px;
   width: 100%;
-  max-width: 1260px;
-  height: 520px;
-  margin: 0 auto 50px auto;
+  max-width: 100%;
+  height: clamp(540px, 68vh, 780px);
+  margin: 0 auto 40px auto;
 }
 
 .books-mosaic-col {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
   height: 100%;
   min-width: 0;
 }
 
 .book-card-pair {
   display: flex;
-  gap: 12px;
+  gap: 14px;
   flex: 1;
   min-height: 0;
   width: 100%;
@@ -2428,14 +2434,14 @@ h1 em, h2 em, h3 em, h4 em,
   }
 
   .books-mosaic {
-    height: 440px;
-    gap: 8px;
+    height: clamp(480px, 58vh, 640px);
+    gap: 10px;
   }
   .books-mosaic-col {
-    gap: 8px;
+    gap: 10px;
   }
   .book-card-pair {
-    gap: 8px;
+    gap: 10px;
   }
 
   .form-row {

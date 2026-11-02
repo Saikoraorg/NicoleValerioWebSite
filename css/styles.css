@@ -1032,19 +1032,19 @@ h1 em, h2 em, h3 em, h4 em,
 .books-catalog-section {
   background-color: var(--color-books-bg); /* #ede8e1 warm sand */
   border-bottom: 1px solid var(--color-border);
-  padding: 70px 0 85px;
+  padding: 50px 0 65px;
 }
 
 .books-catalog-section .section-container {
   width: 96%;
-  max-width: 1800px;
-  padding: 0 12px;
+  max-width: 1700px;
+  padding: 0 16px;
 }
 
 .books-header {
   text-align: center;
-  max-width: 720px;
-  margin: 0 auto 36px;
+  max-width: 760px;
+  margin: 0 auto 28px;
 }
 
 .books-eyebrow {
@@ -1059,12 +1059,12 @@ h1 em, h2 em, h3 em, h4 em,
 }
 
 .books-title {
-  font-size: clamp(3rem, 6vw, 5rem);
+  font-size: clamp(2.5rem, 5vw, 4.2rem);
   font-weight: 500;
   letter-spacing: 0.02em;
   line-height: 1.05;
   color: var(--color-primary);
-  margin-bottom: 16px;
+  margin-bottom: 12px;
 }
 
 .books-title em {
@@ -1075,7 +1075,7 @@ h1 em, h2 em, h3 em, h4 em,
 .books-description {
   font-size: 0.95rem;
   color: var(--color-text-muted);
-  line-height: 1.65;
+  line-height: 1.6;
 }
 
 /* ==========================================================================
@@ -1090,24 +1090,24 @@ h1 em, h2 em, h3 em, h4 em,
 .books-mosaic {
   display: grid;
   grid-template-columns: 1.85fr 1.05fr 1.85fr 1.05fr 1.85fr;
-  gap: 14px;
+  gap: 12px;
   width: 100%;
   max-width: 100%;
-  height: clamp(540px, 68vh, 780px);
-  margin: 0 auto 40px auto;
+  height: clamp(420px, 50vh, 530px);
+  margin: 0 auto 24px auto;
 }
 
 .books-mosaic-col {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
   height: 100%;
   min-width: 0;
 }
 
 .book-card-pair {
   display: flex;
-  gap: 14px;
+  gap: 12px;
   flex: 1;
   min-height: 0;
   width: 100%;
@@ -1118,7 +1118,7 @@ h1 em, h2 em, h3 em, h4 em,
   overflow: hidden;
   cursor: pointer;
   background-color: var(--color-surface);
-  border-radius: 2px;
+  border-radius: 3px;
   box-shadow: 0 4px 16px rgba(63, 59, 52, 0.1);
   transition: transform 0.35s var(--transition-fast), box-shadow 0.35s var(--transition-fast);
 }
@@ -1157,42 +1157,42 @@ h1 em, h2 em, h3 em, h4 em,
 }
 
 .books-mosaic .book-card:hover .book-mosaic-img {
-  transform: scale(1.05);
+  transform: scale(1.04);
 }
 
 /* Specific focal points to prevent awkward cuts */
 .book-card[data-slug="familia"] .book-mosaic-img {
-  object-position: center 25%;
+  object-position: center 22%;
 }
 .book-card[data-slug="navidad"] .book-mosaic-img {
   object-position: center top;
 }
 .book-card[data-slug="marcapersonal"] .book-mosaic-img {
-  object-position: center 15%;
+  object-position: 72% 25%;
 }
 .book-card[data-slug="cumpleanos"] .book-mosaic-img {
-  object-position: center 30%;
+  object-position: 48% 62%;
 }
 .book-card[data-slug="revelaciondegenero"] .book-mosaic-img {
-  object-position: center top;
+  object-position: center 50%;
 }
 .book-card[data-slug="parejasplaya"] .book-mosaic-img {
   object-position: center top;
 }
 .book-card[data-slug="boda"] .book-mosaic-img {
-  object-position: center 35%;
+  object-position: center 30%;
 }
 .book-card[data-slug="embarazo"] .book-mosaic-img {
-  object-position: center 20%;
+  object-position: center 32%;
 }
 .book-card[data-slug="eventos"] .book-mosaic-img {
-  object-position: center 35%;
+  object-position: center 25%;
 }
 .book-card[data-slug="gastronomia"] .book-mosaic-img {
   object-position: center center;
 }
 .book-card[data-slug="parejas"] .book-mosaic-img {
-  object-position: center top;
+  object-position: center 18%;
 }
 
 /* Corner Marker Tab (matching the user's reference image!) */
@@ -1228,15 +1228,18 @@ h1 em, h2 em, h3 em, h4 em,
 .book-mosaic-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, rgba(63, 59, 52, 0.92) 0%, rgba(63, 59, 52, 0.5) 45%, rgba(63, 59, 52, 0.15) 100%);
+  background: linear-gradient(to top, rgba(35, 32, 28, 0.94) 0%, rgba(35, 32, 28, 0.62) 55%, rgba(35, 32, 28, 0.12) 100%);
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  padding: 22px 18px;
+  padding: clamp(10px, 1.2vw, 16px);
+  box-sizing: border-box;
   opacity: 0;
-  transition: opacity 0.35s ease;
+  transition: opacity 0.3s ease;
   z-index: 6;
   pointer-events: none;
+  overflow: hidden;
+  max-height: 100%;
 }
 
 .books-mosaic .book-card:hover .book-mosaic-overlay {
@@ -1245,21 +1248,28 @@ h1 em, h2 em, h3 em, h4 em,
 
 .book-overlay-category {
   font-family: var(--font-sans);
-  font-size: 0.58rem;
-  letter-spacing: 0.18em;
+  font-size: 0.52rem;
+  letter-spacing: 0.16em;
   color: var(--color-accent-light);
   font-weight: 700;
   text-transform: uppercase;
-  margin-bottom: 3px;
+  margin-bottom: 2px;
+  line-height: 1.1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .book-overlay-title {
   font-family: var(--font-serif);
-  font-size: 1.25rem;
+  font-size: clamp(0.95rem, 1.2vw, 1.2rem);
   font-weight: 500;
   color: #ffffff;
-  margin-bottom: 4px;
-  line-height: 1.15;
+  margin-bottom: 2px;
+  line-height: 1.1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .book-overlay-title em {
@@ -1268,25 +1278,30 @@ h1 em, h2 em, h3 em, h4 em,
 
 .book-overlay-count {
   font-family: var(--font-sans);
-  font-size: 0.64rem;
+  font-size: 0.58rem;
   letter-spacing: 0.08em;
-  color: rgba(255, 255, 255, 0.75);
-  margin-bottom: 10px;
+  color: rgba(255, 255, 255, 0.82);
+  margin-bottom: 6px;
+  line-height: 1.1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .book-overlay-btn {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: 4px;
   font-family: var(--font-sans);
-  font-size: 0.65rem;
+  font-size: 0.58rem;
   font-weight: 700;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   color: #ffffff;
   text-transform: uppercase;
   border-bottom: 1.5px solid var(--color-accent);
-  padding-bottom: 2px;
+  padding-bottom: 1px;
   width: fit-content;
+  line-height: 1.1;
 }
 
 .book-spine {
@@ -2434,7 +2449,7 @@ h1 em, h2 em, h3 em, h4 em,
   }
 
   .books-mosaic {
-    height: clamp(480px, 58vh, 640px);
+    height: clamp(380px, 46vh, 480px);
     gap: 10px;
   }
   .books-mosaic-col {
@@ -2459,7 +2474,7 @@ h1 em, h2 em, h3 em, h4 em,
     display: flex;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
-    height: 460px;
+    height: 420px;
     padding-bottom: 14px;
     -webkit-overflow-scrolling: touch;
   }

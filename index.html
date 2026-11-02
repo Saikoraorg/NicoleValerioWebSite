@@ -50,6 +50,10 @@
 
       <!-- Action Button & Mobile Menu Toggle -->
       <div class="header-actions">
+        <a href="admin.html" class="btn btn-outline-minimal btn-sm admin-header-link" title="Panel de Administración" style="text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
+          <span>⚙️ ADMIN</span>
+        </a>
+
         <button class="btn btn-outline-minimal btn-sm header-book-btn" id="openBookingModalBtn">
           <span>RESERVAR SESIÓN</span>
         </button>
@@ -76,6 +80,7 @@
       <li><a href="#books" class="mobile-nav-link">Books (Catálogo)</a></li>
       <li><a href="#resenas" class="mobile-nav-link">Reseñas</a></li>
       <li><a href="#contacto" class="mobile-nav-link">Contacto</a></li>
+      <li><a href="admin.html" class="mobile-nav-link" style="color: var(--color-accent); font-weight: 700;">⚙️ Panel Admin</a></li>
     </ul>
     <div class="mobile-drawer-footer">
       <button class="btn btn-dark-minimal btn-block" id="mobileBookBtn">RESERVAR SESIÓN</button>
@@ -823,6 +828,11 @@
 
       <div class="footer-right">
         <span class="motto-text"><em>Momentos que trascienden el tiempo</em></span>
+        <div style="margin-top: 6px;">
+          <a href="admin.html" style="font-size: 0.72rem; color: var(--color-text-subtle); text-decoration: none; letter-spacing: 0.08em; opacity: 0.75; transition: opacity 0.2s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.75'">
+            ⚙️ PANEL DE ADMINISTRACIÓN
+          </a>
+        </div>
       </div>
     </div>
     <div class="footer-bottom-copyright">
@@ -906,13 +916,25 @@
 
         <div class="form-row">
           <div class="form-group">
-            <label for="preferredDate">Fecha tentativa deseada</label>
-            <input type="date" id="preferredDate" name="date">
+            <label for="preferredDate">Fecha tentativa deseada *</label>
+            <input type="date" id="preferredDate" name="date" required>
           </div>
           <div class="form-group">
-            <label for="location">Ciudad / Ubicación deseada</label>
-            <input type="text" id="location" name="location" placeholder="Ej. Estudio, exterior o a domicilio">
+            <label for="preferredTime">Hora preferida *</label>
+            <select id="preferredTime" name="time" required>
+              <option value="09:00">09:00 AM - Mañana</option>
+              <option value="10:30" selected>10:30 AM - Mañana</option>
+              <option value="12:00">12:00 PM - Mediodía</option>
+              <option value="15:00">03:00 PM - Tarde</option>
+              <option value="16:30">04:30 PM - Golden Hour (Atardecer)</option>
+              <option value="18:00">06:00 PM - Noche</option>
+            </select>
           </div>
+        </div>
+
+        <div class="form-group">
+          <label for="location">Ciudad / Ubicación deseada</label>
+          <input type="text" id="location" name="location" placeholder="Ej. Estudio NVF, exterior o a domicilio">
         </div>
 
         <div class="form-group">

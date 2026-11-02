@@ -7,7 +7,35 @@
 
 document.addEventListener('DOMContentLoaded', () => {
 
-  const catalog = window.STUDIO_NVF_CATALOG || {};
+  // Load base catalog and merge with admin modifications from localStorage if available
+  let catalog = window.STUDIO_NVF_CATALOG || {};
+  try {
+    const customCatalog = JSON.parse(localStorage.getItem('studionvf_catalog_custom') || '{}');
+    if (customCatalog && Object.keys(customCatalog).length > 0) {
+      catalog = { ...catalog, ...customCatalog };
+      window.STUDIO_NVF_CATALOG = catalog;
+    }
+  } catch (e) {
+    console.warn('Error reading custom catalog:', e);
+  }
+
+  // Dynamically sync book covers and titles in the mosaic if modified by admin
+  document.querySelectorAll('.book-card[data-slug]').forEach(card => {
+    const slug = card.getAttribute('data-slug');
+    if (catalog[slug]) {
+      const bookData = catalog[slug];
+      if (bookData.cover) {
+        const img = card.querySelector('.book-mosaic-img');
+        if (img && img.getAttribute('src') !== bookData.cover) {
+          img.src = bookData.cover;
+        }
+      }
+      if (bookData.title) {
+        const titleEl = card.querySelector('.book-overlay-title em');
+        if (titleEl) titleEl.textContent = bookData.title;
+      }
+    }
+  });
 
   /* ==========================================================================
      1. NAVIGATION & MOBILE DRAWER
@@ -317,25 +345,51 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Booking form submission
+  // Booking form submission (Direct integration with Admin Calendar & WhatsApp)
   if (bookingForm) {
     bookingForm.addEventListener('submit', (e) => {
       e.preventDefault();
-      const name = document.getElementById('clientName').value;
-      const email = document.getElementById('clientEmail').value;
-      const phone = document.getElementById('clientPhone').value;
+      const name = document.getElementById('clientName').value.trim();
+      const email = document.getElementById('clientEmail').value.trim();
+      const phone = document.getElementById('clientPhone').value.trim();
       const session = sessionTypeSelect.value;
       const date = document.getElementById('preferredDate').value;
+      const time = document.getElementById('preferredTime') ? document.getElementById('preferredTime').value : '10:30';
+      const location = document.getElementById('location') ? document.getElementById('location').value.trim() : '';
+      const message = document.getElementById('message') ? document.getElementById('message').value.trim() : '';
 
-      formFeedback.innerHTML = `<strong>¡Gracias ${name}!</strong> Hemos recibido tu solicitud para el book de <em>${session}</em>. Te contactaremos a la brevedad a ${phone} o ${email}.`;
+      // Persist to localStorage 'studionvf_bookings' for the Admin Calendar
+      const newBooking = {
+        id: 'book_' + Date.now(),
+        name,
+        email,
+        phone,
+        session,
+        date: date || new Date().toISOString().split('T')[0],
+        time: time || '10:30',
+        location,
+        message,
+        status: 'Pendiente',
+        created_at: new Date().toISOString()
+      };
+
+      try {
+        const stored = JSON.parse(localStorage.getItem('studionvf_bookings') || '[]');
+        stored.unshift(newBooking);
+        localStorage.setItem('studionvf_bookings', JSON.stringify(stored));
+      } catch (err) {
+        console.error('Error saving booking to localStorage:', err);
+      }
+
+      formFeedback.innerHTML = `<strong>¡Gracias ${name}!</strong> Hemos registrado tu solicitud para el Book de <em>${session}</em> para el día <strong>${date || 'por definir'}</strong> a las <strong>${time}</strong>. Te contactaremos a la brevedad a ${phone}.`;
       formFeedback.className = 'form-feedback success';
 
       setTimeout(() => {
-        const msg = encodeURIComponent(`¡Hola Studio NVF! Soy ${name}, envié solicitud para el Book de ${session} fecha: ${date || 'por definir'}.`);
+        const msg = encodeURIComponent(`¡Hola Studio NVF! Soy ${name}, envié solicitud para el Book de ${session} fecha: ${date || 'por definir'} a las ${time || '10:30'}.`);
         window.open(`https://wa.me/?text=${msg}`, '_blank');
         bookingForm.reset();
         setTimeout(closeBookingModal, 2500);
-      }, 1200);
+      }, 1400);
     });
   }
 

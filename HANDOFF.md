@@ -124,8 +124,16 @@ Los siguientes cambios fueron aplicados para simplificar la navegación y mejora
 | :--- | :--- |
 | **Mosaico 100% fiel a la referencia** | Se implementó la composición exacta de 5 módulos/columnas sin huecos vacíos ni recortes: Col 1 (Familia horizontal arriba + Navidad/Marca Personal abajo), Col 2 (Cumpleaños vertical completa), Col 3 (Revelación/Parejas Playa arriba + Boda horizontal abajo), Col 4 (Embarazo vertical completa), Col 5 (Eventos horizontal arriba + Gastronomía/Parejas abajo). |
 | **Pestañas esquineras con marca de libro** | Cada tarjeta cuenta con la pestaña de esquina curvada en tono carbón/oliva con el número de book correspondiente (`01` a `11`). |
-| **Hover interactivo y apertura de modal** | Al pasar el cursor sobre cualquier fotografía, se despliega una superposición editorial con el título, categoría y botón `ABRIR BOOK →`. Al hacer clic, abre la galería 4K interactiva original. |
+| **Hover ultra-compacto y clic directo** | El hover se optimizó para que no tape las fotos ni cause desbordamientos, permitiendo abrir la galería 4K interactiva con un solo clic. |
 | **Adaptabilidad móvil (Swipe horizontal)** | En pantallas pequeñas, el mosaico permite deslizamiento táctil horizontal fluido con `scroll-snap` para mantener intacta la composición sin deformar las fotografías. |
+
+### 8. Panel de Administración, Calendario de Citas & Supabase (2026-11-02)
+| Módulo | Descripción |
+| :--- | :--- |
+| **Portal de Administración (`admin.html`)** | Página administrativa independiente con autenticación visual, diseño editorial minimalista y navegación por pestañas: Calendario de Citas, Gestor de Books & Galería, y Estructura Supabase. |
+| **Calendario Interactivo de Reservas** | Vista mensual con días marcados, insignias de color por tipo de sesión (`Familia`, `Boda`, `Embarazo`, `Cumpleaños`, etc.), panel lateral con citas detalladas (fecha, hora, cliente, teléfono con WhatsApp directo, ubicación y notas), y formulario para agendar citas manuales. Sincronizado en tiempo real con el formulario web `#bookingForm`. |
+| **Gestor de Books & Galería de Fotos** | Permite modificar metadatos de los 11 books, reemplazar portadas (subiendo archivo local desde la PC o por URL), previsualización en tiempo real (*Live Preview*), ver todas las fotos de cada sesión, agregar fotos nuevas (drag & drop o URL) y definir cualquier foto como portada con un solo clic. |
+| **Esquema de Base de Datos Supabase (`supabase_schema.sql`)** | Script SQL completo y verificado para PostgreSQL en Supabase con 5 tablas (`books`, `photos`, `bookings`, `reviews`, `site_assets`), triggers de auto-actualización, políticas de seguridad RLS y configuración de Storage Buckets (`covers` y `photos`). |
 
 ---
 

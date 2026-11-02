@@ -1072,119 +1072,215 @@ h1 em, h2 em, h3 em, h4 em,
   line-height: 1.65;
 }
 
-/* Gallery Wall Diamond Layout — 11 books */
 /* ==========================================================================
-   GALLERY WALL DIAMOND COMPOSITION — 11 BOOKS (Inspirado en muro de cuadros)
-   Zero cortes forzados: Verticales a 2:3 / Horizontales a 3:2 sin huecos vacíos
+   EDITORIAL MOSAIC PANORAMIC GRID — 11 BOOKS (Inspirado en la referencia)
+   Col 1: 1 Wide / 2 Half
+   Col 2: 1 Full Height
+   Col 3: 2 Half / 1 Wide
+   Col 4: 1 Full Height
+   Col 5: 1 Wide / 2 Half
    ========================================================================== */
 
-.books-grid {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 18px;
+.books-mosaic {
+  display: grid;
+  grid-template-columns: 1.85fr 1.05fr 1.85fr 1.05fr 1.85fr;
+  gap: 12px;
   width: 100%;
-  max-width: 1240px;
-  margin: 0 auto 60px auto;
-  padding: 30px 0;
+  max-width: 1260px;
+  height: 520px;
+  margin: 0 auto 50px auto;
 }
 
-.books-col {
+.books-mosaic-col {
   display: flex;
   flex-direction: column;
-  gap: 22px;
+  gap: 12px;
+  height: 100%;
   min-width: 0;
-  transition: transform var(--transition-normal);
 }
 
-/* Columnas de retrato (Verticales) */
-.books-col.col-portrait {
-  flex: 1;
-}
-
-/* Columna central (Horizontales - más ancha para ratio 3:2) */
-.books-col.col-landscape {
-  flex: 1.45;
-}
-
-/* Escalonamiento sutil que dibuja el contorno de ROMBO / DIAMOND */
-.books-col.col-1 {
-  transform: translateY(45px);
-}
-.books-col.col-2 {
-  transform: translateY(20px);
-}
-.books-col.col-3 {
-  transform: translateY(0);
-}
-.books-col.col-4 {
-  transform: translateY(20px);
-}
-.books-col.col-5 {
-  transform: translateY(45px);
-}
-
-.book-card {
+.book-card-pair {
   display: flex;
-  flex-direction: column;
-  cursor: pointer;
+  gap: 12px;
+  flex: 1;
+  min-height: 0;
   width: 100%;
-  transition: transform var(--transition-normal);
 }
 
-.book-card:hover {
-  transform: translateY(-8px);
-}
-
-/* Realistic Art Book Jacket & Frame */
-.book-jacket {
+.books-mosaic .book-card {
   position: relative;
-  width: 100%;
-  background-color: #ffffff;
   overflow: hidden;
-  box-shadow: 
-    inset 4px 0 10px rgba(0, 0, 0, 0.22),
-    inset 0 0 0 1px rgba(63, 59, 52, 0.08),
-    0 10px 28px rgba(63, 59, 52, 0.12);
-  border-radius: 2px 4px 4px 2px;
-  transition: box-shadow var(--transition-normal), transform var(--transition-normal);
+  cursor: pointer;
+  background-color: var(--color-surface);
+  border-radius: 2px;
+  box-shadow: 0 4px 16px rgba(63, 59, 52, 0.1);
+  transition: transform 0.35s var(--transition-fast), box-shadow 0.35s var(--transition-fast);
 }
 
-/* Ratios exactos de las fotos originales — CERO CORTES */
-.books-col.col-portrait .book-jacket {
-  aspect-ratio: 2 / 3;
+.books-mosaic .book-card.card-wide {
+  flex: 1.05;
+  min-height: 0;
+  width: 100%;
 }
 
-.books-col.col-landscape .book-jacket {
-  aspect-ratio: 3 / 2;
+.books-mosaic .book-card.card-half {
+  flex: 1;
+  min-height: 0;
+  height: 100%;
 }
 
-.books-col.col-landscape .center-hero-card .book-jacket {
-  aspect-ratio: 16 / 10;
-  box-shadow: 
-    inset 5px 0 12px rgba(0, 0, 0, 0.25),
-    inset 0 0 0 1px rgba(147, 158, 126, 0.35),
-    0 16px 36px rgba(63, 59, 52, 0.18);
+.books-mosaic .book-card.card-full {
+  flex: 1;
+  height: 100%;
+  width: 100%;
 }
 
-.book-jacket img {
+.books-mosaic .book-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 32px rgba(63, 59, 52, 0.22);
+  z-index: 10;
+}
+
+/* Image behavior inside card */
+.book-mosaic-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center 22%; /* Prioriza rostros y detalles superiores */
   display: block;
   transition: transform 0.6s var(--ease-smooth);
 }
 
-.book-card:hover .book-jacket img {
-  transform: scale(1.03);
+.books-mosaic .book-card:hover .book-mosaic-img {
+  transform: scale(1.05);
 }
 
-.book-card:hover .book-jacket {
-  box-shadow: 
-    inset 5px 0 12px rgba(0, 0, 0, 0.28),
-    inset 0 0 0 1px rgba(147, 158, 126, 0.5),
-    0 16px 36px rgba(63, 59, 52, 0.22);
+/* Specific focal points to prevent awkward cuts */
+.book-card[data-slug="familia"] .book-mosaic-img {
+  object-position: center 25%;
+}
+.book-card[data-slug="navidad"] .book-mosaic-img {
+  object-position: center top;
+}
+.book-card[data-slug="marcapersonal"] .book-mosaic-img {
+  object-position: center 15%;
+}
+.book-card[data-slug="cumpleanos"] .book-mosaic-img {
+  object-position: center 30%;
+}
+.book-card[data-slug="revelaciondegenero"] .book-mosaic-img {
+  object-position: center top;
+}
+.book-card[data-slug="parejasplaya"] .book-mosaic-img {
+  object-position: center top;
+}
+.book-card[data-slug="boda"] .book-mosaic-img {
+  object-position: center 35%;
+}
+.book-card[data-slug="embarazo"] .book-mosaic-img {
+  object-position: center 20%;
+}
+.book-card[data-slug="eventos"] .book-mosaic-img {
+  object-position: center 35%;
+}
+.book-card[data-slug="gastronomia"] .book-mosaic-img {
+  object-position: center center;
+}
+.book-card[data-slug="parejas"] .book-mosaic-img {
+  object-position: center top;
+}
+
+/* Corner Marker Tab (matching the user's reference image!) */
+.book-tab-marker {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: rgba(63, 59, 52, 0.88);
+  backdrop-filter: blur(4px);
+  color: #FAF8F5;
+  padding: 5px 14px 6px 9px;
+  border-bottom-right-radius: 18px;
+  z-index: 5;
+  font-family: var(--font-sans);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.15);
+  pointer-events: none;
+  transition: background 0.3s ease;
+}
+
+.book-tab-marker.tab-olive {
+  background: rgba(147, 158, 126, 0.92);
+}
+
+.books-mosaic .book-card:hover .book-tab-marker {
+  background: var(--color-accent);
+  color: #ffffff;
+}
+
+/* Luxury Editorial Hover Overlay */
+.book-mosaic-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(63, 59, 52, 0.92) 0%, rgba(63, 59, 52, 0.5) 45%, rgba(63, 59, 52, 0.15) 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 22px 18px;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  z-index: 6;
+  pointer-events: none;
+}
+
+.books-mosaic .book-card:hover .book-mosaic-overlay {
+  opacity: 1;
+}
+
+.book-overlay-category {
+  font-family: var(--font-sans);
+  font-size: 0.58rem;
+  letter-spacing: 0.18em;
+  color: var(--color-accent-light);
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 3px;
+}
+
+.book-overlay-title {
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: #ffffff;
+  margin-bottom: 4px;
+  line-height: 1.15;
+}
+
+.book-overlay-title em {
+  font-style: italic;
+}
+
+.book-overlay-count {
+  font-family: var(--font-sans);
+  font-size: 0.64rem;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.75);
+  margin-bottom: 10px;
+}
+
+.book-overlay-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--font-sans);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: #ffffff;
+  text-transform: uppercase;
+  border-bottom: 1.5px solid var(--color-accent);
+  padding-bottom: 2px;
+  width: fit-content;
 }
 
 .book-spine {
@@ -2331,19 +2427,15 @@ h1 em, h2 em, h3 em, h4 em,
     grid-template-columns: 1fr;
   }
 
-  .books-grid {
-    flex-wrap: wrap;
-    gap: 16px;
-    align-items: stretch;
+  .books-mosaic {
+    height: 440px;
+    gap: 8px;
   }
-  .books-col {
-    transform: none !important;
+  .books-mosaic-col {
+    gap: 8px;
   }
-  .books-col.col-portrait {
-    flex: calc(50% - 16px);
-  }
-  .books-col.col-landscape {
-    flex: 100%;
+  .book-card-pair {
+    gap: 8px;
   }
 
   .form-row {
@@ -2356,12 +2448,46 @@ h1 em, h2 em, h3 em, h4 em,
   }
 }
 
-@media (max-width: 480px) {
-  .books-grid {
-    gap: 12px;
+@media (max-width: 860px) {
+  .books-mosaic {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    height: 460px;
+    padding-bottom: 14px;
+    -webkit-overflow-scrolling: touch;
   }
-  .books-col.col-portrait {
-    flex: 100%;
+  .books-mosaic::-webkit-scrollbar {
+    height: 6px;
+  }
+  .books-mosaic::-webkit-scrollbar-track {
+    background: var(--color-surface-subtle);
+    border-radius: 3px;
+  }
+  .books-mosaic::-webkit-scrollbar-thumb {
+    background: var(--color-accent);
+    border-radius: 3px;
+  }
+  .books-mosaic-col {
+    flex: 0 0 280px;
+    scroll-snap-align: start;
+  }
+  .books-mosaic-col.col-2,
+  .books-mosaic-col.col-4 {
+    flex: 0 0 175px;
+  }
+}
+
+@media (max-width: 480px) {
+  .books-mosaic {
+    height: 380px;
+  }
+  .books-mosaic-col {
+    flex: 0 0 240px;
+  }
+  .books-mosaic-col.col-2,
+  .books-mosaic-col.col-4 {
+    flex: 0 0 150px;
   }
 
   .follow-photos-row {

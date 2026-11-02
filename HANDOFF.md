@@ -112,13 +112,20 @@ Los siguientes cambios fueron aplicados para simplificar la navegación y mejora
 | Componentes React **`AboutSection`** y **`StoryModal`** | **Eliminados** de `page.tsx` (imports, estado y JSX). | `src/app/page.tsx` |
 | Botón **★ DEJAR MI CALIFICACIÓN** | **Añadido** como CTA prominente en el header de la sección Reseñas, visible de inmediato. Al hacer clic realiza *smooth scroll* al formulario y auto-enfoca el primer campo. | `index.html`, `css/styles.css`, `js/main.js` |
 
-### 6. Muro de Galería Rombo (Gallery Wall) y Nueva Paleta de Color (2026-10-29)
+### 6. Muro de Galería Rombo y Paleta de Color (2026-10-29)
 | Elemento | Descripción del cambio |
 | :--- | :--- |
 | **Paleta Natural Editorial** | Se actualizaron todos los tokens de diseño con la nueva paleta: Crema (`#F4EFE8`), Carbón Oliva (`#3F3B34`), Verde Salvia (`#939E7E`), Rosa Polvoso (`#D8B8AF`) y Taupe Cálido (`#B8AA9E`). |
-| **Muro de Galería (Rombo)** | Se rediseñó la sección Books como una composición tipo *Gallery Wall* en 5 columnas con silueta de rombo: las 3 fotos horizontales en el centro (ratio 3:2) y las 8 verticales a los costados (ratio 2:3). Sin huecos vacíos ni recortes forzados. |
 | **Formulario de Reseñas Desplegable** | El botón "DEJAR MI CALIFICACIÓN" abre suavemente el formulario y se oculta; el formulario incluye botón "Cancelar" y se autocierra tras publicar con éxito. |
 | **Comando `npm run dev`** | Configurado para servir inmediatamente el sitio estático (`index.html`) en el puerto 3000. |
+
+### 7. Composición Editorial Mosaico Panorámico (2026-11-02)
+| Elemento | Descripción del cambio |
+| :--- | :--- |
+| **Mosaico 100% fiel a la referencia** | Se implementó la composición exacta de 5 módulos/columnas sin huecos vacíos ni recortes: Col 1 (Familia horizontal arriba + Navidad/Marca Personal abajo), Col 2 (Cumpleaños vertical completa), Col 3 (Revelación/Parejas Playa arriba + Boda horizontal abajo), Col 4 (Embarazo vertical completa), Col 5 (Eventos horizontal arriba + Gastronomía/Parejas abajo). |
+| **Pestañas esquineras con marca de libro** | Cada tarjeta cuenta con la pestaña de esquina curvada en tono carbón/oliva con el número de book correspondiente (`01` a `11`). |
+| **Hover interactivo y apertura de modal** | Al pasar el cursor sobre cualquier fotografía, se despliega una superposición editorial con el título, categoría y botón `ABRIR BOOK →`. Al hacer clic, abre la galería 4K interactiva original. |
+| **Adaptabilidad móvil (Swipe horizontal)** | En pantallas pequeñas, el mosaico permite deslizamiento táctil horizontal fluido con `scroll-snap` para mantener intacta la composición sin deformar las fotografías. |
 
 ---
 

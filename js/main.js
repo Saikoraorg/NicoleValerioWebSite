@@ -682,13 +682,38 @@ Studio NVF · Nicole Valerio Fotografía Editorial`;
     rfCancelBtn.addEventListener('click', hideReviewForm);
   }
 
-  const STORAGE_KEY = 'studionvf_reviews_v1';
+  const STORAGE_KEY = 'studionvf_reviews_v2';
 
   // Seed reviews that are always shown (from HTML). We store only user-submitted ones.
   const seedReviews = [
-    { name: 'Daniela y Andrés', session: 'Boda de Autor · Studio NVF', rating: 5, quote: 'Nicole tiene un talento increíble para capturar la esencia de cada momento. Nos hizo sentir súper cómodos y el resultado fue más de lo que imaginamos. La galería y el book de nuestra boda son una joya familiar.', initials: 'D&A' },
-    { name: 'Mariana López', session: 'Book Embarazo', rating: 5, quote: 'Las fotos de nuestro embarazo son un recuerdo invaluable. El trato fue cálido, respetuoso y el catálogo digital superó cualquier expectativa.', initials: 'ML' },
-    { name: 'Valeria Torres', session: 'Marca Personal', rating: 5, quote: 'La sesión de marca personal transformó completamente la imagen de mi estudio. Captó la sobriedad y creatividad exacta que necesitaba.', initials: 'VT' },
+    {
+      name: 'Katherina Fernández',
+      session: 'Familia & Navidad · Studio NVF',
+      rating: 5,
+      quote: 'Conocimos a Nico cuando nos convertimos en papás por primera vez, iniciamos una tradición de tomar fotos para navidad y desde entonces ella nos ha acompañado en cada transcurso de nuestras etapas como familia. Su servicio, carisma y profesionalismo se destacan desde el primer momento, y con su cámara nos regala el poder plasmar en un segundo un momento eterno 💖 por siempre la mejor.',
+      initials: 'KF'
+    },
+    {
+      name: 'Katherine (BARTOLINO’S Tex Mex)',
+      session: 'Gastronomía · BARTOLINO’S Tex Mex',
+      rating: 5,
+      quote: 'Trabajar con Nicole ha sido una experiencia lindísima. Estamos demasiado felices con su trabajo; es una profesional increíble, súper detallista y comprometida con cada sesión. Las fotos quedan simplemente preciosas y logra capturar cada detalle de una manera espectacular. ✨ Nos encanta la calidad de su trabajo, pero también la dedicación y el cariño que pone en lo que hace. Para nosotros, contar con alguien que entiende lo que queremos transmitir con Bartolino’s y logra plasmarlo tan bonito en cada fotografía hace toda la diferencia. ¡La recomendamos con los ojos cerrados! Estamos felices de tenerla como parte de la historia de Bartolino’s. 🧡',
+      initials: 'BT'
+    },
+    {
+      name: 'Hillary Figueroa Studio',
+      session: 'Marca Personal & Eventos',
+      rating: 5,
+      quote: 'He tenido la oportunidad de trabajar con Nicole en diferentes etapas de mi carrera y siempre quedo demasiado feliz con los resultados. Desde actualizar mis fotografías profesionales para eventos y presentaciones, hasta el lanzamiento de mi producto de Powder Brows y la cobertura de actividades en mi academia, Nicole ha estado presente capturando momentos importantes de mi marca. Me encanta porque entiende lo que quiero transmitir, cuida cada detalle y siempre logra que las fotografías reflejen el profesionalismo de mi trabajo. Sin duda, se ha convertido en mi fotógrafa de confianza y sé que puedo contar con ella para cada nuevo proyecto. La recomiendo muchísimo!!',
+      initials: 'HF'
+    },
+    {
+      name: 'Figue PMU',
+      session: 'Marca Personal · Micropigmentación',
+      rating: 5,
+      quote: 'Cuando apenas estaba iniciando en el mundo de la micropigmentación, decidí invertir en una sesión de fotografía de marca personal con Nicole, y definitivamente fue un antes y un después para mi negocio. Las fotografías lograron proyectar una imagen mucho más profesional y confiable. Fue increíble ver cómo una buena sesión podía elevar tanto la percepción de mi marca, para mí esto fue una inversión que marcó la diferencia en cómo se veía mi trabajo hacia los demás.',
+      initials: 'FP'
+    }
   ];
 
   function loadStoredReviews() {

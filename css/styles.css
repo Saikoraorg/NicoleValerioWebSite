@@ -3328,3 +3328,303 @@ h1 em, h2 em, h3 em, h4 em,
 #publicar-calificacion.form-visible {
   display: block;
 }
+
+/* ==========================================================================
+   REVIEW SESSION PHOTO MODAL & UPLOAD STYLES
+   ========================================================================== */
+
+/* Review session photo chip / button */
+.review-session-photo-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #FAF7F2;
+  border: 1px solid rgba(211, 167, 120, 0.4);
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin-top: auto;
+  margin-bottom: 20px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  user-select: none;
+}
+
+.review-session-photo-btn:hover {
+  background: #F4EFEB;
+  border-color: var(--color-accent);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.review-thumb-wrapper {
+  position: relative;
+  width: 48px;
+  height: 48px;
+  border-radius: 6px;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: #1C1A18;
+}
+
+.review-thumb-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.review-thumb-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.review-session-photo-btn:hover .review-thumb-overlay {
+  opacity: 1;
+}
+
+.review-photo-btn-label {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.photo-btn-text {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.photo-btn-sub {
+  font-size: 0.7rem;
+  color: var(--color-text-subtle);
+  letter-spacing: 0.02em;
+}
+
+/* Modal Popup: Ver foto de la sesión */
+.review-photo-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 10500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.review-photo-modal.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.review-photo-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(18, 16, 14, 0.92);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.review-photo-container {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 680px;
+  max-height: 90vh;
+  background: #1C1A18;
+  border-radius: 16px;
+  border: 1px solid rgba(211, 167, 120, 0.35);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transform: scale(0.94);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.review-photo-modal.active .review-photo-container {
+  transform: scale(1);
+}
+
+.review-photo-close-btn {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 10;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #FFFFFF;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  line-height: 1;
+  transition: all 0.2s ease;
+}
+
+.review-photo-close-btn:hover {
+  background: #C5A059;
+  color: #1C1A18;
+  transform: rotate(90deg);
+}
+
+.review-photo-img-wrap {
+  width: 100%;
+  max-height: 58vh;
+  background: #0D0C0B;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.review-photo-img-wrap img {
+  max-width: 100%;
+  max-height: 58vh;
+  object-fit: contain;
+  display: block;
+}
+
+.review-photo-caption {
+  padding: 22px 26px;
+  background: #1C1A18;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.review-photo-tag {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #C5A059;
+  margin-bottom: 6px;
+}
+
+.review-photo-client {
+  font-family: var(--font-serif);
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: #FFFFFF;
+  margin-bottom: 6px;
+}
+
+.review-photo-quote {
+  font-size: 0.88rem;
+  color: rgba(255, 255, 255, 0.7);
+  font-style: italic;
+  line-height: 1.5;
+  margin: 0;
+  max-height: 4.5em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+/* Photo Upload Box in Review Form */
+.rf-photo-group {
+  margin-top: 4px;
+}
+
+.rf-optional-tip {
+  font-size: 0.78rem;
+  color: var(--color-text-subtle);
+  font-weight: normal;
+  margin-left: 6px;
+}
+
+.rf-photo-upload-box {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-top: 6px;
+}
+
+.rf-pick-photo-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  background: #FAF7F2;
+  border: 1px dashed rgba(211, 167, 120, 0.6);
+  border-radius: 6px;
+  color: var(--color-primary);
+  font-size: 0.84rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.rf-pick-photo-btn:hover {
+  background: #F4EFEB;
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.rf-photo-preview-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #FFFFFF;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  padding: 6px 12px 6px 6px;
+}
+
+.rf-preview-thumb {
+  width: 44px;
+  height: 44px;
+  object-fit: cover;
+  border-radius: 4px;
+  display: block;
+}
+
+.rf-preview-details {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.rf-preview-filename {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--color-primary);
+  max-width: 180px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rf-remove-photo-btn {
+  background: none;
+  border: none;
+  color: #c92a2a;
+  font-size: 0.72rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  text-align: left;
+}
+
+.rf-remove-photo-btn:hover {
+  text-decoration: underline;
+}

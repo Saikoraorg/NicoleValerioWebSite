@@ -659,6 +659,30 @@
                 placeholder="Cuéntanos cómo fue tu experiencia durante la sesión y con el resultado de las fotos..."
                 required></textarea>
             </div>
+            <div class="rf-group rf-photo-group">
+              <label for="rfPhotoInput">
+                <span>Foto de tu sesión (opcional)</span>
+                <span class="rf-optional-tip">— Sube una foto de tu book para mostrarla en tu reseña</span>
+              </label>
+              <div class="rf-photo-upload-box" id="rfPhotoUploadBox">
+                <input type="file" id="rfPhotoInput" accept="image/jpeg,image/png,image/webp" style="display: none;">
+                <button type="button" class="rf-pick-photo-btn" id="rfPickPhotoBtn">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                    <polyline points="21 15 16 10 5 21"></polyline>
+                  </svg>
+                  <span>Cargar foto de la sesión</span>
+                </button>
+                <div class="rf-photo-preview-box" id="rfPhotoPreviewBox" style="display: none;">
+                  <img src="" alt="Vista previa" id="rfPhotoPreviewImg" class="rf-preview-thumb">
+                  <div class="rf-preview-details">
+                    <span id="rfPhotoPreviewName" class="rf-preview-filename">foto.jpg</span>
+                    <button type="button" class="rf-remove-photo-btn" id="rfRemovePhotoBtn" title="Quitar foto">✕ Quitar</button>
+                  </div>
+                </div>
+              </div>
+            </div>
             <div class="rf-feedback" id="rfFeedback"></div>
             <div class="rf-actions-row">
               <button type="submit" class="rf-submit-btn">
@@ -813,6 +837,24 @@
             <div class="lightbox-filmstrip" id="lightboxFilmstrip"></div>
           </div>
           <button class="btn btn-box-minimal" id="lightboxInquireBtn">Quiero una sesión como esta</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- POPUP / MODAL: VER FOTO DE LA SESIÓN (RESEÑAS) -->
+  <div class="review-photo-modal" id="reviewPhotoModal" aria-hidden="true" role="dialog" aria-label="Foto de la sesión">
+    <div class="review-photo-backdrop" id="reviewPhotoBackdrop"></div>
+    <div class="review-photo-container">
+      <button class="review-photo-close-btn" id="reviewPhotoCloseBtn" aria-label="Cerrar visor">&times;</button>
+      <div class="review-photo-body">
+        <div class="review-photo-img-wrap">
+          <img src="" alt="Foto de la sesión" id="reviewPhotoImg" loading="eager">
+        </div>
+        <div class="review-photo-caption">
+          <span class="review-photo-tag" id="reviewPhotoTag">STUDIO NVF</span>
+          <h4 class="review-photo-client" id="reviewPhotoClient">Cliente</h4>
+          <p class="review-photo-quote" id="reviewPhotoQuote">"..."</p>
         </div>
       </div>
     </div>

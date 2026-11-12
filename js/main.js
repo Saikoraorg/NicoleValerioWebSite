@@ -691,28 +691,32 @@ Studio NVF · Nicole Valerio Fotografía Editorial`;
       session: 'Familia & Navidad · Studio NVF',
       rating: 5,
       quote: 'Conocimos a Nico cuando nos convertimos en papás por primera vez, iniciamos una tradición de tomar fotos para navidad y desde entonces ella nos ha acompañado en cada transcurso de nuestras etapas como familia. Su servicio, carisma y profesionalismo se destacan desde el primer momento, y con su cámara nos regala el poder plasmar en un segundo un momento eterno 💖 por siempre la mejor.',
-      initials: 'KF'
+      initials: 'KF',
+      photo: 'assets/images/studionvf/cover_navidad.jpg'
     },
     {
       name: 'Katherine (BARTOLINO’S Tex Mex)',
       session: 'Gastronomía · BARTOLINO’S Tex Mex',
       rating: 5,
       quote: 'Trabajar con Nicole ha sido una experiencia lindísima. Estamos demasiado felices con su trabajo; es una profesional increíble, súper detallista y comprometida con cada sesión. Las fotos quedan simplemente preciosas y logra capturar cada detalle de una manera espectacular. ✨ Nos encanta la calidad de su trabajo, pero también la dedicación y el cariño que pone en lo que hace. Para nosotros, contar con alguien que entiende lo que queremos transmitir con Bartolino’s y logra plasmarlo tan bonito en cada fotografía hace toda la diferencia. ¡La recomendamos con los ojos cerrados! Estamos felices de tenerla como parte de la historia de Bartolino’s. 🧡',
-      initials: 'BT'
+      initials: 'BT',
+      photo: 'assets/images/studionvf/cover_gastronomia.jpg'
     },
     {
       name: 'Hillary Figueroa Studio',
       session: 'Marca Personal & Eventos',
       rating: 5,
       quote: 'He tenido la oportunidad de trabajar con Nicole en diferentes etapas de mi carrera y siempre quedo demasiado feliz con los resultados. Desde actualizar mis fotografías profesionales para eventos y presentaciones, hasta el lanzamiento de mi producto de Powder Brows y la cobertura de actividades en mi academia, Nicole ha estado presente capturando momentos importantes de mi marca. Me encanta porque entiende lo que quiero transmitir, cuida cada detalle y siempre logra que las fotografías reflejen el profesionalismo de mi trabajo. Sin duda, se ha convertido en mi fotógrafa de confianza y sé que puedo contar con ella para cada nuevo proyecto. La recomiendo muchísimo!!',
-      initials: 'HF'
+      initials: 'HF',
+      photo: 'assets/images/studionvf/cover_marcapersonal.jpg'
     },
     {
       name: 'Figue PMU',
       session: 'Marca Personal · Micropigmentación',
       rating: 5,
       quote: 'Cuando apenas estaba iniciando en el mundo de la micropigmentación, decidí invertir en una sesión de fotografía de marca personal con Nicole, y definitivamente fue un antes y un después para mi negocio. Las fotografías lograron proyectar una imagen mucho más profesional y confiable. Fue increíble ver cómo una buena sesión podía elevar tanto la percepción de mi marca, para mí esto fue una inversión que marcó la diferencia en cómo se veía mi trabajo hacia los demás.',
-      initials: 'FP'
+      initials: 'FP',
+      photo: 'assets/images/studionvf/cover_parejas.jpg'
     }
   ];
 
@@ -752,9 +756,27 @@ Studio NVF · Nicole Valerio Fotografía Editorial`;
     const safeName = escapeHTML(r.name);
     const safeSession = escapeHTML(r.session || 'Studio NVF');
     const safeInitials = escapeHTML(r.initials || getInitials(r.name));
+    const safeSrc = r.photo ? escapeHTML(r.photo) : '';
+    const photoBtn = r.photo ? `
+      <button class="review-session-photo-btn" data-photo="${safeSrc}" data-name="${safeName}" data-session="${safeSession}" data-quote="${safeQuote}" aria-label="Ver foto de la sesión">
+        <div class="review-thumb-wrapper">
+          <img src="${safeSrc}" alt="Foto sesión" class="review-thumb-img" loading="lazy">
+          <div class="review-thumb-overlay">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          </div>
+        </div>
+        <div class="review-photo-btn-label">
+          <span class="photo-btn-text">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+            Ver foto de la sesión
+          </span>
+          <span class="photo-btn-sub">Studio NVF · Fotografía editorial</span>
+        </div>
+      </button>` : '';
     card.innerHTML = `
       <div class="stars-row" data-rating="${r.rating}">${starsHTML(r.rating)}</div>
       <p class="review-quote">"${safeQuote}"</p>
+      ${photoBtn}
       <div class="reviewer-meta">
         <div class="reviewer-avatar-placeholder">${safeInitials}</div>
         <div class="reviewer-info">
@@ -828,6 +850,79 @@ Studio NVF · Nicole Valerio Fotografía Editorial`;
     if (prevBtn) prevBtn.addEventListener('click', () => scrollToCard(carousel, dotsEl, currentPage - 1));
     if (nextBtn) nextBtn.addEventListener('click', () => scrollToCard(carousel, dotsEl, currentPage + 1));
     window.addEventListener('resize', () => buildDots(carousel, dotsEl));
+
+    // Delegate click on photo buttons (cards rendered dynamically)
+    carousel.addEventListener('click', (e) => {
+      const btn = e.target.closest('.review-session-photo-btn');
+      if (!btn) return;
+      openReviewPhoto(btn.dataset.photo, btn.dataset.name, btn.dataset.session, btn.dataset.quote);
+    });
+  }
+
+  // Review Photo Modal
+  const reviewPhotoModal    = document.getElementById('reviewPhotoModal');
+  const reviewPhotoBackdrop = document.getElementById('reviewPhotoBackdrop');
+  const reviewPhotoCloseBtn = document.getElementById('reviewPhotoCloseBtn');
+  const reviewPhotoImg      = document.getElementById('reviewPhotoImg');
+  const reviewPhotoTag      = document.getElementById('reviewPhotoTag');
+  const reviewPhotoClient   = document.getElementById('reviewPhotoClient');
+  const reviewPhotoQuote    = document.getElementById('reviewPhotoQuote');
+
+  function openReviewPhoto(photo, name, session, quote) {
+    if (!reviewPhotoModal) return;
+    reviewPhotoImg.src = photo;
+    reviewPhotoTag.textContent = session || 'STUDIO NVF';
+    reviewPhotoClient.textContent = name;
+    reviewPhotoQuote.textContent = '\u201c' + quote + '\u201d';
+    reviewPhotoModal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeReviewPhoto() {
+    if (!reviewPhotoModal) return;
+    reviewPhotoModal.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  if (reviewPhotoCloseBtn) reviewPhotoCloseBtn.addEventListener('click', closeReviewPhoto);
+  if (reviewPhotoBackdrop) reviewPhotoBackdrop.addEventListener('click', closeReviewPhoto);
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && reviewPhotoModal && reviewPhotoModal.classList.contains('active')) closeReviewPhoto();
+  });
+
+  // Photo upload wiring in review form
+  const rfPhotoInput      = document.getElementById('rfPhotoInput');
+  const rfPickPhotoBtn    = document.getElementById('rfPickPhotoBtn');
+  const rfPhotoPreviewBox = document.getElementById('rfPhotoPreviewBox');
+  const rfPhotoPreviewImg = document.getElementById('rfPhotoPreviewImg');
+  const rfPhotoPreviewName = document.getElementById('rfPhotoPreviewName');
+  const rfRemovePhotoBtn  = document.getElementById('rfRemovePhotoBtn');
+  let rfPhotoDataURL = null;
+
+  if (rfPickPhotoBtn) rfPickPhotoBtn.addEventListener('click', () => rfPhotoInput && rfPhotoInput.click());
+  if (rfPhotoInput) {
+    rfPhotoInput.addEventListener('change', () => {
+      const file = rfPhotoInput.files[0];
+      if (!file) return;
+      if (file.size > 8 * 1024 * 1024) { alert('La foto no debe superar 8 MB.'); rfPhotoInput.value = ''; return; }
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        rfPhotoDataURL = ev.target.result;
+        if (rfPhotoPreviewImg)  rfPhotoPreviewImg.src = rfPhotoDataURL;
+        if (rfPhotoPreviewName) rfPhotoPreviewName.textContent = file.name;
+        if (rfPickPhotoBtn)    rfPickPhotoBtn.style.display = 'none';
+        if (rfPhotoPreviewBox) rfPhotoPreviewBox.style.display = 'flex';
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+  if (rfRemovePhotoBtn) {
+    rfRemovePhotoBtn.addEventListener('click', () => {
+      rfPhotoDataURL = null;
+      if (rfPhotoInput)      rfPhotoInput.value = '';
+      if (rfPhotoPreviewBox) rfPhotoPreviewBox.style.display = 'none';
+      if (rfPickPhotoBtn)    rfPickPhotoBtn.style.display = '';
+    });
   }
 
   // Star rating input
@@ -866,7 +961,7 @@ Studio NVF · Nicole Valerio Fotografía Editorial`;
       if (!rating) { showFeedback('Selecciona una calificación con estrellas.', 'error'); return; }
       if (!message || message.length < 10) { showFeedback('Escribe una reseña de al menos 10 caracteres.', 'error'); return; }
 
-      const newReview = { name, session, rating, quote: message, initials: getInitials(name) };
+      const newReview = { name, session, rating, quote: message, initials: getInitials(name), ...(rfPhotoDataURL ? { photo: rfPhotoDataURL } : {}) };
       saveReview(newReview);
 
       // Add to carousel live
@@ -884,6 +979,10 @@ Studio NVF · Nicole Valerio Fotografía Editorial`;
       reviewForm.reset();
       selectedRating = 0;
       starBtns.forEach(b => b.classList.remove('active'));
+      rfPhotoDataURL = null;
+      if (rfPhotoInput)      rfPhotoInput.value = '';
+      if (rfPhotoPreviewBox) rfPhotoPreviewBox.style.display = 'none';
+      if (rfPickPhotoBtn)    rfPickPhotoBtn.style.display = '';
       setTimeout(hideReviewForm, 2500);
     });
   }

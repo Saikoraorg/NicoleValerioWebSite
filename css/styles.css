@@ -1209,30 +1209,27 @@ h1 em, h2 em, h3 em, h4 em,
   object-position: center 20%;
 }
 
-/* Corner Marker Tab */
-.book-tab-marker {
+/* Book Name Label (visible always, top-left) */
+.book-name-label {
   position: absolute;
-  top: 0;
-  left: 0;
-  background: rgba(28, 26, 24, 0.85);
-  backdrop-filter: blur(4px);
+  top: 10px;
+  left: 10px;
+  background: rgba(28, 26, 24, 0.75);
+  backdrop-filter: blur(6px);
   color: #FAF8F5;
-  padding: 4px 10px 5px 8px;
-  border-bottom-right-radius: 12px;
+  padding: 5px 14px 6px;
+  border-radius: 4px;
   z-index: 5;
-  font-family: var(--font-sans);
-  font-size: 0.62rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
+  font-family: var(--font-serif);
+  font-size: 0.92rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
   pointer-events: none;
 }
 
-.book-tab-marker.tab-olive {
-  background: rgba(100, 110, 80, 0.88);
-}
-
-.books-mosaic .book-card:hover .book-tab-marker {
-  opacity: 1;
+.book-name-label em {
+  font-style: italic;
+  font-weight: 500;
 }
 
 /* Overlay: hidden permanently — click opens gallery directly */
@@ -1396,19 +1393,11 @@ h1 em, h2 em, h3 em, h4 em,
   gap: 12px;
 }
 
-.follow-photo-item {
-  position: relative;
-  aspect-ratio: 1 / 1;
-  overflow: hidden;
-  background-color: #141312;
-}
-
 .follow-photo-link {
   display: block;
-  width: 100%;
-  height: 100%;
-  position: relative;
+  aspect-ratio: 4 / 3;
   overflow: hidden;
+  border-radius: 6px;
   text-decoration: none;
 }
 
@@ -1419,66 +1408,9 @@ h1 em, h2 em, h3 em, h4 em,
   transition: transform 0.6s var(--ease-smooth), filter 0.4s ease;
 }
 
-.follow-hover-overlay {
-  position: absolute;
-  inset: 0;
-  background: rgba(18, 16, 14, 0.72);
-  backdrop-filter: blur(3px);
-  -webkit-backdrop-filter: blur(3px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #ffffff;
-  opacity: 0;
-  transition: opacity 0.35s var(--ease-smooth);
-  padding: 16px;
-  text-align: center;
-}
-
-.follow-hover-badge {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  color: #ffffff;
-  transform: translateY(12px);
-  transition: transform 0.35s var(--ease-smooth);
-}
-
-.follow-hover-badge svg {
-  stroke: var(--color-accent);
-}
-
-.follow-handle {
-  font-family: var(--font-sans);
-  font-size: 0.76rem;
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  color: #ffffff;
-}
-
-.follow-cta-text {
-  font-family: var(--font-sans);
-  font-size: 0.68rem;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: var(--color-accent);
-  border-top: 1px solid rgba(211, 167, 120, 0.4);
-  padding-top: 6px;
-  margin-top: 2px;
-}
-
-.follow-photo-item:hover .follow-photo-link img {
-  transform: scale(1.1);
-  filter: brightness(0.85);
-}
-
-.follow-photo-item:hover .follow-hover-overlay {
-  opacity: 1;
-}
-
-.follow-photo-item:hover .follow-hover-badge {
-  transform: translateY(0);
+.follow-photo-link:hover img {
+  transform: scale(1.06);
+  filter: brightness(0.92);
 }
 
 /* ==========================================================================
@@ -2917,7 +2849,7 @@ h1 em, h2 em, h3 em, h4 em,
 
 
 /* ==========================================================================
-   SECCIÓN NICOLE VALERIO — Intro limpia
+   SECCIÓN STORYTELLING — ¡Hola, soy Nicole!
    ========================================================================== */
 
 .nicole-intro-section {
@@ -2926,87 +2858,200 @@ h1 em, h2 em, h3 em, h4 em,
   border-bottom: 1px solid var(--color-border);
 }
 
-.nicole-intro-grid {
+/* --- Hero: Photo left + Text right --- */
+.storytelling-hero {
   display: grid;
   grid-template-columns: 1fr 1.2fr;
-  gap: 70px;
+  gap: 60px;
   align-items: center;
+  margin-bottom: 60px;
 }
 
-.nicole-intro-image-wrap {
+.storytelling-photo-wrap {
+  display: flex;
+  justify-content: center;
+}
+
+.storytelling-photo-frame {
   position: relative;
+  transform: rotate(-3deg);
+  border-radius: 16px;
   overflow: hidden;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.18);
+  max-width: 380px;
 }
 
-.nicole-intro-img {
+.storytelling-photo {
   width: 100%;
-  height: 520px;
-  object-fit: cover;
-  object-position: center top;
+  height: auto;
   display: block;
-  filter: grayscale(8%);
-  transition: transform 0.6s var(--transition-fast);
 }
 
-.nicole-intro-image-wrap:hover .nicole-intro-img {
-  transform: scale(1.03);
-}
-
-.nicole-intro-content {
+.storytelling-intro-text {
   display: flex;
   flex-direction: column;
-  gap: 0;
 }
 
-.nicole-intro-content .books-eyebrow {
-  margin-bottom: 14px;
+.storytelling-title {
+  font-family: var(--font-serif);
+  font-size: clamp(2.4rem, 5vw, 3.8rem);
+  font-weight: 700;
+  color: var(--color-primary);
+  margin-bottom: 16px;
+  line-height: 1.1;
 }
 
-.nicole-intro-content .editorial-main-title {
-  margin-bottom: 28px;
-  font-size: clamp(2.2rem, 4vw, 3.4rem);
+.storytelling-title em {
+  font-style: italic;
+  font-weight: 600;
 }
 
-.nicole-intro-text {
+.storytelling-bio {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 1.05rem;
+  color: var(--color-accent);
+  line-height: 1.7;
+  margin-bottom: 20px;
+}
+
+.storytelling-body {
   font-family: var(--font-sans);
+  font-size: 0.95rem;
+  color: var(--color-text-muted);
+  line-height: 1.8;
+  margin-bottom: 12px;
+}
+
+/* --- Journey: 4-photo grid --- */
+.storytelling-journey {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.storytelling-journey-intro {
+  font-family: var(--font-serif);
+  font-style: italic;
+  color: var(--color-accent);
+  font-size: 1.05rem;
+  margin-bottom: 30px;
+}
+
+.storytelling-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  max-width: 700px;
+  margin: 0 auto 30px;
+}
+
+.storytelling-card {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  aspect-ratio: 4 / 3;
+}
+
+.storytelling-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s var(--ease-smooth);
+}
+
+.storytelling-card:hover img {
+  transform: scale(1.05);
+}
+
+.storytelling-card-label {
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  padding: 8px 20px;
+  border-radius: 20px;
+  font-family: var(--font-sans);
+  font-size: 0.82rem;
+  color: var(--color-primary);
+  white-space: nowrap;
+  font-weight: 500;
+}
+
+/* "¡y así vamos creciendo juntos!" label */
+.storytelling-growing {
+  display: inline-block;
+  margin-top: 10px;
+  margin-bottom: 40px;
+}
+
+.storytelling-growing span {
+  display: inline-block;
+  border: 1px solid var(--color-primary);
+  padding: 10px 28px;
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+  color: var(--color-primary);
+  text-transform: lowercase;
+}
+
+/* Quote box */
+.storytelling-quote-box {
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 30px 40px;
+  max-width: 700px;
+  margin: 0 auto 30px;
+  text-align: center;
+}
+
+.storytelling-quote-box p {
+  font-family: var(--font-serif);
+  font-style: italic;
   font-size: 1rem;
   line-height: 1.8;
-  color: var(--color-text-subtle);
-  margin-bottom: 18px;
+  color: var(--color-text-muted);
 }
 
-.nicole-intro-cta {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  margin-top: 14px;
-  text-decoration: none;
-  background: var(--color-primary);
-  color: #fff;
-  border: 1.5px solid var(--color-primary);
-  padding: 14px 32px;
+/* Closing text */
+.storytelling-closing {
+  text-align: center;
   font-family: var(--font-sans);
-  font-size: 0.76rem;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  cursor: pointer;
-  transition: all var(--transition-fast);
-  width: fit-content;
+  font-size: 1rem;
+  color: var(--color-primary);
+  margin-bottom: 10px;
 }
 
-.nicole-intro-cta:hover {
-  background: var(--color-accent);
-  border-color: var(--color-accent);
-  transform: translateY(-2px);
-}
-
+/* --- Storytelling Responsive --- */
 @media (max-width: 900px) {
-  .nicole-intro-grid {
+  .storytelling-hero {
     grid-template-columns: 1fr;
     gap: 36px;
+    text-align: center;
   }
-  .nicole-intro-img {
-    height: 360px;
+  .storytelling-photo-frame {
+    max-width: 300px;
+    margin: 0 auto;
+  }
+  .storytelling-title {
+    font-size: clamp(2rem, 6vw, 2.8rem);
+  }
+}
+
+@media (max-width: 640px) {
+  .storytelling-grid {
+    grid-template-columns: 1fr;
+    max-width: 400px;
+  }
+  .storytelling-card-label {
+    font-size: 0.75rem;
+    padding: 6px 16px;
+  }
+  .storytelling-quote-box {
+    padding: 20px 24px;
   }
 }
 

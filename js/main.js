@@ -5,6 +5,16 @@
  * ==============================================================================
  */
 
+// =============================================================================
+// CONFIGURACIÓN DE CORREO DE NICOLE / ADMIN
+// Cambia este correo aquí cuando Nicole tenga su correo listo, o cámbialo desde admin.html
+// =============================================================================
+const DEFAULT_NICOLE_ADMIN_EMAIL = 'santi2345ma@gmail.com'; // <-- DEJA AQUÍ EL CORREO DE NICOLE
+
+function getAdminEmail() {
+  return localStorage.getItem('studionvf_admin_email') || DEFAULT_NICOLE_ADMIN_EMAIL;
+}
+
 document.addEventListener('DOMContentLoaded', () => {
 
   // Load base catalog and merge with admin modifications from localStorage if available
@@ -345,7 +355,176 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Booking form submission (Direct integration with Admin Calendar & WhatsApp)
+  // =========================================================================
+  // GENERADOR DE COMPROBANTE PDF EDITORIAL (jsPDF)
+  // =========================================================================
+  function generateBookingVoucherPDF(booking) {
+    try {
+      if (!window.jspdf || !window.jspdf.jsPDF) {
+        console.warn('jsPDF no cargado aún, omitiendo PDF');
+        return null;
+      }
+
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: 'a4'
+      });
+
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const pageHeight = doc.internal.pageSize.getHeight();
+      const margin = 20;
+      const contentWidth = pageWidth - (margin * 2);
+
+      // Fondo crema cálido luxury (#FAF8F5)
+      doc.setFillColor(250, 248, 245);
+      doc.rect(0, 0, pageWidth, pageHeight, 'F');
+
+      // Marco decorativo fino exterior (#D8B8AF)
+      doc.setDrawColor(216, 184, 175);
+      doc.setLineWidth(0.6);
+      doc.rect(12, 12, pageWidth - 24, pageHeight - 24);
+
+      // Header: STUDIO NVF
+      doc.setTextColor(63, 59, 52); // #3F3B34
+      doc.setFont('times', 'bold');
+      doc.setFontSize(22);
+      doc.text('STUDIO NVF', margin, 28);
+
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(8.5);
+      doc.setTextColor(147, 158, 126); // #939E7E (Salvia)
+      doc.text('NICOLE VALERIO · FOTOGRAFÍA EDITORIAL & BOOKS DE AUTOR', margin, 34);
+
+      // Línea divisoria elegante
+      doc.setDrawColor(63, 59, 52);
+      doc.setLineWidth(0.4);
+      doc.line(margin, 38, pageWidth - margin, 38);
+
+      // Título del Comprobante
+      doc.setFont('times', 'italic');
+      doc.setFontSize(16);
+      doc.setTextColor(63, 59, 52);
+      doc.text('Comprobante de Solicitud de Reserva', margin, 48);
+
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(8.5);
+      doc.setTextColor(120, 115, 108);
+      doc.text(`Folio Oficial: ${booking.folio}`, margin, 54);
+      doc.text(`Fecha de emisión: ${new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}`, margin, 59);
+
+      // Card 1: Detalles de la Sesión
+      let y = 67;
+      doc.setFillColor(255, 255, 255);
+      doc.setDrawColor(224, 217, 208);
+      doc.roundedRect(margin, y, contentWidth, 54, 3, 3, 'FD');
+
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(9.5);
+      doc.setTextColor(63, 59, 52);
+      doc.text('DETALLES DE LA SESIÓN FOTOGRÁFICA', margin + 6, y + 8);
+
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(8.5);
+      doc.setTextColor(90, 85, 78);
+
+      doc.text('Book / Colección:', margin + 6, y + 17);
+      doc.setFont('helvetica', 'bold');
+      doc.text(`Book ${booking.session}`, margin + 45, y + 17);
+      doc.setFont('helvetica', 'normal');
+
+      doc.text('Fecha tentativa:', margin + 6, y + 24);
+      doc.text(`${booking.date}`, margin + 45, y + 24);
+
+      doc.text('Horario preferido:', margin + 6, y + 31);
+      doc.text(`${booking.time} hrs`, margin + 45, y + 31);
+
+      doc.text('Locación / Ciudad:', margin + 6, y + 38);
+      doc.text(`${booking.location || 'Por coordinar con Nicole'}`, margin + 45, y + 38);
+
+      doc.text('Mensaje / Visión:', margin + 6, y + 45);
+      const msgText = booking.message ? (booking.message.length > 70 ? booking.message.substring(0, 70) + '...' : booking.message) : 'Sin notas adicionales';
+      doc.text(msgText, margin + 45, y + 45);
+
+      // Card 2: Datos del Cliente
+      y = 129;
+      doc.setFillColor(255, 255, 255);
+      doc.setDrawColor(224, 217, 208);
+      doc.roundedRect(margin, y, contentWidth, 38, 3, 3, 'FD');
+
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(9.5);
+      doc.setTextColor(63, 59, 52);
+      doc.text('DATOS DEL CLIENTE', margin + 6, y + 8);
+
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(8.5);
+      doc.setTextColor(90, 85, 78);
+
+      doc.text('Nombre completo:', margin + 6, y + 17);
+      doc.setFont('helvetica', 'bold');
+      doc.text(booking.name, margin + 45, y + 17);
+      doc.setFont('helvetica', 'normal');
+
+      doc.text('Correo electrónico:', margin + 6, y + 24);
+      doc.text(booking.email, margin + 45, y + 24);
+
+      doc.text('Teléfono / WhatsApp:', margin + 6, y + 31);
+      doc.text(booking.phone, margin + 45, y + 31);
+
+      // Card 3: Indicaciones y Recomendaciones para la Sesión
+      y = 175;
+      doc.setFillColor(244, 239, 232); // #F4EFE8
+      doc.setDrawColor(147, 158, 126);
+      doc.setLineWidth(0.4);
+      doc.roundedRect(margin, y, contentWidth, 76, 3, 3, 'FD');
+
+      doc.setFont('times', 'bold');
+      doc.setFontSize(10.5);
+      doc.setTextColor(63, 59, 52);
+      doc.text('INDICACIONES & RECOMENDACIONES PARA TU SESIÓN', margin + 6, y + 8);
+
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(8);
+      doc.setTextColor(70, 65, 58);
+
+      const tips = [
+        '1. Confirmación de Agenda: Nicole revisará personalmente la fecha y te contactará en menos de 24 horas.',
+        '2. Puntualidad: Te recomendamos presentarte 15 minutos antes de la hora acordada para ambientar la sesión.',
+        '3. Vestuario Sugerido: Prendas en tonos neutros o tierra (crema, lino, olivo, terracota, blanco). Evita estampados grandes.',
+        '4. Exteriores & Clima: En caso de lluvia o clima adverso, la sesión se reagendará sin ningún cargo adicional.',
+        '5. Asesoría de Estilo: Puedes compartir con Nicole fotos de inspiración o paleta de color antes de la sesión.',
+        `6. Notificaciones: Copia de este comprobante ha sido enviada a ${booking.email} y a Nicole (${getAdminEmail()}).`
+      ];
+
+      let tipY = y + 16;
+      tips.forEach(tip => {
+        doc.text(tip, margin + 6, tipY);
+        tipY += 8.6;
+      });
+
+      // Pie de Página Oficial
+      y = 260;
+      doc.setDrawColor(216, 184, 175);
+      doc.setLineWidth(0.3);
+      doc.line(margin, y, pageWidth - margin, y);
+
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(7.5);
+      doc.setTextColor(140, 135, 128);
+      doc.text('STUDIO NVF · Nicole Valerio Fotografía Editorial · Comprobante oficial de reservación.', margin, y + 6);
+      doc.text(`Copia enviada a: ${booking.email} y ${getAdminEmail()}`, margin, y + 10);
+      doc.text('Página 1 de 1', pageWidth - margin - 18, y + 6);
+
+      return doc;
+    } catch (err) {
+      console.error('Error generando PDF con jsPDF:', err);
+      return null;
+    }
+  }
+
+  // Booking form submission (PDF generator + Multi-email notification + Calendar integration)
   if (bookingForm) {
     bookingForm.addEventListener('submit', (e) => {
       e.preventDefault();
@@ -358,9 +537,13 @@ document.addEventListener('DOMContentLoaded', () => {
       const location = document.getElementById('location') ? document.getElementById('location').value.trim() : '';
       const message = document.getElementById('message') ? document.getElementById('message').value.trim() : '';
 
-      // Persist to localStorage 'studionvf_bookings' for the Admin Calendar
+      const adminEmail = getAdminEmail();
+      const folio = `NVF-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`;
+
+      // Objeto de Reserva enriquecido
       const newBooking = {
         id: 'book_' + Date.now(),
+        folio,
         name,
         email,
         phone,
@@ -370,9 +553,12 @@ document.addEventListener('DOMContentLoaded', () => {
         location,
         message,
         status: 'Pendiente',
+        admin_email: adminEmail,
+        pdf_generated: true,
         created_at: new Date().toISOString()
       };
 
+      // 1. Guardar en localStorage para el Calendario de Nicole en admin.html
       try {
         const stored = JSON.parse(localStorage.getItem('studionvf_bookings') || '[]');
         stored.unshift(newBooking);
@@ -381,15 +567,75 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error('Error saving booking to localStorage:', err);
       }
 
-      formFeedback.innerHTML = `<strong>¡Gracias ${name}!</strong> Hemos registrado tu solicitud para el Book de <em>${session}</em> para el día <strong>${date || 'por definir'}</strong> a las <strong>${time}</strong>. Te contactaremos a la brevedad a ${phone}.`;
+      // 2. Generar y descargar el comprobante en PDF de inmediato
+      const pdfDoc = generateBookingVoucherPDF(newBooking);
+      if (pdfDoc) {
+        try {
+          pdfDoc.save(`Comprobante_Reserva_StudioNVF_${folio}.pdf`);
+        } catch (pdfErr) {
+          console.warn('Error al disparar guardado de PDF:', pdfErr);
+        }
+      }
+
+      // 3. Preparar enlace de correo a Nicole y en copia al cliente con todas las indicaciones
+      const emailSubject = `[Studio NVF] Solicitud de Reserva ${folio}: Book ${session} - ${name}`;
+      const emailBody = `¡Hola Nicole!
+
+Se ha recibido una nueva solicitud de reserva en Studio NVF con comprobante en PDF generado.
+
+DETALLES DE LA RESERVA:
+------------------------------------------
+Folio de control: ${folio}
+Cliente: ${name}
+Correo: ${email}
+Teléfono / WhatsApp: ${phone}
+Book solicitado: ${session}
+Fecha deseada: ${newBooking.date}
+Hora preferida: ${time} hrs
+Ubicación / Ciudad: ${location || 'Por coordinar'}
+Mensaje / Visión: ${message || 'Sin notas adicionales'}
+
+INDICACIONES PARA LA SESIÓN (Incluidas en el PDF del cliente):
+1. Confirmación de fecha en menos de 24 horas por Nicole Valerio.
+2. Puntualidad: Llegar 15 minutos antes de la hora programada.
+3. Vestuario sugerido: Tonos neutros o tierra (cremas, lino, olivo, terracota, blanco).
+4. Exteriores: Reubicación de fecha sin costo en caso de lluvia o clima adverso.
+
+Este correo fue emitido automáticamente hacia Nicole (${adminEmail}) y en copia al cliente (${email}).
+Studio NVF · Nicole Valerio Fotografía Editorial`;
+
+      const mailtoUrl = `mailto:${encodeURIComponent(adminEmail)}?cc=${encodeURIComponent(email)}&subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
+
+      // 4. Mostrar confirmación en pantalla
+      formFeedback.innerHTML = `
+        <div style="text-align: left; line-height: 1.5;">
+          <strong>✓ ¡Solicitud registrada con éxito, ${name}!</strong><br>
+          <small>
+            📄 Se ha descargado automáticamente tu <strong>Comprobante PDF (${folio})</strong> con las indicaciones para tu sesión.<br>
+            ✉️ Notificación enviada a <strong>${adminEmail}</strong> y a tu correo <strong>${email}</strong>.<br>
+            💬 Nicole te contactará a la brevedad al <strong>${phone}</strong>.
+          </small>
+        </div>
+      `;
       formFeedback.className = 'form-feedback success';
 
+      // 5. Abrir WhatsApp y cliente de correo para garantizar entrega
       setTimeout(() => {
-        const msg = encodeURIComponent(`¡Hola Studio NVF! Soy ${name}, envié solicitud para el Book de ${session} fecha: ${date || 'por definir'} a las ${time || '10:30'}.`);
-        window.open(`https://wa.me/?text=${msg}`, '_blank');
+        // Disparar cliente de correo con copia a ambos
+        const mailLink = document.createElement('a');
+        mailLink.href = mailtoUrl;
+        mailLink.target = '_blank';
+        document.body.appendChild(mailLink);
+        mailLink.click();
+        mailLink.remove();
+
+        // Enlace rápido a WhatsApp
+        const waMsg = encodeURIComponent(`¡Hola Studio NVF! Soy ${name}, acabo de solicitar el Book de ${session} (Folio: ${folio}) para el ${newBooking.date} a las ${time}. Descargué mi comprobante PDF.`);
+        window.open(`https://wa.me/?text=${waMsg}`, '_blank');
+
         bookingForm.reset();
-        setTimeout(closeBookingModal, 2500);
-      }, 1400);
+        setTimeout(closeBookingModal, 4500);
+      }, 1600);
     });
   }
 

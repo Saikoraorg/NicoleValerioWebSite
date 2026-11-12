@@ -113,6 +113,187 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   ];
 
+  // =========================================================================
+  // GESTIÓN DE CORREO DE NOTIFICACIONES PARA NICOLE
+  // =========================================================================
+  const DEFAULT_ADMIN_EMAIL = 'santi2345ma@gmail.com';
+  const emailInput = document.getElementById('adminNotificationEmailInput');
+  const btnSaveEmail = document.getElementById('btnSaveAdminEmail');
+
+  function initAdminEmailSetting() {
+    const currentEmail = localStorage.getItem('studionvf_admin_email') || DEFAULT_ADMIN_EMAIL;
+    if (emailInput) {
+      emailInput.value = currentEmail;
+    }
+  }
+
+  if (btnSaveEmail && emailInput) {
+    btnSaveEmail.addEventListener('click', () => {
+      const val = emailInput.value.trim();
+      if (!val || !val.includes('@')) {
+        alert('Por favor ingresa un correo electrónico válido');
+        return;
+      }
+      localStorage.setItem('studionvf_admin_email', val);
+      showToast(`✓ Correo de Nicole actualizado a: ${val}`, true);
+    });
+  }
+
+  initAdminEmailSetting();
+
+  // =========================================================================
+  // GENERADOR DE COMPROBANTE PDF PARA ADMIN
+  // =========================================================================
+  function generateBookingVoucherPDF(booking) {
+    try {
+      if (!window.jspdf || !window.jspdf.jsPDF) {
+        alert('Librería jsPDF no disponible');
+        return;
+      }
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const pageHeight = doc.internal.pageSize.getHeight();
+      const margin = 20;
+      const contentWidth = pageWidth - (margin * 2);
+
+      // Fondo ecru / crema suave
+      doc.setFillColor(250, 248, 245);
+      doc.rect(0, 0, pageWidth, pageHeight, 'F');
+
+      // Marco decorativo
+      doc.setDrawColor(216, 184, 175);
+      doc.setLineWidth(0.6);
+      doc.rect(12, 12, pageWidth - 24, pageHeight - 24);
+
+      // Encabezado Studio NVF
+      doc.setTextColor(63, 59, 52);
+      doc.setFont('times', 'bold');
+      doc.setFontSize(22);
+      doc.text('STUDIO NVF', margin, 28);
+
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(8.5);
+      doc.setTextColor(147, 158, 126);
+      doc.text('NICOLE VALERIO · FOTOGRAFÍA EDITORIAL & BOOKS DE AUTOR', margin, 34);
+
+      doc.setDrawColor(63, 59, 52);
+      doc.setLineWidth(0.4);
+      doc.line(margin, 38, pageWidth - margin, 38);
+
+      // Título
+      doc.setFont('times', 'italic');
+      doc.setFontSize(16);
+      doc.setTextColor(63, 59, 52);
+      doc.text('Comprobante Oficial de Reserva', margin, 48);
+
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(8.5);
+      doc.setTextColor(120, 115, 108);
+      const folio = booking.folio || `NVF-${(booking.date || '2026').replace(/-/g, '')}-${(booking.id || '0000').slice(-4)}`;
+      doc.text(`Folio Oficial: ${folio}`, margin, 54);
+      doc.text(`Estado actual: ${booking.status || 'Pendiente'}`, margin, 59);
+
+      // Detalles Sesión
+      let y = 67;
+      doc.setFillColor(255, 255, 255);
+      doc.setDrawColor(224, 217, 208);
+      doc.roundedRect(margin, y, contentWidth, 54, 3, 3, 'FD');
+
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(9.5);
+      doc.setTextColor(63, 59, 52);
+      doc.text('DETALLES DE LA SESIÓN FOTOGRÁFICA', margin + 6, y + 8);
+
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(8.5);
+      doc.setTextColor(90, 85, 78);
+      doc.text('Book / Colección:', margin + 6, y + 17);
+      doc.setFont('helvetica', 'bold');
+      doc.text(`Book ${booking.session}`, margin + 45, y + 17);
+      doc.setFont('helvetica', 'normal');
+      doc.text('Fecha programada:', margin + 6, y + 24);
+      doc.text(`${booking.date}`, margin + 45, y + 24);
+      doc.text('Horario:', margin + 6, y + 31);
+      doc.text(`${booking.time || '10:30'} hrs`, margin + 45, y + 31);
+      doc.text('Locación / Ciudad:', margin + 6, y + 38);
+      doc.text(`${booking.location || 'Por coordinar con Nicole'}`, margin + 45, y + 38);
+      doc.text('Mensaje / Visión:', margin + 6, y + 45);
+      const msg = booking.message ? (booking.message.length > 70 ? booking.message.substring(0, 70) + '...' : booking.message) : 'Sin notas adicionales';
+      doc.text(msg, margin + 45, y + 45);
+
+      // Datos Cliente
+      y = 129;
+      doc.setFillColor(255, 255, 255);
+      doc.setDrawColor(224, 217, 208);
+      doc.roundedRect(margin, y, contentWidth, 38, 3, 3, 'FD');
+
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(9.5);
+      doc.setTextColor(63, 59, 52);
+      doc.text('DATOS DEL CLIENTE', margin + 6, y + 8);
+
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(8.5);
+      doc.setTextColor(90, 85, 78);
+      doc.text('Nombre completo:', margin + 6, y + 17);
+      doc.setFont('helvetica', 'bold');
+      doc.text(booking.name, margin + 45, y + 17);
+      doc.setFont('helvetica', 'normal');
+      doc.text('Correo electrónico:', margin + 6, y + 24);
+      doc.text(booking.email || 'No especificado', margin + 45, y + 24);
+      doc.text('Teléfono / WhatsApp:', margin + 6, y + 31);
+      doc.text(booking.phone || 'No especificado', margin + 45, y + 31);
+
+      // Indicaciones
+      y = 175;
+      doc.setFillColor(244, 239, 232);
+      doc.setDrawColor(147, 158, 126);
+      doc.setLineWidth(0.4);
+      doc.roundedRect(margin, y, contentWidth, 76, 3, 3, 'FD');
+
+      doc.setFont('times', 'bold');
+      doc.setFontSize(10.5);
+      doc.setTextColor(63, 59, 52);
+      doc.text('INDICACIONES & RECOMENDACIONES PARA LA SESIÓN', margin + 6, y + 8);
+
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(8);
+      doc.setTextColor(70, 65, 58);
+
+      const adminEmail = localStorage.getItem('studionvf_admin_email') || DEFAULT_ADMIN_EMAIL;
+      const tips = [
+        '1. Confirmación de Agenda: Nicole revisará personalmente la fecha y te contactará en menos de 24 horas.',
+        '2. Puntualidad: Te recomendamos presentarte 15 minutos antes de la hora acordada para ambientar la sesión.',
+        '3. Vestuario Sugerido: Prendas en tonos neutros o tierra (crema, lino, olivo, terracota, blanco). Evita estampados grandes.',
+        '4. Exteriores & Clima: En caso de lluvia o clima adverso, la sesión se reagendará sin ningún cargo adicional.',
+        '5. Asesoría de Estilo: Puedes compartir con Nicole fotos de inspiración o paleta de color antes de la sesión.',
+        `6. Correo receptor oficial: ${adminEmail} (Copia a: ${booking.email || 'cliente'}).`
+      ];
+
+      let tipY = y + 16;
+      tips.forEach(tip => {
+        doc.text(tip, margin + 6, tipY);
+        tipY += 8.6;
+      });
+
+      // Pie
+      y = 260;
+      doc.setDrawColor(216, 184, 175);
+      doc.setLineWidth(0.3);
+      doc.line(margin, y, pageWidth - margin, y);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(7.5);
+      doc.setTextColor(140, 135, 128);
+      doc.text('STUDIO NVF · Nicole Valerio Fotografía Editorial · Comprobante oficial de reservación.', margin, y + 6);
+      doc.text(`Folio: ${folio} · Notificaciones gestionadas para Nicole Valerio`, margin, y + 10);
+
+      doc.save(`Comprobante_Reserva_${folio}.pdf`);
+    } catch (err) {
+      console.error('Error al generar PDF en admin:', err);
+    }
+  }
+
   let bookings = [];
 
   function loadBookings() {
@@ -356,6 +537,9 @@ document.addEventListener('DOMContentLoaded', () => {
           <a href="${waUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-success btn-sm py-1 px-2 d-inline-flex align-items-center gap-1 text-decoration-none" style="font-size: 0.75rem;">
             <i class="bi bi-whatsapp"></i> WhatsApp
           </a>
+          <button class="btn btn-outline-dark btn-sm py-1 px-2 d-inline-flex align-items-center gap-1 btn-download-pdf" style="font-size: 0.75rem;">
+            <i class="bi bi-file-earmark-pdf-fill text-danger"></i> PDF
+          </button>
           <span class="small text-muted"><i class="bi bi-telephone me-1"></i>${b.phone || 'Sin teléfono'}</span>
         </div>
 
@@ -377,6 +561,12 @@ document.addEventListener('DOMContentLoaded', () => {
           </button>
         </div>
       `;
+
+      // PDF Voucher download button
+      card.querySelector('.btn-download-pdf')?.addEventListener('click', () => {
+        generateBookingVoucherPDF(b);
+        showToast(`Descargando comprobante PDF para ${b.name}...`, true);
+      });
 
       // Status selector
       card.querySelector('.status-changer-select').addEventListener('change', (e) => {

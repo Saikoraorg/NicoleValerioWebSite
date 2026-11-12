@@ -92,8 +92,9 @@ FOR EACH ROW EXECUTE FUNCTION sync_book_photo_count();
 -- ==============================================================================
 CREATE TABLE IF NOT EXISTS public.bookings (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    folio TEXT UNIQUE NOT NULL,                         -- Folio de control, ej: 'NVF-2026-0842'
     client_name TEXT NOT NULL,                          -- Nombre completo del cliente
-    client_email TEXT NOT NULL,                         -- Correo electrónico
+    client_email TEXT NOT NULL,                         -- Correo electrónico del cliente
     client_phone TEXT NOT NULL,                         -- Teléfono o WhatsApp
     session_type TEXT NOT NULL,                         -- 'Familia', 'Boda', 'Embarazo', etc.
     booking_date DATE NOT NULL,                         -- Fecha de la cita (AAAA-MM-DD)
@@ -105,19 +106,41 @@ CREATE TABLE IF NOT EXISTS public.bookings (
         status IN ('Pendiente', 'Confirmada', 'Completada', 'Cancelada')
     ),
     internal_notes TEXT,                                -- Notas privadas para Nicole
+    -- Campos de Comprobante PDF y Notificación por Correo
+    pdf_url TEXT,                                       -- Enlace al PDF guardado en Storage
+    pdf_generated BOOLEAN DEFAULT true,                 -- Bandera de PDF emitido
+    admin_email_recipient TEXT DEFAULT 'santi2345ma@gmail.com', -- Correo receptor de Nicole
+    notification_sent_to_admin BOOLEAN DEFAULT false,   -- Estado de envío a Nicole
+    notification_sent_to_client BOOLEAN DEFAULT false,  -- Estado de envío al cliente
+    email_sent_at TIMESTAMPTZ,                          -- Timestamp de envío del correo
     created_at TIMESTAMPTZ DEFAULT NOW(),
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
 CREATE INDEX IF NOT EXISTS idx_bookings_date ON public.bookings(booking_date);
 CREATE INDEX IF NOT EXISTS idx_bookings_status ON public.bookings(status);
+CREATE INDEX IF NOT EXISTS idx_bookings_folio ON public.bookings(folio);
 
 CREATE TRIGGER update_bookings_updated_at
 BEFORE UPDATE ON public.bookings
 FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 -- ==============================================================================
--- TABLA 4: reviews (Reseñas y Calificaciones con Estrellas)
+-- TABLA 4: app_settings (Configuración Dinámica y Notificaciones)
+-- ==============================================================================
+CREATE TABLE IF NOT EXISTS public.app_settings (
+    key TEXT PRIMARY KEY,
+    value JSONB NOT NULL,
+    description TEXT,
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TRIGGER update_app_settings_updated_at
+BEFORE UPDATE ON public.app_settings
+FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+-- ==============================================================================
+-- TABLA 5: reviews (Reseñas y Calificaciones con Estrellas)
 -- ==============================================================================
 CREATE TABLE IF NOT EXISTS public.reviews (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -130,7 +153,7 @@ CREATE TABLE IF NOT EXISTS public.reviews (
 );
 
 -- ==============================================================================
--- TABLA 5: site_assets (Imágenes Globales: Hero, Work, Press, Instagram)
+-- TABLA 6: site_assets (Imágenes Globales: Hero, Work, Press, Instagram)
 -- ==============================================================================
 CREATE TABLE IF NOT EXISTS public.site_assets (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -150,8 +173,20 @@ CREATE TABLE IF NOT EXISTS public.site_assets (
 ALTER TABLE public.books ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.photos ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.bookings ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.app_settings ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.reviews ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.site_assets ENABLE ROW LEVEL SECURITY;
+
+-- Configuración: Lectura pública de ajustes no sensibles, modificación sólo admin
+CREATE POLICY "Public can view app settings"
+ON public.app_settings FOR SELECT
+USING (true);
+
+CREATE POLICY "Admin can manage app settings"
+ON public.app_settings FOR ALL
+TO authenticated
+USING (true)
+WITH CHECK (true);
 
 -- 1. Libros y Fotos: Lectura pública, modificación sólo admin autenticado
 CREATE POLICY "Public can view published books"
@@ -216,9 +251,15 @@ WITH CHECK (true);
 -- ==============================================================================
 -- CONFIGURACIÓN DE STORAGE BUCKETS EN SUPABASE
 -- ==============================================================================
--- Inserción de buckets públicos (si la extensión de storage está activa)
+-- Inserción de buckets públicos:
+-- 1. 'covers'           -> Portadas de los 11 Books
+-- 2. 'photos'           -> Fotos individuales de galerías
+-- 3. 'booking-vouchers' -> Comprobantes en PDF generados para clientes y Nicole
 INSERT INTO storage.buckets (id, name, public)
-VALUES ('covers', 'covers', true), ('photos', 'photos', true)
+VALUES 
+    ('covers', 'covers', true), 
+    ('photos', 'photos', true),
+    ('booking-vouchers', 'booking-vouchers', true)
 ON CONFLICT (id) DO NOTHING;
 
 -- Políticas de Storage: Lectura pública, subida y eliminación para autenticados
@@ -250,9 +291,31 @@ ON storage.objects FOR ALL
 TO authenticated
 USING (bucket_id = 'photos');
 
+-- Vouchers PDF: Lectura pública de comprobantes, subida por anon/auth al reservar
+CREATE POLICY "Public can view booking vouchers"
+ON storage.objects FOR SELECT
+USING (bucket_id = 'booking-vouchers');
+
+CREATE POLICY "Anyone can upload booking voucher on reservation"
+ON storage.objects FOR INSERT
+TO anon, authenticated
+WITH CHECK (bucket_id = 'booking-vouchers');
+
 -- ==============================================================================
--- DATOS INICIALES (SEED DATA: LOS 11 BOOKS DE STUDIO NVF)
+-- DATOS INICIALES (SEED DATA: AJUSTES & LOS 11 BOOKS DE STUDIO NVF)
 -- ==============================================================================
+-- 1. Configuración de Correo para Alertas de Reserva y PDF
+INSERT INTO public.app_settings (key, value, description)
+VALUES 
+    ('admin_notification_email', '"santi2345ma@gmail.com"', 'Correo de Nicole para recibir alertas de reservas y comprobantes PDF'),
+    ('email_notifications_enabled', 'true', 'Activar o desactivar notificaciones automáticas por correo'),
+    ('studio_phone', '"+506 8888 8888"', 'WhatsApp y teléfono oficial del estudio'),
+    ('studio_address', '"Studio NVF, San José, Costa Rica"', 'Dirección o base principal del estudio')
+ON CONFLICT (key) DO UPDATE SET 
+    value = EXCLUDED.value,
+    description = EXCLUDED.description;
+
+-- 2. Catálogo de Books
 INSERT INTO public.books (slug, badge_number, title, subtitle, category, cover_url, photo_count, sort_order)
 VALUES
 ('familia', '01', 'Familia', 'Momentos Genuinos', 'EDITORIAL', 'assets/images/studionvf/cover_familia.jpg', 49, 1),

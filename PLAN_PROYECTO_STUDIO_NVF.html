@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Plan de Proyecto — STUDIO NVF | Nicole Valerio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #FDFCFA;
+      --card-bg: #FFFFFF;
+      --text-main: #2B2621;
+      --text-muted: #6B645C;
+      --gold: #C5A059;
+      --gold-dark: #A37F3B;
+      --dark: #1C1A18;
+      --border: #E8E2D9;
+      --success: #2E7D32;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: #F4EFEB;
+      color: var(--text-main);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      line-height: 1.6;
+      padding: 30px 15px;
+    }
+
+    .doc-container {
+      max-width: 860px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 50px 60px;
+      box-shadow: 0 15px 40px rgba(28, 26, 24, 0.08);
+      border: 1px solid var(--border);
+    }
+
+    /* Print action bar */
+    .action-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--dark);
+      color: white;
+      padding: 16px 24px;
+      border-radius: 12px;
+      margin-bottom: 40px;
+    }
+
+    .btn-download {
+      background: var(--gold);
+      color: var(--dark);
+      border: none;
+      padding: 10px 22px;
+      border-radius: 30px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+
+    .btn-download:hover {
+      background: #dfb974;
+      transform: translateY(-1px);
+    }
+
+    /* Header */
+    header {
+      border-bottom: 2px solid var(--border);
+      padding-bottom: 30px;
+      margin-bottom: 35px;
+    }
+
+    .brand-tag {
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold-dark);
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.8rem;
+      color: var(--dark);
+      line-height: 1.15;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    h1 em {
+      font-style: italic;
+      color: var(--gold-dark);
+    }
+
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+    }
+
+    /* Section styling */
+    section {
+      margin-bottom: 36px;
+    }
+
+    h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.75rem;
+      color: var(--dark);
+      margin-bottom: 14px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    h3 {
+      font-size: 1.1rem;
+      color: var(--dark);
+      margin: 18px 0 8px;
+      font-weight: 700;
+    }
+
+    p {
+      margin-bottom: 14px;
+      font-size: 0.98rem;
+      color: #3C3630;
+    }
+
+    /* Timeline card */
+    .timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin: 20px 0;
+    }
+
+    .timeline-item {
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      gap: 20px;
+      padding: 14px 18px;
+      background: #FAF7F2;
+      border-radius: 10px;
+      border-left: 4px solid var(--gold);
+    }
+
+    .timeline-date {
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: var(--gold-dark);
+    }
+
+    .timeline-desc {
+      font-size: 0.92rem;
+      color: var(--text-main);
+    }
+
+    .timeline-desc strong {
+      color: var(--dark);
+    }
+
+    /* Feature Grid */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 18px 0;
+    }
+
+    .feature-card {
+      background: #FAF7F2;
+      border: 1px solid var(--border);
+      padding: 20px;
+      border-radius: 12px;
+    }
+
+    .feature-card h4 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 6px;
+    }
+
+    .feature-card p {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      margin-bottom: 0;
+    }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 18px 0;
+      background: white;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+
+    th, td {
+      padding: 14px 18px;
+      text-align: left;
+      font-size: 0.92rem;
+    }
+
+    th {
+      background: #FAF7F2;
+      color: var(--dark);
+      font-weight: 700;
+      border-bottom: 2px solid var(--border);
+    }
+
+    td {
+      border-bottom: 1px solid var(--border);
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    .badge-free {
+      background: #E8F5E9;
+      color: var(--success);
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      display: inline-block;
+    }
+
+    /* Highlight box */
+    .highlight-box {
+      background: #FAF5EB;
+      border: 1px solid #E6D7BD;
+      border-left: 5px solid var(--gold);
+      padding: 20px;
+      border-radius: 10px;
+      margin: 20px 0;
+    }
+
+    .highlight-box h4 {
+      color: var(--dark);
+      font-size: 1.05rem;
+      margin-bottom: 6px;
+    }
+
+    .highlight-box p {
+      margin-bottom: 0;
+      font-size: 0.92rem;
+      color: #4A4238;
+    }
+
+    /* Checklist */
+    .checklist {
+      list-style: none;
+      margin: 14px 0;
+    }
+
+    .checklist li {
+      padding: 10px 0;
+      border-bottom: 1px dashed var(--border);
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      font-size: 0.94rem;
+    }
+
+    .checklist-icon {
+      color: var(--gold-dark);
+      font-weight: bold;
+    }
+
+    footer {
+      margin-top: 50px;
+      border-top: 1px solid var(--border);
+      padding-top: 25px;
+      display: flex;
+      justify-content: space-between;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+
+    /* Print styles */
+    @media print {
+      body {
+        background: white;
+        padding: 0;
+      }
+      .doc-container {
+        box-shadow: none;
+        border: none;
+        padding: 0;
+        max-width: 100%;
+      }
+      .action-bar {
+        display: none;
+      }
+    }
+
+    @media (max-width: 650px) {
+      .doc-container { padding: 30px 20px; }
+      .timeline-item { grid-template-columns: 1fr; gap: 6px; }
+      .feature-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="doc-container">
+
+    <!-- Action Bar (Hidden on Print) -->
+    <div class="action-bar">
+      <div>
+        <strong>Documento Listo para Compartir</strong>
+        <div style="font-size: 0.8rem; opacity: 0.8;">Guárdalo como PDF o imprímelo con un clic</div>
+      </div>
+      <button class="btn-download" onclick="window.print()">
+        Descargar en PDF / Imprimir
+      </button>
+    </div>
+
+    <!-- Header -->
+    <header>
+      <div class="brand-tag">STUDIO NVF · DOCUMENTO EJECUTIVO DE PROYECTO</div>
+      <h1>Plan de Proyecto Web, <em>Panel & Automatización</em></h1>
+      <p class="subtitle">Propuesta explicada de forma clara y sin tecnicismos para Nicole Valerio y el equipo de trabajo.</p>
+    </header>
+
+    <!-- 1. En qué consiste el proyecto -->
+    <section>
+      <h2>1. El Objetivo: ¿Qué estamos construyendo?</h2>
+      <p>
+        El objetivo es crear una <strong>experiencia digital de lujo</strong> que refleje la calidad fotográfica y editorial de Nicole Valerio, pero que además sea una <strong>herramienta de trabajo que le ahorre horas de tiempo</strong>:
+      </p>
+
+      <div class="feature-grid">
+        <div class="feature-card">
+          <h4>Página Web de Autor</h4>
+          <p>Elegante, rápida y adaptada a celulares. Muestra las colecciones en formato libro de arte y permite a los clientes solicitar fechas de sesión al instante.</p>
+        </div>
+        <div class="feature-card">
+          <h4>Panel Privado para Nicole</h4>
+          <p>Un espacio exclusivo donde Nicole puede ver su calendario de citas, cambiar fotos de portada y gestionar reservas sin depender de nadie.</p>
+        </div>
+        <div class="feature-card">
+          <h4>Comprobante PDF Automático</h4>
+          <p>Cuando un cliente solicita una cita, la web le genera un voucher de reserva con folio único y consejos de vestuario para su sesión.</p>
+        </div>
+        <div class="feature-card">
+          <h4>Asistente de WhatsApp</h4>
+          <p>Un sistema que atiende a los clientes y les envía el catálogo de tarifas en PDF de forma automática cuando escriben pidiendo información.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. Calendario -->
+    <section>
+      <h2>2. Fechas Clave y Calendario de Trabajo</h2>
+      <p>Un paso a paso ordenado para llegar a la entrega final con tiempo de sobra para revisiones:</p>
+
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-date">Mié 4 de Nov</div>
+          <div class="timeline-desc"><strong>Entrega de Material:</strong> Nicole nos entrega sus textos ("Quién soy / Storytelling"), fotos seleccionadas y video detrás de cámaras.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-date">5 al 8 de Nov</div>
+          <div class="timeline-desc"><strong>Retoque y Acomodo Visual:</strong> David retoca los elementos visuales y se integran en la página web.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-date">Lun 9 de Nov</div>
+          <div class="timeline-desc"><strong>Primer Avance para Nicole:</strong> Le compartimos el enlace web en vivo para que lo abra en su celular y nos dé sus impresiones.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-date">9 al 25 de Nov</div>
+          <div class="timeline-desc"><strong>Panel & Automatización:</strong> Conectamos el panel privado de Nicole y el asistente de WhatsApp para envío de tarifas.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-date">25 al 29 de Nov</div>
+          <div class="timeline-desc"><strong>Pruebas Finales:</strong> Simulamos reservas, revisamos detalles y corregimos cualquier ajuste fino.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-date">Lun 30 de Nov</div>
+          <div class="timeline-desc"><strong>Entrega Final & Capacitación:</strong> Sesión con Nicole para enseñarle a usar su panel y dejar su web activa oficialmente.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. Cómo funciona el Panel de Nicole -->
+    <section>
+      <h2>3. ¿Cómo usará Nicole su Panel Privado?</h2>
+      <p>
+        Diseñamos el panel pensando en la simplicidad: <strong>Nicole no necesita saber nada de programación ni diseño</strong>. Es tan intuitivo como usar una aplicación del celular:
+      </p>
+
+      <ul class="checklist">
+        <li>
+          <span class="checklist-icon">✓</span>
+          <div><strong>Acceso Seguro con PIN:</strong> Al entrar a su panel privado, solo ingresa su clave de 4 dígitos (como desbloquear un teléfono). Puede cambiar su clave cuando quiera.</div>
+        </li>
+        <li>
+          <span class="checklist-icon">✓</span>
+          <div><strong>Calendario de Sesiones:</strong> Ve sus citas organizadas por día y hora, con colores según el tipo de book (Boda, Familiar, Embarazo, etc.).</div>
+        </li>
+        <li>
+          <span class="checklist-icon">✓</span>
+          <div><strong>Botón Directo a WhatsApp:</strong> Al lado de cada cliente hay un botón que abre WhatsApp con el mensaje ya listo para saludarlo y coordinar la cita.</div>
+        </li>
+        <li>
+          <span class="checklist-icon">✓</span>
+          <div><strong>Cambio de Portadas y Títulos:</strong> Si Nicole tiene fotos nuevas de una boda reciente, las selecciona en el panel y la web se actualiza al instante.</div>
+        </li>
+        <li>
+          <span class="checklist-icon">✓</span>
+          <div><strong>Almacenamiento Inteligente:</strong> Las fotos se comprimen de forma automática al subirse para que la web abra en menos de 1 segundo y no consuma espacio costoso.</div>
+        </li>
+      </ul>
+    </section>
+
+    <!-- 4. Asistente de WhatsApp -->
+    <section>
+      <h2>4. El Asistente Automático de WhatsApp</h2>
+
+      <div class="highlight-box">
+        <h4>¿Cómo funcionará en la práctica?</h4>
+        <p>
+          En la página web, el cliente verá un botón que dice <em>"Solicitar Catálogo de Tarifas por WhatsApp"</em>. Al hacer clic, se le abre WhatsApp con un mensaje pre-escrito: <em>"¡Hola Nicole! Me gustaría recibir el catálogo de Bodas 2026"</em>. En cuanto el cliente presiona enviar, el sistema le responde de inmediato entregándole el folleto en PDF con los precios y paquetes.
+        </p>
+      </div>
+
+      <p><strong>Puntos clave sobre WhatsApp:</strong></p>
+      <ul class="checklist">
+        <li>
+          <span class="checklist-icon">✓</span>
+          <div><strong>Cero costo mensual:</strong> La tecnología oficial de WhatsApp permite atender hasta 1,000 conversaciones gratuitas al mes, lo que cubre con creces el volumen de un estudio fotográfico.</div>
+        </li>
+        <li>
+          <span class="checklist-icon">✓</span>
+          <div><strong>Cuidado de su número personal:</strong> Para que Nicole no pierda su WhatsApp habitual en su teléfono físico, recomendamos usar una línea secundaria de bajo costo o automatizaciones directas en la app de WhatsApp Business.</div>
+        </li>
+      </ul>
+    </section>
+
+    <!-- 5. Costos Transparentes -->
+    <section>
+      <h2>5. Costos Reales y Claros: Cero Sorpresas</h2>
+      <p>
+        Uno de los mayores beneficios de esta arquitectura es que <strong>no requiere pagar plataformas caras mensuales</strong> (como Shopify, Wix o Squarespace que cobran \$25 a \$40 dólares mensuales).
+      </p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Servicio</th>
+            <th>¿Para qué sirve?</th>
+            <th>Costo Estimado</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Dominio Web Propio</strong></td>
+            <td>La dirección en internet (ej. <em>nicolevaleriofotografia.com</em>). Queda 100% a nombre de Nicole.</td>
+            <td><strong>~$12 a $15 USD al AÑO</strong></td>
+          </tr>
+          <tr>
+            <td><strong>Alojamiento Web (Hosting)</strong></td>
+            <td>Servidor rápido en la nube con certificado de seguridad candado verde (HTTPS).</td>
+            <td><span class="badge-free">$0 / mes (Gratis)</span></td>
+          </tr>
+          <tr>
+            <td><strong>Base de Datos de Citas</strong></td>
+            <td>Donde se guardan los clientes y sus reservas.</td>
+            <td><span class="badge-free">$0 / mes (Gratis)</span></td>
+          </tr>
+          <tr>
+            <td><strong>Almacenamiento de Fotos</strong></td>
+            <td>Servidor optimizado para imágenes de alta definición.</td>
+            <td><span class="badge-free">$0 / mes (Gratis)</span></td>
+          </tr>
+          <tr>
+            <td><strong>Atención en WhatsApp</strong></td>
+            <td>Envío de catálogos y atención automatizada (hasta 1,000 chats/mes).</td>
+            <td><span class="badge-free">$0 / mes (Gratis)</span></td>
+          </tr>
+          <tr style="background: #FAF7F2; font-weight: bold;">
+            <td>TOTAL ESTIMADO</td>
+            <td>Mantenimiento anual de toda la infraestructura</td>
+            <td style="color: var(--gold-dark); font-size: 1.05rem;">~$15 USD al año</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- 6. Lo que necesitamos -->
+    <section>
+      <h2>6. ¿Qué necesitamos de Nicole para arrancar?</h2>
+      <ul class="checklist">
+        <li>
+          <span class="checklist-icon">1</span>
+          <div><strong>Textos y Biografía:</strong> Su historia personal ("Soy fotógrafa, mamá de Sara...") y cualquier texto que quiera destacar en la sección Sobre Mí.</div>
+        </li>
+        <li>
+          <span class="checklist-icon">2</span>
+          <div><strong>Fotos de Portada:</strong> Sus mejores fotos para cada uno de los Books (Boda, Embarazo, Familia, Gastronomía, etc.).</div>
+        </li>
+        <li>
+          <span class="checklist-icon">3</span>
+          <div><strong>PDFs o Datos de Tarifas 2026:</strong> Los precios y detalles de paquetes para cargarlos en el sistema de respuesta automática.</div>
+        </li>
+      </ul>
+    </section>
+
+    <footer>
+      <div>STUDIO NVF — Nicole Valerio Fotografía Editorial</div>
+      <div>Preparado por el equipo de desarrollo · Noviembre 2026</div>
+    </footer>
+
+  </div>
+
+</body>
+</html>
+

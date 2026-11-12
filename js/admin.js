@@ -7,7 +7,92 @@
 
 document.addEventListener('DOMContentLoaded', () => {
 
-  // 1. Toast Notification Utility (Bootstrap 5)
+  // 0. Security Sanitization (XSS Defense)
+  function escapeHTML(str) {
+    if (!str) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
+
+  // 1. PIN Security Gate (Protección de Acceso Privado)
+  const DEFAULT_PIN = '2026';
+  function getAdminPin() {
+    return localStorage.getItem('studionvf_admin_pin') || DEFAULT_PIN;
+  }
+
+  const lockOverlay = document.getElementById('adminLockOverlay');
+  const pinInput = document.getElementById('adminPinInput');
+  const loginForm = document.getElementById('adminLoginForm');
+  const loginError = document.getElementById('adminLoginError');
+  const btnLogout = document.getElementById('btnLogoutAdmin');
+  const changePinInput = document.getElementById('adminChangePinInput');
+  const btnSavePin = document.getElementById('btnSaveAdminPin');
+
+  function checkAuth() {
+    if (sessionStorage.getItem('studionvf_admin_authenticated') === 'true') {
+      if (lockOverlay) lockOverlay.style.display = 'none';
+    } else {
+      if (lockOverlay) {
+        lockOverlay.style.display = 'flex';
+        setTimeout(() => pinInput?.focus(), 150);
+      }
+    }
+  }
+
+  function handleUnlock() {
+    const entered = (pinInput?.value || '').trim();
+    if (entered === getAdminPin()) {
+      sessionStorage.setItem('studionvf_admin_authenticated', 'true');
+      if (loginError) loginError.classList.add('d-none');
+      if (lockOverlay) {
+        lockOverlay.style.opacity = '0';
+        lockOverlay.style.transition = 'opacity 0.25s ease';
+        setTimeout(() => lockOverlay.style.display = 'none', 250);
+      }
+      showToast('¡Bienvenida, Nicole! Panel desbloqueado.', true);
+    } else {
+      if (loginError) loginError.classList.remove('d-none');
+      if (pinInput) {
+        pinInput.value = '';
+        pinInput.focus();
+      }
+    }
+  }
+
+  if (loginForm) loginForm.addEventListener('submit', (e) => { e.preventDefault(); handleUnlock(); });
+  if (btnLogout) {
+    btnLogout.addEventListener('click', () => {
+      sessionStorage.removeItem('studionvf_admin_authenticated');
+      if (pinInput) pinInput.value = '';
+      if (lockOverlay) {
+        lockOverlay.style.display = 'flex';
+        lockOverlay.style.opacity = '1';
+        pinInput?.focus();
+      }
+      showToast('Panel bloqueado correctamente.', true);
+    });
+  }
+
+  if (btnSavePin && changePinInput) {
+    btnSavePin.addEventListener('click', () => {
+      const newPin = changePinInput.value.trim();
+      if (!newPin || newPin.length < 4) {
+        alert('Por favor ingresa un PIN de al menos 4 caracteres.');
+        return;
+      }
+      localStorage.setItem('studionvf_admin_pin', newPin);
+      changePinInput.value = '';
+      showToast('✓ Nuevo PIN guardado con éxito.', true);
+    });
+  }
+
+  checkAuth();
+
+  // 2. Toast Notification Utility (Bootstrap 5)
   const toastEl = document.getElementById('liveToast');
   const toastMsg = document.getElementById('toastMessage');
 
@@ -517,19 +602,26 @@ document.addEventListener('DOMContentLoaded', () => {
       const waMsg = encodeURIComponent(`¡Hola ${b.name}! Te escribe Nicole Valerio de Studio NVF respecto a tu sesión de ${b.session} para el día ${b.date} a las ${b.time}.`);
       const waUrl = cleanPhone ? `https://wa.me/${cleanPhone}?text=${waMsg}` : `https://wa.me/?text=${waMsg}`;
 
+      const safeSession = escapeHTML(b.session);
+      const safeStatus = escapeHTML(b.status);
+      const safeName = escapeHTML(b.name);
+      const safeDate = escapeHTML(b.date);
+      const safeTime = escapeHTML(b.time || '10:30');
+      const safePhone = escapeHTML(b.phone || 'Sin teléfono');
+
       card.innerHTML = `
         <div class="d-flex justify-content-between align-items-center">
-          <span class="event-pill ${sClass} px-2 py-1">${b.session}</span>
+          <span class="event-pill ${sClass} px-2 py-1">${safeSession}</span>
           <span class="badge ${isConfirmed ? 'bg-success' : (isPending ? 'bg-warning text-dark' : 'bg-secondary')} small">
-            ${b.status}
+            ${safeStatus}
           </span>
         </div>
 
         <div>
-          <h6 class="fw-bold text-dark m-0">${b.name}</h6>
+          <h6 class="fw-bold text-dark m-0">${safeName}</h6>
           <div class="small text-muted mt-1 d-flex align-items-center gap-3">
-            <span><i class="bi bi-calendar-event me-1"></i>${b.date}</span>
-            <span><i class="bi bi-clock me-1"></i>${b.time || '10:30'}</span>
+            <span><i class="bi bi-calendar-event me-1"></i>${safeDate}</span>
+            <span><i class="bi bi-clock me-1"></i>${safeTime}</span>
           </div>
         </div>
 
@@ -540,7 +632,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <button class="btn btn-outline-dark btn-sm py-1 px-2 d-inline-flex align-items-center gap-1 btn-download-pdf" style="font-size: 0.75rem;">
             <i class="bi bi-file-earmark-pdf-fill text-danger"></i> PDF
           </button>
-          <span class="small text-muted"><i class="bi bi-telephone me-1"></i>${b.phone || 'Sin teléfono'}</span>
+          <span class="small text-muted"><i class="bi bi-telephone me-1"></i>${safePhone}</span>
         </div>
 
         ${b.location ? `<div class="small text-secondary"><i class="bi bi-geo-alt me-1"></i>${b.location}</div>` : ''}

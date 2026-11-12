@@ -710,17 +710,31 @@ Studio NVF · Nicole Valerio Fotografía Editorial`;
     return name.trim().split(/\s+/).map(w => w[0].toUpperCase()).slice(0, 2).join('');
   }
 
+  function escapeHTML(str) {
+    if (!str) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
+
   function buildReviewCard(r) {
     const card = document.createElement('div');
     card.className = 'review-card';
+    const safeQuote = escapeHTML(r.quote);
+    const safeName = escapeHTML(r.name);
+    const safeSession = escapeHTML(r.session || 'Studio NVF');
+    const safeInitials = escapeHTML(r.initials || getInitials(r.name));
     card.innerHTML = `
       <div class="stars-row" data-rating="${r.rating}">${starsHTML(r.rating)}</div>
-      <p class="review-quote">"${r.quote}"</p>
+      <p class="review-quote">"${safeQuote}"</p>
       <div class="reviewer-meta">
-        <div class="reviewer-avatar-placeholder">${r.initials || getInitials(r.name)}</div>
+        <div class="reviewer-avatar-placeholder">${safeInitials}</div>
         <div class="reviewer-info">
-          <h4 class="reviewer-name">${r.name}</h4>
-          <span class="reviewer-tag">${r.session || 'Studio NVF'}</span>
+          <h4 class="reviewer-name">${safeName}</h4>
+          <span class="reviewer-tag">${safeSession}</span>
         </div>
       </div>`;
     return card;

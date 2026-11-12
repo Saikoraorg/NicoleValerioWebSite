@@ -19,6 +19,42 @@
 <body>
 
   <!-- ==========================================================================
+       ADMIN ACCESS LOCK OVERLAY (Seguridad con PIN)
+       ========================================================================== -->
+  <div id="adminLockOverlay" style="position: fixed; inset: 0; background: #141312; z-index: 999999; display: flex; align-items: center; justify-content: center; padding: 20px;">
+    <div class="card border-0 shadow-lg text-white p-4 p-md-5" style="max-width: 420px; width: 100%; background: #1C1A18; border-radius: 20px; border: 1px solid rgba(197, 160, 89, 0.3) !important;">
+      <div class="text-center mb-4">
+        <div class="rounded-circle mx-auto d-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px; background: rgba(197, 160, 89, 0.15); color: #C5A059;">
+          <i class="bi bi-shield-lock-fill fs-2"></i>
+        </div>
+        <h4 class="font-serif fw-bold text-white mb-1">STUDIO NVF</h4>
+        <p class="text-muted small m-0">Acceso Privado para Nicole Valerio</p>
+      </div>
+
+      <form id="adminLoginForm" onsubmit="return false;">
+        <div class="mb-3">
+          <label class="form-label small text-light opacity-75 fw-medium">PIN de Acceso</label>
+          <div class="input-group">
+            <span class="input-group-text bg-dark border-secondary text-light"><i class="bi bi-key-fill"></i></span>
+            <input type="password" id="adminPinInput" class="form-control bg-dark text-light border-secondary" placeholder="Ingresa tu PIN" maxlength="20" autofocus autocomplete="current-password">
+          </div>
+          <div id="adminLoginError" class="text-danger small mt-2 d-none">
+            <i class="bi bi-x-circle me-1"></i>PIN incorrecto. Inténtalo de nuevo.
+          </div>
+        </div>
+        <button type="submit" id="btnAdminUnlock" class="btn btn-gold w-100 py-2 fw-bold text-uppercase" style="letter-spacing: 0.1em;">
+          Entrar al Panel
+        </button>
+      </form>
+      <div class="text-center mt-4">
+        <a href="index.html" class="text-decoration-none text-muted small hover-gold">
+          <i class="bi bi-arrow-left me-1"></i>Volver a la Página Principal
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
        TOP NAVBAR (Bootstrap 5)
        ========================================================================== -->
   <nav class="navbar navbar-expand-lg admin-navbar py-3 sticky-top">
@@ -43,6 +79,11 @@
         <button class="btn btn-gold btn-sm px-3 d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#modalNewBooking">
           <i class="bi bi-plus-lg fw-bold"></i>
           <span>+ Agendar Cita</span>
+        </button>
+
+        <button class="btn btn-outline-danger btn-sm px-2 px-md-3 d-flex align-items-center gap-1" id="btnLogoutAdmin" title="Cerrar Sesión / Bloquear Panel">
+          <i class="bi bi-lock-fill"></i>
+          <span class="d-none d-md-inline">Bloquear</span>
         </button>
       </div>
     </div>
@@ -186,25 +227,53 @@
           </div>
         </div>
 
-        <!-- Admin Notification Email Config Card -->
-        <div class="card border-0 shadow-sm rounded-4 p-3 mb-4 bg-white" style="border-left: 4px solid #C5A059 !important;">
-          <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
-            <div class="d-flex align-items-center gap-3">
-              <div class="rounded-circle bg-dark bg-opacity-10 text-dark d-flex align-items-center justify-content-center flex-shrink-0" style="width: 42px; height: 42px;">
-                <i class="bi bi-envelope-paper-heart-fill fs-5 text-warning"></i>
-              </div>
-              <div>
-                <div class="fw-bold text-dark small">Correo para Recepción de Reservas & Comprobantes PDF</div>
-                <div class="text-muted small">Al enviar el formulario web, se genera un PDF personalizado y se envía notificación a este correo y al del cliente.</div>
+        <!-- Admin Notification Email & PIN Config Cards -->
+        <div class="row g-3 mb-4">
+          <div class="col-lg-7">
+            <div class="card border-0 shadow-sm rounded-4 p-3 h-100 bg-white" style="border-left: 4px solid #C5A059 !important;">
+              <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+                <div class="d-flex align-items-center gap-3">
+                  <div class="rounded-circle bg-dark bg-opacity-10 text-dark d-flex align-items-center justify-content-center flex-shrink-0" style="width: 42px; height: 42px;">
+                    <i class="bi bi-envelope-paper-heart-fill fs-5 text-warning"></i>
+                  </div>
+                  <div>
+                    <div class="fw-bold text-dark small">Correo para Recepción de Reservas & PDF</div>
+                    <div class="text-muted small">Notificación a Nicole y al cliente al agendar.</div>
+                  </div>
+                </div>
+                <div class="d-flex align-items-center gap-2 flex-grow-1" style="max-width: 380px;">
+                  <div class="input-group input-group-sm">
+                    <span class="input-group-text bg-light text-muted border-end-0"><i class="bi bi-envelope-fill"></i></span>
+                    <input type="email" class="form-control" id="adminNotificationEmailInput" placeholder="correo@ejemplo.com" value="santi2345ma@gmail.com" aria-label="Correo de Nicole">
+                    <button class="btn btn-dark px-3 fw-medium" id="btnSaveAdminEmail" type="button">
+                      <i class="bi bi-check-lg me-1"></i>Guardar
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
-            <div class="d-flex align-items-center gap-2 flex-grow-1" style="max-width: 460px;">
-              <div class="input-group input-group-sm">
-                <span class="input-group-text bg-light text-muted border-end-0"><i class="bi bi-envelope-fill"></i></span>
-                <input type="email" class="form-control" id="adminNotificationEmailInput" placeholder="correo@ejemplo.com" value="santi2345ma@gmail.com" aria-label="Correo de Nicole">
-                <button class="btn btn-dark px-3 fw-medium" id="btnSaveAdminEmail" type="button">
-                  <i class="bi bi-check-lg me-1"></i>Guardar Correo
-                </button>
+          </div>
+
+          <div class="col-lg-5">
+            <div class="card border-0 shadow-sm rounded-4 p-3 h-100 bg-white" style="border-left: 4px solid #2B2621 !important;">
+              <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+                <div class="d-flex align-items-center gap-2">
+                  <div class="rounded-circle bg-dark bg-opacity-10 text-dark d-flex align-items-center justify-content-center flex-shrink-0" style="width: 42px; height: 42px;">
+                    <i class="bi bi-shield-lock-fill fs-5 text-dark"></i>
+                  </div>
+                  <div>
+                    <div class="fw-bold text-dark small">PIN de Seguridad</div>
+                    <div class="text-muted small">Por defecto: <strong>2026</strong></div>
+                  </div>
+                </div>
+                <div class="d-flex align-items-center gap-2 flex-grow-1" style="max-width: 220px;">
+                  <div class="input-group input-group-sm">
+                    <input type="password" class="form-control" id="adminChangePinInput" placeholder="Nuevo PIN" maxlength="20">
+                    <button class="btn btn-outline-dark px-3 fw-medium" id="btnSaveAdminPin" type="button">
+                      Guardar
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

@@ -1396,7 +1396,7 @@ h1 em, h2 em, h3 em, h4 em,
 
 .follow-photo-link {
   display: block;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 1 / 1;
   overflow: hidden;
   border-radius: 8px;
   text-decoration: none;

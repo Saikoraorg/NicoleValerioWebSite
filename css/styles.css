@@ -1390,13 +1390,13 @@ h1 em, h2 em, h3 em, h4 em,
 
 .follow-photos-row {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: 12px;
 }
 
 .follow-photo-link {
   display: block;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 1 / 1;
   overflow: hidden;
   border-radius: 6px;
   text-decoration: none;

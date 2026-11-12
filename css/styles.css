@@ -1130,12 +1130,12 @@ h1 em, h2 em, h3 em, h4 em,
   grid-column: 4 / span 1;
   grid-row: 2;
 }
-.card-gastronomia {
-  grid-column: 5 / span 2;
+.card-parejasplaya {
+  grid-column: 5 / span 1;
   grid-row: 2;
 }
-.card-parejasplaya {
-  grid-column: 7 / span 1;
+.card-gastronomia {
+  grid-column: 6 / span 2;
   grid-row: 2;
 }
 .card-parejas {
@@ -2335,8 +2335,8 @@ h1 em, h2 em, h3 em, h4 em,
   .card-revelaciondegenero { grid-column: 1 / span 1; grid-row: 3; }
   .card-eventos            { grid-column: 2 / span 2; grid-row: 3; }
   .card-embarazo           { grid-column: 4 / span 1; grid-row: 3; }
-  .card-gastronomia        { grid-column: 1 / span 2; grid-row: 4; }
-  .card-parejasplaya       { grid-column: 3 / span 1; grid-row: 4; }
+  .card-parejasplaya       { grid-column: 1 / span 1; grid-row: 4; }
+  .card-gastronomia        { grid-column: 2 / span 2; grid-row: 4; }
   .card-parejas            { grid-column: 4 / span 1; grid-row: 4; }
 
   .form-row {
@@ -2917,16 +2917,24 @@ h1 em, h2 em, h3 em, h4 em,
 .storytelling-bio {
   font-family: var(--font-serif);
   font-style: italic;
-  font-size: 1.05rem;
-  color: #8E8880;
-  line-height: 1.7;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #2B2621;
+  line-height: 1.6;
   margin-bottom: 18px;
+}
+
+.storytelling-bio em {
+  font-style: italic;
+  font-weight: 700;
+  color: #2B2621;
 }
 
 .storytelling-body {
   font-family: var(--font-sans);
-  font-size: 0.95rem;
-  color: #7A7269;
+  font-size: 0.98rem;
+  font-weight: 500;
+  color: #3F3B34;
   line-height: 1.8;
   margin-bottom: 12px;
 }
@@ -2940,8 +2948,9 @@ h1 em, h2 em, h3 em, h4 em,
 .storytelling-journey-intro {
   font-family: var(--font-serif);
   font-style: italic;
-  color: #8E8880;
-  font-size: 1.08rem;
+  font-weight: 600;
+  color: #3F3B34;
+  font-size: 1.12rem;
   margin-bottom: 30px;
 }
 
